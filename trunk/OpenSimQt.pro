@@ -1,4 +1,4 @@
-#    File:  OpenSimQt.pro
+ #    File:  OpenSimQt.pro
 # Purpose:  Creates compiler files (e.g., makefile or .vcproj file).
 # -------------------------------------------------------------------------- *
 # OpenSimQt was developed with support from Simbios (the NIH National Center *
