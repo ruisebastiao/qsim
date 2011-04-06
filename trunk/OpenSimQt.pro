@@ -1,4 +1,4 @@
- #    File:  OpenSimQt.pro
+#    File:  OpenSimQt.pro
 # Purpose:  Creates compiler files (e.g., makefile or .vcproj file).
 # -------------------------------------------------------------------------- *
 # OpenSimQt was developed with support from Simbios (the NIH National Center *
@@ -48,16 +48,16 @@
 # CONFIG += windows   (full windows  application when TEMPLATE = app)
 # CONFIG += console   (basic console application when TEMPLATE = app)
 # ------------------------------------------------------------------
-TEMPLATE      = vcapp
-CONFIG       += windows
-CONFIG       += debug_and_release  # debug  or  release  or  debug_and_release
-CONFIG       += warn_on            # warn_on  or  warn_off
+TEMPLATE   = vcapp
+CONFIG    += windows
+CONFIG    += debug_and_release  # debug  or  release  or  debug_and_release
+CONFIG    += warn_on            # warn_on  or  warn_off
 
 #--------------------------------------------------------------------
 # Target is OpenSimQt.exe on Windows and OpenSimQt on Macintosh/Linux
 #--------------------------------------------------------------------
-TARGET        = OpenSimQt
-# DESTDIR       = OpenSimQtBuild
+TARGET    = OpenSimQt
+# DESTDIR = OpenSimQtBuild
 
 #--------------------------------------------------------------------
 # Configuration settings.
@@ -77,14 +77,14 @@ TARGET        = OpenSimQt
 # xml:          QtXml module provides C++ implementations of SAX (event-based tandard interface for XML parsers, see http://www.saxproject.org) and
 #               DOM (maps XML document to a tree structure, see http://www.w3.org/DOM/ and QtDom classes)
 #--------------------------------------------------------------------
-CONFIG       += qt
-CONFIG       += core               # Qtcore and Qtgui modules are included by default with CONFIG += qt
-CONFIG       += gui                # Qtcore and Qtgui modules are included by default with CONFIG += qt
-# CONFIG       += network          # QtNetwork module (TCP/IP, http, and sockets)
-# CONFIG       += opengl           # QtOpenGL module  (3D Rendering graphics)
-# CONFIG       += sql              # QtSql module     (Database)
-# CONFIG       += svg              # QtSvg module
-# CONFIG       += xml              # QtXml module
+CONFIG    += qt
+CONFIG    += core       # Qtcore module is included by default with CONFIG += qt
+CONFIG    += gui        # Qtgui modules is included by default with CONFIG += qt
+# CONFIG    += network  # QtNetwork module (TCP/IP, http, and sockets)
+# CONFIG    += opengl   # QtOpenGL module  (3D Rendering graphics)
+# CONFIG    += sql      # QtSql module     (Database)
+# CONFIG    += svg      # QtSvg module
+# CONFIG    += xml      # QtXml module
 
 
 #--------------------------------------------------------------------
