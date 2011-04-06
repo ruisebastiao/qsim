@@ -39,8 +39,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef __OPENSIMQTGUI__ 
-#define __OPENSIMQTGUI__
+#ifndef  OPENSIMQTGUI_H__ 
+#define  OPENSIMQTGUI_H__
 
 
 //------------------------------------------------------------------------------
@@ -56,5 +56,5 @@ int  OpenSimQtGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArg
 
 
 //--------------------------------------------------------------------------
-#endif // __OPENSIMQTGUI__
+#endif  // OPENSIMQTGUI_H__
 //--------------------------------------------------------------------------

@@ -53,7 +53,7 @@ int  main( int numberOfCommandLineArguments, char *arrayOfCommandLineArguments[]
       programSucceededIs0 = OpenSimQt::OpenSimQtGui( numberOfCommandLineArguments, arrayOfCommandLineArguments );
    }
 
-#if 0 && __OPENSIM_QT_DEBUG__
+#if 0 && OPENSIM_QT_DEBUG__
    // This catch statement handles certain types of exceptions
    catch( const exception &e )
    {

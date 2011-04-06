@@ -42,8 +42,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef __OPENSIMQTSTARTSIMULATION_H__ 
-#define __OPENSIMQTSTARTSIMULATION_H__
+#ifndef  OPENSIMQTSTARTSIMULATION_H__ 
+#define  OPENSIMQTSTARTSIMULATION_H__
 
 
 //------------------------------------------------------------------------------
@@ -77,5 +77,5 @@ public slots:
 
 
 //--------------------------------------------------------------------------
-#endif // __OPENSIMQTSTARTSIMULATION_H__
+#endif  // OPENSIMQTSTARTSIMULATION_H__
 //--------------------------------------------------------------------------

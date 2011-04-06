@@ -36,7 +36,6 @@
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
 #include "OpenSimQtStandardHeaders.h"
-//#include "OpenSimQtStartSimulation.h"
 #include <SimTKsimbody.h>
 using namespace SimTK;
 
@@ -51,7 +50,7 @@ bool  WriteExceptionToFile( const char* outputString, const char* exceptionStrin
 {
    bool retValue = false;
 
-#if __OPENSIM_QT_DEBUG__
+#if OPENSIM_QT_DEBUG__
    FILE *outputFile = fopen( "C:\\OpenSimQt\\ExceptionsThrown.txt", "a+" );
    if( outputFile && outputString )
    {

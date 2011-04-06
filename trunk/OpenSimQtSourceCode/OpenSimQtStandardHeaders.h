@@ -34,8 +34,8 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-#ifndef OPENSIMQTSTANDARDHEADERS__
-#define OPENSIMQTSTANDARDHEADERS__
+#ifndef  OPENSIMQTSTANDARDHEADERS_H__
+#define  OPENSIMQTSTANDARDHEADERS_H__
 
 //------------------------------------------------------------------------------
 // Filename enclosed inside < >  means header file is in the Include directory.
@@ -51,7 +51,6 @@
 
 //------------------------------------------------------------------------------
 #define  OPENSIM_QT_DEBUG__   1
-
 
 //------------------------------------------------------------------------------
 #ifdef _WIN32
@@ -69,12 +68,11 @@
 namespace OpenSimQT {
 
 
-
 //------------------------------------------------------------------------------
 }  // End of namespace OpenSimQT
 
 
 //-----------------------------------------------------------------------------
-#endif  /* OPENSIMQTSTANDARDHEADERS__ */
+#endif  // OPENSIMQTSTANDARDHEADERS_H__
 //-----------------------------------------------------------------------------
 
