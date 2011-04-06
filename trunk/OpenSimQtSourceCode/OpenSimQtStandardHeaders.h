@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // File:     OpenSimQtStandardHeaders.h
 // Purpose:  Includes standard C/C++ language and OpenSimQt header files.
-//           Directly or indirectly, 1st file included in all source code files.
+//           Directly or indirectly, first header included in most source code files.
 /* ------------------------------------------------------------------------- *
 *                                 OpenSimQt                                  *
 * -------------------------------------------------------------------------- *
@@ -34,13 +34,10 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-//using namespace std;  // Allow use of standard namespace without std::InFrontOfFunctions 
-
+#ifndef OPENSIMQTSTANDARDHEADERS__
+#define OPENSIMQTSTANDARDHEADERS__
 
 //------------------------------------------------------------------------------
-#ifndef OPENSIMQTSTANDARDHEADERS_
-#define OPENSIMQTSTANDARDHEADERS_
-
 // Filename enclosed inside < >  means header file is in the Include directory.
 // Filename enclosed inside " "  means header file is in the current directory.
 #include <cmath>      // Mathematical Constants
@@ -52,15 +49,21 @@
 #include <cstddef>    // Standard Definitions
 #include <exception>  // Exception handling (e.g., try, catch throw)
 
-#define  OPENSIM_QT_DEBUG_   1
+//------------------------------------------------------------------------------
+#define  OPENSIM_QT_DEBUG__   1
 
-// Disable any possibly annoying warnings and enable DLLExport on windows (if necessary).
+
+//------------------------------------------------------------------------------
 #ifdef _WIN32
-   #pragma warning( disable: 4100 )  /* Disable warning for unreferenced formal parameter */
+   // Disable any possibly annoying warnings. 
+   // For Microsoft Visual Studio 2008, disable warning for un-referenced formal parameter.
+   #pragma warning( disable: 4100 ) 
+   // If necessary to build .dll, enable DLLExport on windows.
    // #define DLLExport __declspec( dllexport )
 #else
    #define DLLExport
 #endif
+
 
 //------------------------------------------------------------------------------
 namespace OpenSimQT {
@@ -72,6 +75,6 @@ namespace OpenSimQT {
 
 
 //-----------------------------------------------------------------------------
-#endif  /* __OPENSIMQTSTANDARDHEADERS__ */
+#endif  /* OPENSIMQTSTANDARDHEADERS__ */
 //-----------------------------------------------------------------------------
 
