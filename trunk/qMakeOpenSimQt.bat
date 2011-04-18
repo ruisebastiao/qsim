@@ -15,8 +15,8 @@ rem           set, by I did not find it necessary.
 rem           QMAKESPEC   to   win32-msvc2008
 rem ------------------------------------------------------------------
 rem This assumes a parallel set of folders.
-rem The 1st is called OpenSimQt and contains trunk (that contains source code)
-rem The 2nd 
+rem 1st folder  OpenSimQt       contains trunk (that contains source code).
+rem 2nd folder  OpenSimQtBuild  contains build folders (debug/release).
 rem ------------------------------------------------------------------
 @echo on
 echo .
