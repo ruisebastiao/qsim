@@ -1,5 +1,6 @@
 #    File:  OpenSimQt.pro
 # Purpose:  Creates compiler files (e.g., makefile or .vcproj file).
+#    Info:  http://doc.trolltech.com/4.2/qmake-tutorial.html
 # -------------------------------------------------------------------------- *
 # OpenSimQt was developed with support from Simbios (the NIH National Center *
 # for Physics-Based Simulation Biological Structures at Stanford) under NIH  *
@@ -34,11 +35,12 @@
 #           qmake -o makefile OpenSimQt.pro
 #   Use 2:  To generate a Microsoft Visual Studio vcproj file:
 #           qmake -tp -vc     OpenSimQt.pro
-
 # ------------------------------------------------------------------
 # Note:     On Windows 32-bit, _may_ have to set the environment variables:
 #           QMAKESPEC   to   win32-msvc2008
 #           PATH        add  C:\Qt\4.7.2\bin\
+#           PATH        add  C:\Simbody\bin\    (for .dlls)
+# ------------------------------------------------------------------
 
 # ------------------------------------------------------------------
 # TEMPLATE = app      Creates a Makefile to build an application.
@@ -93,6 +95,7 @@ CONFIG    += gui        # Qtgui modules is included by default with CONFIG += qt
 # LIBPATH     - is the location of directory with *.a files
 # LIBS        - contains libraries you want to use in application
 #               Note: LIBS are found along QMAKE_LIBDIR (formerly LIBPATH).
+# Ensure  .dlls are on Windows PATH, e.g. C:\Simbody\bin is on PATH.
 #--------------------------------------------------------------------
 INCLUDEPATH  += /Qt/4.7.2/include/
 INCLUDEPATH  += /Simbody/include/
