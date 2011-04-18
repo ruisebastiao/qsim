@@ -1,6 +1,6 @@
 @echo off
 rem ------------------------------------------------------------------
-rem    File:  qMakeOpenSimQt.bat   (created by Paul Mitiguy)
+rem    File:   qMakeOpenSimQt.bat   (created by Paul Mitiguy)
 rem Purpose:  Simplifies invoking qmake on Windows PC computers.
 rem    Use:   At the command (cmd.exe) prompt, type  qMakeOpenSimQt.bat
 rem           qmake creates .vcproj file in another directory.
