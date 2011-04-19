@@ -96,6 +96,7 @@ CONFIG    += gui        # Qtgui modules is included by default with CONFIG += qt
 # LIBS        - contains libraries you want to use in application
 #               Note: LIBS are found along QMAKE_LIBDIR (formerly LIBPATH).
 # Ensure  .dlls are on Windows PATH, e.g. C:\Simbody\bin is on PATH.
+# Use quotes if there are spaces in INCLUDEPATH.
 #--------------------------------------------------------------------
 INCLUDEPATH  += /Qt/4.7.2/include/
 INCLUDEPATH  += /Simbody/include/
