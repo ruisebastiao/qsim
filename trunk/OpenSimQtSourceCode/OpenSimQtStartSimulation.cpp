@@ -36,8 +36,13 @@
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
 #include "OpenSimQtStandardHeaders.h"
-#include <SimTKsimbody.h>
-using namespace SimTK;
+#if 0                             // Change 1 to 0 if want to use Simbody only.
+   #include <SimTKsimbody.h>      // Includes all Simbody header files.
+   using namespace SimTK;
+#else
+   #include <OpenSim.h>           // Includes all OSimAPI header files.
+   namespace OSimAPI = OpenSim;   // Avoid confusion between OpenSimQt and OpenSim namespaces
+#endif
 
 //------------------------------------------------------------------------------
 namespace OpenSimQt {
@@ -55,8 +60,7 @@ bool  WriteExceptionToFile( const char* outputString, const char* exceptionStrin
    if( outputFile && outputString )
    {
       retValue = fputs( outputString, outputFile ) != EOF;
-      if( exceptionStringOrNull )
-          retValue = retValue && fputs( exceptionStringOrNull, outputFile ) != EOF;
+      if( exceptionStringOrNull ) retValue = retValue && fputs( exceptionStringOrNull, outputFile ) != EOF;
       fflush( outputFile );
       fclose( outputFile );
    }
@@ -68,7 +72,7 @@ bool  WriteExceptionToFile( const char* outputString, const char* exceptionStrin
 //-----------------------------------------------------------------------------
 bool  StartAndRunSimulationMathematicsInsideExceptionHandling( )
 {
-
+#if 0
    // Create the system, with subsystems for the bodies and some forces.
    MultibodySystem system;
    SimbodyMatterSubsystem matter(system);
@@ -107,6 +111,7 @@ bool  StartAndRunSimulationMathematicsInsideExceptionHandling( )
    ts.initialize(state);
    ts.stepTo(10.0);
 
+#endif
 
 	 // Simulation completed properly
    return true;

@@ -1,4 +1,4 @@
- #    File:  OpenSimQt.pro
+#    File:  OpenSimQt.pro
 # Purpose:  Creates compiler files (e.g., makefile or .vcproj file).
 #    Info:  http://doc.trolltech.com/4.2/qmake-tutorial.html
 # -------------------------------------------------------------------------- *
@@ -36,10 +36,9 @@
 #   Use 2:  To generate a Microsoft Visual Studio vcproj file:
 #           qmake -tp -vc     OpenSimQt.pro
 # ------------------------------------------------------------------
-# Note:     On Windows 32-bit, _may_ have to set the environment variables:
+# Note:     On Windows 32-bit, _may_ have to set environment variables:
 #           QMAKESPEC   to   win32-msvc2008
 #           PATH        add  C:\Qt\4.7.2\bin\
-#           PATH        add  C:\Simbody\bin\    (for .dlls)
 # ------------------------------------------------------------------
 
 # ------------------------------------------------------------------
@@ -56,10 +55,9 @@ CONFIG    += debug_and_release  # debug  or  release  or  debug_and_release
 CONFIG    += warn_on            # warn_on  or  warn_off
 
 #--------------------------------------------------------------------
-# Target is OpenSimQt.exe on Windows and OpenSimQt on Macintosh/Linux
+# Target on Windows is OpenSimQt.exe.  On Macintosh/Linux is OpenSimQt.
 #--------------------------------------------------------------------
 TARGET    = OpenSimQt
-# DESTDIR = OpenSimQtBuild
 
 #--------------------------------------------------------------------
 # Configuration settings.
@@ -82,11 +80,11 @@ TARGET    = OpenSimQt
 CONFIG    += qt
 CONFIG    += core       # Qtcore module is included by default with CONFIG += qt
 CONFIG    += gui        # Qtgui modules is included by default with CONFIG += qt
-# CONFIG    += network  # QtNetwork module (TCP/IP, http, and sockets)
-# CONFIG    += opengl   # QtOpenGL module  (3D Rendering graphics)
-# CONFIG    += sql      # QtSql module     (Database)
-# CONFIG    += svg      # QtSvg module
-# CONFIG    += xml      # QtXml module
+#  CONFIG    += network # QtNetwork module (TCP/IP, http, and sockets)
+#  CONFIG    += opengl  # QtOpenGL module  (3D Rendering graphics)
+#  CONFIG    += sql     # QtSql module     (Database)
+#  CONFIG    += svg     # QtSvg module
+#  CONFIG    += xml     # QtXml module
 
 
 #--------------------------------------------------------------------
@@ -95,27 +93,26 @@ CONFIG    += gui        # Qtgui modules is included by default with CONFIG += qt
 # LIBPATH     - is the location of directory with *.a files
 # LIBS        - contains libraries you want to use in application
 #               Note: LIBS are found along QMAKE_LIBDIR (formerly LIBPATH).
-# Ensure  .dlls are on Windows PATH, e.g. C:\Simbody\bin is on PATH.
-# Use quotes if there are spaces in INCLUDEPATH.
+# Note: Enclose names in paths in quotes if there are spaces, e.g., "/Program Files"
 #--------------------------------------------------------------------
 INCLUDEPATH  += /Qt/4.7.2/include/
-INCLUDEPATH  += /Simbody/include/
-QMAKE_LIBDIR += /Simbody/lib
+QMAKE_EXT_H  += .hpp    # Allows .hpp files to be treated as header files.
+INCLUDEPATH  += /OpenSim2.2.1/sdk/include/
+INCLUDEPATH  += /OpenSim2.2.1/sdk/include/OpenSim
+INCLUDEPATH  += /OpenSim2.2.1/sdk/include/SimTK/include
+QMAKE_LIBDIR += /OpenSim2.2.1/sdk/lib/
 win32:CONFIG(1 || release)
 {
-LIBS         += SimTKsimbody.lib
-LIBS         += SimTKmath.lib
-LIBS         += SimTKcommon.lib
+LIBS         += OpenSim_SimTKsimbody.lib
+LIBS         += OpenSim_SimTKmath.lib
+LIBS         += OpenSim_SimTKcommon.lib
 LIBS         += SimTKlapack.lib
 LIBS         += pthreadVC2.lib
-}
-win32:CONFIG(0 || debug)
-{
-LIBS         += SimTKsimbody_d.lib
-LIBS         += SimTKmath_d.lib
-LIBS         += SimTKcommon_d.lib
-LIBS         += SimTKlapack.lib
-LIBS         += pthreadVC2.lib
+LIBS         += osimCommon.lib
+LIBS         += osimSimulation.lib
+LIBS         += osimAnalyses.lib
+LIBS         += osimActuators.lib
+LIBS         += osimTools.lib
 }
 
 #--------------------------------------------------------------------
@@ -154,4 +151,27 @@ else unix:!macx{
 }
 
 
+
+#--------------------------------------------------------------------
+# If using Simbody (not OpenSim API) use the following.
+# Ensure  .dlls are on Windows computer's PATH environment variable, e.g. C:\Simbody\bin is on PATH.
+#--------------------------------------------------------------------
+#  INCLUDEPATH  += /Simbody/include/
+#  QMAKE_LIBDIR += /Simbody/lib
+#  win32:CONFIG(1 || release)
+#  {
+#  LIBS         += SimTKsimbody.lib
+#  LIBS         += SimTKmath.lib
+#  LIBS         += SimTKcommon.lib
+#  LIBS         += SimTKlapack.lib
+#  LIBS         += pthreadVC2.lib
+#  }
+#  win32:CONFIG(0 || debug)
+#  {
+#  LIBS         += SimTKsimbody_d.lib
+#  LIBS         += SimTKmath_d.lib
+#  LIBS         += SimTKcommon_d.lib
+#  LIBS         += SimTKlapack.lib
+#  LIBS         += pthreadVC2.lib
+#  }
 
