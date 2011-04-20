@@ -42,6 +42,7 @@
 #else
    #include <OpenSim.h>           // Includes all OSimAPI header files.
    namespace OSimAPI = OpenSim;   // Avoid confusion between OpenSimQt and OpenSim namespaces
+   using namespace OSimAPI;
 #endif
 
 //------------------------------------------------------------------------------
@@ -72,7 +73,12 @@ bool  WriteExceptionToFile( const char* outputString, const char* exceptionStrin
 //-----------------------------------------------------------------------------
 bool  StartAndRunSimulationMathematicsInsideExceptionHandling( )
 {
-#if 0
+#if 1
+		// Create an OpenSim model and set its name
+    Model osimModel;
+    osimModel.setName("tugOfWar");
+
+#else
    // Create the system, with subsystems for the bodies and some forces.
    MultibodySystem system;
    SimbodyMatterSubsystem matter(system);

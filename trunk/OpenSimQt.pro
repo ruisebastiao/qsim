@@ -96,7 +96,6 @@ CONFIG    += gui        # Qtgui modules is included by default with CONFIG += qt
 # Note: Enclose names in paths in quotes if there are spaces, e.g., "/Program Files"
 #--------------------------------------------------------------------
 INCLUDEPATH  += /Qt/4.7.2/include/
-QMAKE_EXT_H  += .hpp    # Allows .hpp files to be treated as header files.
 INCLUDEPATH  += /OpenSim2.2.1/sdk/include/
 INCLUDEPATH  += /OpenSim2.2.1/sdk/include/OpenSim
 INCLUDEPATH  += /OpenSim2.2.1/sdk/include/SimTK/include
