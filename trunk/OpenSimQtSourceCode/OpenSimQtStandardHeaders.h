@@ -55,8 +55,8 @@
 //------------------------------------------------------------------------------
 #ifdef _WIN32
    // Disable any possibly annoying warnings. 
-   // For Microsoft Visual Studio 2008, disable warning for un-referenced formal parameter.
-   #pragma warning( disable: 4100 ) 
+   #pragma warning( disable: 4100 )    // For Microsoft Visual Studio 2008, disable warning for un-referenced formal parameter.
+   #pragma warning( disable: 4189 )    // For Microsoft Visual Studio 2008, disable warning for un-referenced local variable.
    // If necessary to build .dll, enable DLLExport on windows.
    // #define DLLExport __declspec( dllexport )
 #else
