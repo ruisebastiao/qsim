@@ -88,7 +88,7 @@ CONFIG    += gui        # Qtgui modules is included by default with CONFIG += qt
 
 
 #--------------------------------------------------------------------
-# List of additional paths e.g., for header and library files
+# List of additional paths e.g., for Qt header and library files.
 # INCLUDEPATH - is the location of directory with header files
 # LIBPATH     - is the location of directory with *.a files
 # LIBS        - contains libraries you want to use in application
@@ -96,23 +96,6 @@ CONFIG    += gui        # Qtgui modules is included by default with CONFIG += qt
 # Note: Enclose names in paths in quotes if there are spaces, e.g., "/Program Files"
 #--------------------------------------------------------------------
 INCLUDEPATH  += /Qt/4.7.2/include/
-INCLUDEPATH  += /OpenSim2.2.1/sdk/include/
-INCLUDEPATH  += /OpenSim2.2.1/sdk/include/OpenSim
-INCLUDEPATH  += /OpenSim2.2.1/sdk/include/SimTK/include
-QMAKE_LIBDIR += /OpenSim2.2.1/sdk/lib/
-win32:CONFIG(1 || release)
-{
-LIBS         += OpenSim_SimTKsimbody.lib
-LIBS         += OpenSim_SimTKmath.lib
-LIBS         += OpenSim_SimTKcommon.lib
-LIBS         += SimTKlapack.lib
-LIBS         += pthreadVC2.lib
-LIBS         += osimCommon.lib
-LIBS         += osimSimulation.lib
-LIBS         += osimAnalyses.lib
-LIBS         += osimActuators.lib
-LIBS         += osimTools.lib
-}
 
 #--------------------------------------------------------------------
 # Header files for source code
@@ -129,6 +112,24 @@ SOURCES      += ./OpenSimQtSourceCode/OpenSimQtGui.cpp
 SOURCES      += ./OpenSimQtSourceCode/OpenSimQtStartSimulation.cpp
 
 #--------------------------------------------------------------------
+# List of additional include and library paths for Simbody.
+# If using Simbody (not OpenSim API), ensure folder containing Simbody .dlls are
+# on Windows computer's PATH environment variable, e.g. C:\Simbody\bin is on PATH.
+#--------------------------------------------------------------------
+INCLUDEPATH  += /Simbody/include/
+QMAKE_LIBDIR += /Simbody/lib/
+
+#--------------------------------------------------------------------
+# List of additional include and library paths for OpenSim API
+# If using OpenSim API ensure folder containing OpenSim API .dlls are on Windows
+# computer's PATH environment variable, e.g. C:\OpenSimToEndUser\bin is on PATH.
+#--------------------------------------------------------------------
+INCLUDEPATH  += /OpenSimToEndUser/sdk/include/
+INCLUDEPATH  += /OpenSimToEndUser/sdk/include/OpenSim/
+INCLUDEPATH  += /OpenSimToEndUser/sdk/include/SimTK/include/
+QMAKE_LIBDIR += /OpenSimToEndUser/sdk/lib/
+
+#--------------------------------------------------------------------
 # Platform-specific settings.
 # win32  enabled for Windows platforms
 # unix   enabled for Unix platforms - including macx
@@ -136,37 +137,55 @@ SOURCES      += ./OpenSimQtSourceCode/OpenSimQtStartSimulation.cpp
 #--------------------------------------------------------------------
 win32{
    # Windows only commands here
+   LIBS         += pthreadVC2.lib
+   LIBS         += SimTKlapack.lib
+
+   CONFIG( release, debug|release ){
+   LIBS         += SimTKsimbody.lib    #  Old: OpenSim_SimTKsimbody.lib
+   LIBS         += SimTKmath.lib       #  Old: OpenSim_SimTKmath.lib
+   LIBS         += SimTKcommon.lib     #  Old: OpenSim_SimTKcommon.lib
+   LIBS         += osimCommon.lib
+   LIBS         += osimSimulation.lib
+   LIBS         += osimAnalyses.lib
+   LIBS         += osimActuators.lib
+   LIBS         += osimTools.lib
+   }
+
+   CONFIG( debug, debug|release ){
+   LIBS         += SimTKsimbody_d.lib
+   LIBS         += SimTKmath_d.lib
+   LIBS         += SimTKcommon_d.lib
+   LIBS         += osimCommon_d.lib
+   LIBS         += osimSimulation_d.lib
+   LIBS         += osimAnalyses_d.lib
+   LIBS         += osimActuators_d.lib
+   LIBS         += osimTools_d.lib
+   }
+
    # DEF_FILE   .def file to be linked against for the application.
    # RC_FILE     resource file for the application.
    # RES_FILE    resource file to be linked against for the application.
 }
-#--------------------------------------
-else macx{
-   # MacOSx only commands here
+#---------------------------------------------
+else macx{         # MacOSx only commands here
 }
-#--------------------------------------
-else unix:!macx{
-   # Linux only commands here
+#---------------------------------------------
+else unix:!macx{   # Linux only commands here
 }
 
 
 
 #--------------------------------------------------------------------
 # If using Simbody (not OpenSim API) use the following.
-# Ensure  .dlls are on Windows computer's PATH environment variable, e.g. C:\Simbody\bin is on PATH.
 #--------------------------------------------------------------------
-#  INCLUDEPATH  += /Simbody/include/
-#  QMAKE_LIBDIR += /Simbody/lib
-#  win32:CONFIG(1 || release)
-#  {
+#  win32:CONFIG(release){
 #  LIBS         += SimTKsimbody.lib
 #  LIBS         += SimTKmath.lib
 #  LIBS         += SimTKcommon.lib
 #  LIBS         += SimTKlapack.lib
 #  LIBS         += pthreadVC2.lib
 #  }
-#  win32:CONFIG(0 || debug)
-#  {
+#  win32:CONFIG(0 || debug){
 #  LIBS         += SimTKsimbody_d.lib
 #  LIBS         += SimTKmath_d.lib
 #  LIBS         += SimTKcommon_d.lib

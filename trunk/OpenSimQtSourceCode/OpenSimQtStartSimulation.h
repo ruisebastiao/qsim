@@ -59,13 +59,13 @@ class OpenSimQtStartSimulation : public QObject
     Q_OBJECT
 
 public:
-    OpenSimQtStartSimulation()  {;}
+	OpenSimQtStartSimulation( ) {;}
 
 public slots:
     void  StartSimulation( )  
     { 
-   //    QLibrary library("Simbody");
-   //    library.load();
+       // QLibrary simbodyLibrary( "Simbody" );  
+	   // simbodyLibrary.load();
        StartAndRunSimulationMathematics(); 
     }
 };

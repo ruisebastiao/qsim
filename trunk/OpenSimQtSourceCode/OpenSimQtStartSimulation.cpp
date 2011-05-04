@@ -43,6 +43,7 @@
    #include <OpenSim.h>           // Includes all OSimAPI header files.
    namespace OSimAPI = OpenSim;   // Avoid confusion between OpenSimQt and OpenSim namespaces
    using namespace OSimAPI;
+   using namespace SimTK;
 #endif
 
 //------------------------------------------------------------------------------
@@ -83,10 +84,12 @@ bool  StartAndRunSimulationMathematicsInsideExceptionHandling( )
 		OpenSim::Body& ground = osimModel.getGroundBody();
 
 		// Add display geometry to the ground to visualize in the GUI
+		FILE *Fptr = fopen( "\\OpenSim2.2.1\\sdk\\APIExamples\\ExampleMain\\ground.vtp", "r" );
+
 		ground.addDisplayGeometry( "\\OpenSim2.2.1\\sdk\\APIExamples\\ExampleMain\\ground.vtp" );
 		ground.addDisplayGeometry( "\\OpenSim2.2.1\\sdk\\APIExamples\\ExampleMain\\anchor1.vtp" );
 		ground.addDisplayGeometry( "\\OpenSim2.2.1\\sdk\\APIExamples\\ExampleMain\\anchor2.vtp" );
-#elif 0
+
 		// BLOCK BODY
 
 		// Specify properties of a 20 kg, 0.1 m^3 block body
@@ -185,7 +188,7 @@ bool  StartAndRunSimulationMathematicsInsideExceptionHandling( )
 		// Create new floor contact halfspace
 		ContactHalfSpace *floor = new ContactHalfSpace(SimTK::Vec3(0), SimTK::Vec3(0, 0, -0.5*SimTK_PI), ground, "floor");
 		// Create new cube contact mesh
-		OpenSim::ContactMesh *cube = new OpenSim::ContactMesh("blockRemesh192.obj", SimTK::Vec3(0), SimTK::Vec3(0), *block, "cube");
+		OpenSim::ContactMesh *cube = new OpenSim::ContactMesh("\\OpenSim2.2.1\\sdk\\APIExamples\\ExampleMain\\blockRemesh192.obj", SimTK::Vec3(0), SimTK::Vec3(0), *block, "cube");
 
 		// Add contact geometry to the model
 		osimModel.addContactGeometry(floor);
@@ -260,7 +263,7 @@ bool  StartAndRunSimulationMathematicsInsideExceptionHandling( )
 		//////////////////////////
 
 		// Initialize the system and get the default state
-		SimTK::State& si = osimModel.initSystem();
+		SimTK::State &si = osimModel.initSystem();
 
 		// Define non-zero (defaults are 0) states for the free joint
 		CoordinateSet& modelCoordinateSet = osimModel.updCoordinateSet();
@@ -273,7 +276,7 @@ bool  StartAndRunSimulationMathematicsInsideExceptionHandling( )
 
 		// Create the integrator, force reporter, and manager for the simulation.
 		// Create the integrator
-		SimTK::RungeKuttaMersonIntegrator integrator(osimModel.getSystem());
+		SimTK::RungeKuttaMersonIntegrator integrator( osimModel.getMultibodySystem() );
 		integrator.setAccuracy(1.0e-4);
 
 		// Create the force reporter
