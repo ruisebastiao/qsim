@@ -109,7 +109,8 @@ HEADERS      += ./OpenSimQtSourceCode/OpenSimQtStartSimulation.h
 #--------------------------------------------------------------------
 SOURCES      += ./OpenSimQtSourceCode/OpenSimQtMain.cpp
 SOURCES      += ./OpenSimQtSourceCode/OpenSimQtGui.cpp
-SOURCES      += ./OpenSimQtSourceCode/OpenSimQtStartSimulation.cpp
+SOURCES      += ./OpenSimQtSourceCode/OpenSimQtStartSimulationGui.cpp
+SOURCES      += ./OpenSimQtSourceCode/OpenSimQtStartSimulationNoGui.cpp
 
 #--------------------------------------------------------------------
 # List of additional include and library paths for Simbody.

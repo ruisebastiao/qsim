@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// File:     OpenSimQtStartSimulation.h
+// File:     OpenSimQtStartSimulationGui.cpp
 // Class:    OpenSimQtStartSimulation
 // Parent:   QObject
 // Purpose:  Catches the Qt widget signal that starts the simulation.
@@ -38,39 +38,29 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-#include <QObject>
-
-
-//------------------------------------------------------------------------------
-#ifndef  OPENSIMQTSTARTSIMULATION_H__ 
-#define  OPENSIMQTSTARTSIMULATION_H__
-
+#include "OpenSimQtStartSimulation.h"
 
 //------------------------------------------------------------------------------
 namespace OpenSimQt {
 
-// The following ANSI-standard C++ function separates the Qt portion of this code
-// with the portion of the code that does the simulation-mathematics.
-bool  StartAndRunSimulationMathematics( );
 
-//-----------------------------------------------------------------------------
-class OpenSimQtStartSimulation : public QObject
+//------------------------------------------------------------------------------
+void  OpenSimQtStartSimulation::StartSimulation( )
 {
-    Q_OBJECT
+   // Qt provides four kinds of buttons: QPushButton, QCheckBox, QRadioButton, and QToolButton.
+   // QPushButton widgetPushButtonToStartSimulation( "Push button to start simulation", 0 );
+   // widgetPushButtonToQuit.resize( 600, 180 );
+   // QObject::connect( &widgetPushButtonToStartSimulation, SIGNAL( clicked() ), &app, SLOT( quit() ) );
+   // mainWindowLayoutManager.addWidget( &widgetPushButtonToQuit );
 
-public:
-	 OpenSimQtStartSimulation() {;}
-
-public slots:
-   void  StartSimulation();  
-};
-
+   // QLibrary simbodyLibrary( "Simbody" );
+   // simbodyLibrary.load();
+   StartAndRunSimulationMathematics();
+}
 
 
 //------------------------------------------------------------------------------
 }  // End of namespace OpenSimQt
 
 
-//--------------------------------------------------------------------------
-#endif  // OPENSIMQTSTARTSIMULATION_H__
-//--------------------------------------------------------------------------
+
