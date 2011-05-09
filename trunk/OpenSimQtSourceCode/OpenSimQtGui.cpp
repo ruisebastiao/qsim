@@ -78,7 +78,10 @@ int OpenSimQtGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArgu
    // Widgets can contain other widgets.
    // Widgets are always created hidden to customize before showing (avoiding flicker).
    // Note: The title of the main application window cannot be made bold, etc., as it is controlled by OS, not Qt.
-   QWidget mainWindowInApplication( 0, Qt::Window );
+   QWidget *mainWindowParentNull = NULL;
+   Qt::WindowFlags  mainWindowFlags = Qt::Window;
+   // QMainWindow mainWindowInApplication( mainWindowParentNull, mainWindowFlags );
+   QWidget mainWindowInApplication( mainWindowParentNull, mainWindowFlags );
    mainWindowInApplication.setWindowTitle( "OpenSimQt" );
    mainWindowInApplication.setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
    // mainWindowInApplication.resize( 400, 200 );
@@ -89,7 +92,7 @@ int OpenSimQtGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArgu
    QVBoxLayout mainWindowLayoutManager( &mainWindowInApplication );
 
    // Labels are widgets that contain text and that can be formatted with simple HTML-style formatting.
-   QLabel widgetLabel( "<h1><b><i>Hello</i></b> &nbsp;&nbsp; <font color=blue>world!</font></h1> <h2><b><font color=blue><br>Scott, Sherm, Ayman, Peter, Matt, Chand, Mark, <br>Ajay, Sam, Edith, Jennifer, Joy, Jessie, Paul, Melanie, ...</font color><b><br></h2>", 0  );
+   QLabel widgetLabel( "<h1><b><i>Hello</i></b> &nbsp;&nbsp; <font color=blue>world!</font></h1> <h2><b><font color=blue><br>Scott, Sherm, Ayman, Peter, Matt, Chand, Mark, <br>Ajay, Sam, Edith, Jennifer, Joy, Jessie, Paul, Melanie, ...</font color><b><br></h2>", &mainWindowInApplication );
    widgetLabel.setAlignment( Qt::AlignHCenter );
    mainWindowLayoutManager.addWidget( &widgetLabel );
 
@@ -97,29 +100,29 @@ int OpenSimQtGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArgu
    // Widgets emit signals to indicate use action or a change of state.
    // For example QPushButton emits a clicked() signal when user clicks the button.
    // A signal can be connected to a function (called a "slot")
-   QPushButton widgetPushButtonToQuit( "Push button to quit", 0 );
+   QPushButton widgetPushButtonToQuit( "Push button to quit", &mainWindowInApplication );
    widgetPushButtonToQuit.resize( 600, 180 );
    QObject::connect( &widgetPushButtonToQuit, SIGNAL( clicked() ), &app, SLOT( quit() ) );
    mainWindowLayoutManager.addWidget( &widgetPushButtonToQuit );
 
    // Start a simulation when button is pushed by connecting to a "slot".
-   OpenSimQtStartSimulation startSim;
-   QPushButton widgetPushButtonToSimulate( "Push button to simulate", 0 );
+   OpenSimQtStartSimulation startSim( &mainWindowInApplication );
+   QPushButton widgetPushButtonToSimulate( "Push button to simulate", &mainWindowInApplication );
    widgetPushButtonToSimulate.resize( 600, 180 );
-   QObject::connect( &widgetPushButtonToSimulate, SIGNAL( clicked() ), &startSim, SLOT( StartSimulation() ) );
+   QObject::connect( &widgetPushButtonToSimulate, SIGNAL( clicked() ), &startSim, SLOT( SlotStartSimulationFromMainApplicationWindow() ) );
    mainWindowLayoutManager.addWidget( &widgetPushButtonToSimulate );
 
    // QCheckBox allows for exclusive or non-exclusive selections.
-   QCheckBox simpleCheckBox1( "This is check box 1",  0 );
-   QCheckBox simpleCheckBox2( "This is check box 2",  0 );
-   QCheckBox simpleCheckBox3( "This is check box 3",  0 );
+   QCheckBox simpleCheckBox1( "This is check box 1", &mainWindowInApplication );
+   QCheckBox simpleCheckBox2( "This is check box 2", &mainWindowInApplication );
+   QCheckBox simpleCheckBox3( "This is check box 3", &mainWindowInApplication );
    mainWindowLayoutManager.addWidget( &simpleCheckBox1 );
    mainWindowLayoutManager.addWidget( &simpleCheckBox2 );
    mainWindowLayoutManager.addWidget( &simpleCheckBox3 );
 
    // Radio buttons (do not have to be contained within QGroupBox)
-   QRadioButton simpleRadioButton1( "Random radio button 1", 0 );
-   QRadioButton simpleRadioButton2( "Random radio button 2", 0 );
+   QRadioButton simpleRadioButton1( "Random radio button 1", &mainWindowInApplication );
+   QRadioButton simpleRadioButton2( "Random radio button 2", &mainWindowInApplication );
    mainWindowLayoutManager.addWidget( &simpleRadioButton1 );
    mainWindowLayoutManager.addWidget( &simpleRadioButton2 );
    simpleRadioButton2.setChecked( true );
@@ -153,7 +156,7 @@ int OpenSimQtGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArgu
    // vboxLayoutManagerForRadioButtons.addStretch( 1 );
 
    // Make it so pushing independentPopUpMenuButton causes menu to appear.
-   QMenu menu( 0 ); // ( &mainWindowInApplication );
+   QMenu menu( &mainWindowInApplication );
    // menu.setTitle(  "Menu title" );                    // May only makes sense in certain circumstances.
    menu.addAction( "First  Menu Item" );
    menu.addAction( "Second Menu Item" );
@@ -165,21 +168,21 @@ int OpenSimQtGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArgu
 #if 0
    // QPushButton can display an icon.
    QIcon prettyIcon( "C://test//box1.ico" );
-   QPushButton widgetPrettyPushButton( prettyIcon, "Hi there", 0 );
+   QPushButton widgetPrettyPushButton( prettyIcon, "Hi there", &mainWindowInApplication );
    // widgetPrettyPushButton.resize( 600, 180 );
    mainWindowLayoutManager.addWidget( &widgetPrettyPushButton );
 #endif
 
 #if 0
    // QToolButton is usually used inside a QToolBar.
-   QToolButton  simpleToolButton( 0 );
-   QToolBar     exampleToolBar( "Title of toolbar", 0 );
+   QToolButton  simpleToolButton( &mainWindowInApplication );
+   QToolBar     exampleToolBar( "Title of toolbar", &mainWindowInApplication );
    exampleToolBar.addWidget( &simpleToolButton );
    mainWindowLayoutManager.addWidget( &exampleToolBar );
 #endif
 
    // Progress bar
-   QProgressBar progressBar;
+   QProgressBar progressBar( &mainWindowInApplication );
    progressBar.setOrientation( Qt::Horizontal );
    progressBar.setAlignment( Qt::AlignHCenter );
    progressBar.setRange( 200, 400 );
@@ -188,13 +191,13 @@ int OpenSimQtGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArgu
    mainWindowLayoutManager.addWidget( &progressBar );
 
    // Create spinbox with designated range, increment, etc.
-   QSpinBox widgetSpinBox( 0 );
+   QSpinBox widgetSpinBox( &mainWindowInApplication );
    widgetSpinBox.setRange( 0, 20 );
    widgetSpinBox.setSingleStep( 2 );
    mainWindowLayoutManager.addWidget( &widgetSpinBox );
 
    // Create integer slider with designated range, tick interval, tick position, initial value, etc.
-   QSlider  widgetSlider(Qt::Horizontal, 0 );
+   QSlider  widgetSlider(Qt::Horizontal, &mainWindowInApplication );
    widgetSlider.setRange( 0, 20 );
    widgetSlider.setSingleStep( 2 );      // When user presses Left or Right arrow
    widgetSlider.setPageStep( 10 );       // When user presses Page Up or Page Down.
@@ -208,6 +211,7 @@ int OpenSimQtGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArgu
    widgetSlider.setValue( 4  );
 
    // Show the main window and all its children.
+   // mainWindowInApplication.setCentralWidget( &widgetPushButtonToSimulate );
    mainWindowInApplication.show();
 
    // Pass control of application to Qt.

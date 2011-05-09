@@ -38,6 +38,7 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
+#include "OpenSimQtStandardHeaders.h"
 #include <QObject>
 
 
@@ -51,18 +52,32 @@ namespace OpenSimQt {
 
 // The following ANSI-standard C++ function separates the Qt portion of this code
 // with the portion of the code that does the simulation-mathematics.
-bool  StartAndRunSimulationMathematics( );
+bool  StartAndRunSimulationMathematicsEngineNoGui( );
 
 //-----------------------------------------------------------------------------
 class OpenSimQtStartSimulation : public QObject
 {
-    Q_OBJECT
+   Q_OBJECT
 
 public:
-	 OpenSimQtStartSimulation() {;}
+   // Constructors and destructors.
+   OpenSimQtStartSimulation( QWidget* parentWidget ) { this->SetParentWidget(parentWidget);}
+  ~OpenSimQtStartSimulation() {;}
 
 public slots:
-   void  StartSimulation();  
+   void  SlotStartSimulationFromMainApplicationWindow();  
+   void  SlotStartSimulationFromThisWindowNoGui()  { StartAndRunSimulationMathematicsEngineNoGui(); }
+
+private:
+   // Disable default constructors and/or destructors unless they are needed.
+   OpenSimQtStartSimulation();
+
+   // Private Get/Set methods for class data.
+   QWidget*  GetParentWidget()                         { return myParentWidget; }
+   QWidget*  SetParentWidget( QWidget *parentWidget )  { return myParentWidget = parentWidget; }
+
+   // Class data.
+   QWidget*  myParentWidget;
 };
 
 

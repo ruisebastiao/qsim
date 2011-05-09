@@ -100,15 +100,16 @@ INCLUDEPATH  += /Qt/4.7.2/include/
 #--------------------------------------------------------------------
 # Header files for source code
 #--------------------------------------------------------------------
-HEADERS      += ./OpenSimQtSourceCode/OpenSimQtStandardHeaders.h
+HEADERS      += ./OpenSimQtSourceCode/OpenSimQtGenericFunctions.h
 HEADERS      += ./OpenSimQtSourceCode/OpenSimQtGui.h
+HEADERS      += ./OpenSimQtSourceCode/OpenSimQtStandardHeaders.h
 HEADERS      += ./OpenSimQtSourceCode/OpenSimQtStartSimulation.h
 
 #--------------------------------------------------------------------
 # Source code  (cpp)
 #--------------------------------------------------------------------
-SOURCES      += ./OpenSimQtSourceCode/OpenSimQtMain.cpp
 SOURCES      += ./OpenSimQtSourceCode/OpenSimQtGui.cpp
+SOURCES      += ./OpenSimQtSourceCode/OpenSimQtMain.cpp
 SOURCES      += ./OpenSimQtSourceCode/OpenSimQtStartSimulationGui.cpp
 SOURCES      += ./OpenSimQtSourceCode/OpenSimQtStartSimulationNoGui.cpp
 

@@ -1,7 +1,6 @@
 //-----------------------------------------------------------------------------
-// File:     OpenSimQtStandardHeaders.h
-// Purpose:  Includes standard C/C++ language and OpenSimQt header files.
-//           Directly or indirectly, first header included in most source code files.
+// File:     OpenSimQtGenericFunctions.h
+// Purpose:  Generically useful ANSI C++ standard functions.
 /* ------------------------------------------------------------------------- *
 *                                 OpenSimQt                                  *
 * -------------------------------------------------------------------------- *
@@ -34,37 +33,24 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-#ifndef  OPENSIMQTSTANDARDHEADERS_H__
-#define  OPENSIMQTSTANDARDHEADERS_H__
+#include "OpenSimQtStandardHeaders.h"
+
 
 //------------------------------------------------------------------------------
-// Filename enclosed inside < >  means header file is in the Include directory.
-// Filename enclosed inside " "  means header file is in the current directory.
-#include <cmath>      // Mathematical Constants
-#include <cstdarg>    // Variable Argument Lists
-#include <cstdio>     // Standard Input/Output Functions
-#include <cstdlib>    // Utility Functions
-#include <ctime>      // Time and Date information
-#include <cassert>    // Verify Program Assertion
-#include <cstddef>    // Standard Definitions
-#include <exception>  // Exception handling (e.g., try, catch throw)
+#ifndef  OPENSIMQTGENERICFUNCTIONS_H__
+#define  OPENSIMQTGENERICFUNCTIONS_H__
+
 
 //------------------------------------------------------------------------------
-#define  OPENSIM_QT_DEBUG__   1
+namespace OpenSimQt {
+
+   // Suspend program execution for designated number of milliseconds.
+   inline void  SleepInMilliseconds( const unsigned long numMillisecondsToSleep )  { const clock_t stopClock = numMillisecondsToSleep + std::clock();  while( std::clock() < stopClock ); }
 
 //------------------------------------------------------------------------------
-#ifdef _WIN32
-   // Disable any possibly annoying warnings. 
-   #pragma warning( disable: 4100 )    // For Microsoft Visual Studio 2008, disable warning for un-referenced formal parameter.
-   #pragma warning( disable: 4189 )    // For Microsoft Visual Studio 2008, disable warning for un-referenced local variable.
-   // If necessary to build .dll, enable DLLExport on windows.
-   // #define DLLExport __declspec( dllexport )
-#else
-   #define DLLExport
-#endif
+}  // End of namespace OpenSimQT
 
 
 //-----------------------------------------------------------------------------
-#endif  // OPENSIMQTSTANDARDHEADERS_H__
+#endif  // OPENSIMQTGENERICFUNCTIONS_H__
 //-----------------------------------------------------------------------------
-
