@@ -3,15 +3,13 @@
 // Purpose:  Includes standard C/C++ language and OpenSimQt header files.
 //           Directly or indirectly, first header included in most source code files.
 /* ------------------------------------------------------------------------- *
-*                                 OpenSimQt                                  *
-* -------------------------------------------------------------------------- *
 * OpenSimQt was developed with support from Simbios (the NIH National Center *
 * for Physics-Based Simulation Biological Structures at Stanford) under NIH  *
 * Roadmap for Medical Research grant U54 GM072970 and from NCSRR (National   *
 * Center for Simulation in Rehabilitation Research) under NIH research       *
 * infrastructure grant R24 HD065690.                                         *
 *                                                                            *
-* Portions copyright (c) 2011 the Authors and Stanford University.           *
+* Portions copyright (c) 2011 the Authors and/or and Stanford University.    *
 * Authors: Paul Mitiguy                                                      *
 * Contributors: Ayman Habib, Michael Sherman                                 *
 *                                                                            *
@@ -28,7 +26,7 @@
 *                                                                            *
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR *
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   *
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    *
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL   *
 * THE AUTHORS, CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,    *
 * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR      *
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
