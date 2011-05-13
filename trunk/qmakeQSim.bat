@@ -20,11 +20,11 @@ rem 2nd folder  QSimCompilerMisc  contains build folders (debug/release).
 rem ------------------------------------------------------------------
 @echo on
 echo .
-cd ..\..\QSimCompilerMisc
-qmake  ..\QSimSourceCode\trunk\QSim.pro
-cd ..\QSimSourceCode\trunk
+cd ..\QSimCompilerMisc
+qmake  ..\QSimSourceCode\QSim.pro
+cd ..\QSimSourceCode
 @echo.
-@echo  Created  ..\..\QSimCompilerMisc\QSim.vcproj  
+@echo  Created  ..\QSimCompilerMisc\QSim.vcproj  
 @echo.
 
 
