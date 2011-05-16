@@ -59,32 +59,48 @@ public:
 
 private slots:
    // Slots for file menu.
-   bool  ExitProgramSlot()   { return true; }
-   void  NewFileSlot()       {;}  
-   bool  OpenFileSlot()      { return true; }
-   bool  SaveFileSlot()      { return true; }
-   bool  SaveFileAsSlot()    { return true; }
+   void  ExitProgramSlot() { QCoreApplication::quit(); }
+   void  NewFileSlot()     { ; }  
+   void  OpenFileSlot()    { ; }
+   void  SaveFileSlot()    { ; }
+   void  SaveFileAsSlot()  { ; }
    
+   // Slots for edit menu.
+   void  EditCutSlot()     { ; }
+   void  EditCopySlot()    { ; }
+   void  EditPasteSlot()   { ; }
+
    // Slots for help menu.
-   // void  AboutThisProgramInfoSlot() {;}
+   void  HelpAboutSlot()   { ; }
+   void  HelpHelpSlot()    { ; }
 
 private:
+   void  AddActionToMainWindowMenu( QAction *action, QMenu *mainWindowMenu, const char *textName, const QKeySequence& keySequenceShortcut, const char *pathToIconFile );
+   void  AddActionToMainWindowMenu( QAction *action, QMenu *mainWindowMenu, const char *textName, const char *pathToIconFile );
    void  CreateFileMenu();
-   // void  CreateEditMenu();
-   // void  CreateHelpMenu();
+   void  CreateEditMenu();
+   void  CreateHelpMenu();
    // void  CreateToolBars();
    // void  CreateStatusBar();
 
-   // Class data.
-   QAction    myExitProgramAction;
-   QAction    myNewFileAction;
-   QAction    myOpenFileAction;
-   QAction    mySaveFileAction;
-   QAction    mySaveFileAsAction;
+   // Actions for file menu.
+   QAction  myExitProgramAction;
+   QAction  myNewFileAction;
+   QAction  myOpenFileAction;
+   QAction  mySaveFileAction;
+   QAction  mySaveFileAsAction;
+
+   // Actions for edit menu.
+   QAction  myEditCutAction;
+   QAction  myEditCopyAction;
+   QAction  myEditPasteAction;
+
+   // Actions for help menu.
+   QAction  myHelpAboutAction;
+   QAction  myHelpContentsAction;
+
 
    QTextEdit  myQSimMainWindowTextEdit;
-   QMenu      myFileMenu;
-
 };
 
 

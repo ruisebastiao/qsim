@@ -35,6 +35,7 @@
 * -------------------------------------------------------------------------- */
 #include "QSimGui.h"
 #include "QSimStartSimulation.h"
+#include "QSimMainWindow.h"
 #include <QtCore>
 #include <QtGui>
 // #include <QtOpenGL>          /* Requires CONFIG += opengl  in qmake file. */
@@ -71,6 +72,25 @@ int QSimGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArguments
    // Create object to manage application-wide resources.
    QApplication app( numberOfCommandLineArguments, arrayOfCommandLineArguments );
 
+   QSimMainWindow mainApplicationWindow;
+   mainApplicationWindow.show();
+
+   // Pass control of application to Qt.
+   // User actions generate events (messages), e.g., "mouse press" and "mouse release".
+   // app.setMainWidget( &widgetPushButton );
+   return app.exec();
+}
+
+
+//------------------------------------------------------------------------------
+}  // End of namespace QSim
+
+
+
+
+
+
+#if 0
    // Create widgets, i.e., "windows gadget" (visual element in user interface).
    // Widgets include labels, buttons, menus, scroll bars, and frames.
    // Widgets can contain other widgets.
@@ -211,15 +231,6 @@ int QSimGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArguments
    // Show the main window and all its children.
    // mainWindowInApplication.setCentralWidget( &widgetPushButtonToSimulate );
    mainWindowInApplication.show();
-
-   // Pass control of application to Qt.
-   // User actions generate events (messages), e.g., "mouse press" and "mouse release".
-   // app.setMainWidget( &widgetPushButton );
-   return app.exec();
-}
-
-
-//------------------------------------------------------------------------------
-}  // End of namespace QSim
+#endif
 
 

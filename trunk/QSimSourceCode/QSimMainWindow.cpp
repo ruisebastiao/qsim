@@ -41,11 +41,31 @@ namespace QSim {
 
 
 //-----------------------------------------------------------------------------
-QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NULL), myOpenFileAction(NULL), mySaveFileAction(NULL), mySaveFileAsAction(NULL)
+QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NULL), myOpenFileAction(NULL), mySaveFileAction(NULL), mySaveFileAsAction(NULL), myEditCopyAction(NULL), myEditCutAction(NULL), myEditPasteAction(NULL), myHelpAboutAction(NULL), myHelpContentsAction(NULL)
 {
    // Complete the class construction.
    this->setCentralWidget( &myQSimMainWindowTextEdit );
    this->CreateFileMenu();
+   this->CreateEditMenu();
+   this->CreateHelpMenu();
+}
+
+
+//------------------------------------------------------------------------------
+void  QSimMainWindow::AddActionToMainWindowMenu( QAction *action, QMenu *mainWindowMenu, const char *textName, const char *pathToIconFile )
+{
+   action->setParent( this );
+   action->setText( tr(textName) );
+// action->setIcon( QIcon(pathToIconFile) );
+   mainWindowMenu->addAction( action );
+}
+
+
+//------------------------------------------------------------------------------
+void  QSimMainWindow::AddActionToMainWindowMenu( QAction *action, QMenu *mainWindowMenu, const char *textName, const QKeySequence& keySequenceShortcut, const char *pathToIconFile )
+{
+   action->setShortcut( keySequenceShortcut );
+   this->AddActionToMainWindowMenu( action, mainWindowMenu, textName, pathToIconFile );
 }
 
 
@@ -58,54 +78,60 @@ void QSimMainWindow::CreateFileMenu()
    QMenuBar* mainWindowMenuBar = this->menuBar();                // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* fileMenu = mainWindowMenuBar->addMenu( tr("&File") );  // Creates/Gets/Owns this menu.
 
-   myNewFileAction.setParent( this );
-   myNewFileAction.setIconText( tr("&NewFile") );
-   // myNewFileAction.setIcon( ":/QSimIcons/NewFileIcon.png" );
-   myNewFileAction.setShortcuts( QKeySequence::New );
+   this->AddActionToMainWindowMenu( &myNewFileAction,  fileMenu, "&New file",  QKeySequence::New,  ":/QSimIcons/NewFileIcon.png" );
    QObject::connect( &myNewFileAction, SIGNAL(triggered()), this, SLOT(NewFileSlot()) );
-   fileMenu->addAction( &myNewFileAction );
 
-   myOpenFileAction.setParent( this );
-   myOpenFileAction.setIconText( tr("&OpenFile") );
-   // myOpenFileAction.setIcon( ":/QSimIcons/OpenFileIcon.png" );
-   myNewFileAction.setShortcuts( QKeySequence::Open );
+   this->AddActionToMainWindowMenu( &myOpenFileAction, fileMenu, "&Open file", QKeySequence::Open, ":/QSimIcons/OpenFileIcon.png" );
    QObject::connect( &myOpenFileAction, SIGNAL(triggered()), this, SLOT(OpenFileSlot()) );
-   fileMenu->addAction( &myOpenFileAction );
 
-   mySaveFileAction.setParent( this );
-   mySaveFileAction.setIconText( tr("&SaveFile") );
-   // mySaveFileAction.setIcon( ":/QSimIcons/SaveFileIcon.png" );
-   mySaveFileAction.setShortcuts( QKeySequence::Save );
+   this->AddActionToMainWindowMenu( &mySaveFileAction, fileMenu, "&Save file", QKeySequence::Save, ":/QSimIcons/SaveFileIcon.png" );
    QObject::connect( &mySaveFileAction, SIGNAL(triggered()), this, SLOT(SaveFileSlot()) );
-   fileMenu->addAction( &mySaveFileAction );
 
-   mySaveFileAsAction.setParent( this );
-   mySaveFileAsAction.setIconText( tr("&SaveFileAs") );
-   // mySaveFileAsAction.setIcon( ":/QSimIcons/SaveFileAsIcon.png" );
-   mySaveFileAsAction.setShortcuts( QKeySequence::SaveAs );
+   this->AddActionToMainWindowMenu( &mySaveFileAsAction, fileMenu, "&Save file as", QKeySequence::SaveAs, ":/QSimIcons/SaveFileAsIcon.png" );
    QObject::connect( &mySaveFileAsAction, SIGNAL(triggered()), this, SLOT(SaveFileAsSlot()) );
-   fileMenu->addAction( &mySaveFileAsAction );
 
-   myExitProgramAction.setParent( this );
-   myExitProgramAction.setIconText( tr("&ExitProgram") );
-   // myExitProgramAction.setIcon( ":/QSimIcons/ExitProgramIcon.png" );
-   myNewFileAction.setShortcuts( QKeySequence::New );
-   QObject::connect( &myNewFileAction, SIGNAL(triggered()), this, SLOT(NewFileSlot()) );
    fileMenu->addSeparator();
-   fileMenu->addAction( &myExitProgramAction );
-
-   // editMenu = menuBar()->addMenu(tr("&Edit"));
-   // editMenu->addAction(cutAct);
-   // editMenu->addAction(copyAct);
-   // editMenu->addAction(pasteAct);
-   //
-   // menuBar()->addSeparator();
-   //
-   // helpMenu = menuBar()->addMenu(tr("&Help"));
-   // helpMenu->addAction(aboutAct);
-   // helpMenu->addAction(aboutQtAct);
+   this->AddActionToMainWindowMenu( &myExitProgramAction, fileMenu, "&Quit/Exit program", QKeySequence::Quit, ":/QSimIcons/QuitExitIcon.png" );
+   QObject::connect( &myExitProgramAction, SIGNAL(triggered()), this, SLOT(ExitProgramSlot()) );
 }
 
+
+
+//-----------------------------------------------------------------------------
+void QSimMainWindow::CreateEditMenu()
+{
+   // Create actions (user-interface objects inserted into widgets) that allow a program to standardize
+   // performance and keeps in sync identical commands invocable via menus, toolbar buttons, and/or keyboard shortcuts.
+   //---------------------------------------
+   QMenuBar* mainWindowMenuBar = this->menuBar();                // Creates/Gets/Owns QMainWindow menuBar.
+   QMenu* editMenu = mainWindowMenuBar->addMenu( tr("&Edit") );  // Creates/Gets/Owns this menu.
+
+   this->AddActionToMainWindowMenu( &myEditCutAction,   editMenu, "&Cut",   QKeySequence::Cut,   ":/QSimIcons/EditCutIcon.png" );
+   QObject::connect( &myEditCutAction,   SIGNAL(triggered()), this, SLOT(EditCutSlot()) );
+
+   this->AddActionToMainWindowMenu( &myEditCopyAction,  editMenu, "&Copy",  QKeySequence::Copy,  ":/QSimIcons/EditCopyIcon.png" );
+   QObject::connect( &myEditCopyAction,  SIGNAL(triggered()), this, SLOT(EditCopySlot()) );
+
+   this->AddActionToMainWindowMenu( &myEditPasteAction, editMenu, "&Paste", QKeySequence::Paste, ":/QSimIcons/EditPasteIcon.png" );
+   QObject::connect( &myEditPasteAction, SIGNAL(triggered()), this, SLOT(EditPasteSlot()) );
+}
+
+
+//-----------------------------------------------------------------------------
+void QSimMainWindow::CreateHelpMenu()
+{
+   // Create actions (user-interface objects inserted into widgets) that allow a program to standardize
+   // performance and keeps in sync identical commands invocable via menus, toolbar buttons, and/or keyboard shortcuts.
+   //---------------------------------------
+   QMenuBar* mainWindowMenuBar = this->menuBar();                // Creates/Gets/Owns QMainWindow menuBar.
+   QMenu* helpMenu = mainWindowMenuBar->addMenu( tr("&Help") );  // Creates/Gets/Owns this menu.
+
+   this->AddActionToMainWindowMenu( &myHelpAboutAction, helpMenu, "&About", ":/QSimIcons/HelpAboutIcon.png" );
+   QObject::connect( &myHelpAboutAction,   SIGNAL(triggered()), this, SLOT(HelpAboutSlot()) );
+
+   this->AddActionToMainWindowMenu( &myHelpContentsAction,  helpMenu, "&Help",  QKeySequence::HelpContents,  ":/QSimIcons/HelpContentsIcon.png" );
+   QObject::connect( &myHelpContentsAction,   SIGNAL(triggered()), this, SLOT(HelpContentsSlot()) );
+}
 
 
 
