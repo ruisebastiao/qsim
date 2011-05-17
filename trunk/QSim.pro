@@ -70,15 +70,13 @@ win32{
 #--------------------------------------------------------------------
 macx{
    TEMPLATE   = app
-
    #-----------------------------------------------------------------
    # qmake can automatically generate build rules for linking against frameworks in the standard framework directory on Mac OS X,
    # located at /Library/Frameworks/.  Specify other directories with the QMAKE_LFLAGS linker option.
    # The framework itself is linked by appending the -framework options and the name of the framework to the LIBS variable.
    # Example: QMAKE_LFLAGS += -F/path/to/framework/directory/
    # Example: LIBS += -framework TheFramework
-   INCLUDEPATH += /Library/Frameworks/
-
+   INCLUDEPATH += /Library/Frameworks
    // On Macintosh OSX, a GUI application must be deployed in a bundle.
    // See: http://doc.qt.nokia.com/latest/deployment-mac.html
    // A bundle is a single entity, allows drag-and-drop installation, and the program easily finds its info in the bundle.
@@ -87,7 +85,6 @@ macx{
    // These files may be hidden.  From a Terminal prompt, view them by typing,  ls -la
    // To create a Macintosh OSX command line tool (that does not used a bundle", use
    // CONFIG -= app_bundle
-
 }
 
 #--------------------------------------------------------------------
