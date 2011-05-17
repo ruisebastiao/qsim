@@ -82,6 +82,7 @@ void  QSimStartSimulation::SlotStartSimulationFromMainApplicationWindow( )
 }
 
 
+
 //------------------------------------------------------------------------------
 }  // End of namespace QSim
 

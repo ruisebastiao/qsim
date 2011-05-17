@@ -34,6 +34,7 @@
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
 #include "CppStandardHeaders.h"
+#include "QSimStartSimulation.h"
 #include <QtCore>
 #include <QtGui>
 
@@ -71,8 +72,11 @@ private slots:
    void  EditPasteSlot()   { ; }
 
    // Slots for help menu.
-   void  HelpAboutSlot()   { ; }
+   void  HelpAboutSlot()   { this->CreateCrazyWidget(); }
    void  HelpHelpSlot()    { ; }
+
+   // Slots for Simulate menu.
+   void  SlotStartSimulationFromMainApplicationWindow() { myStartSimulationBroker.SlotStartSimulationFromThisWindowNoGui(); }  
 
 private:
    void  AddActionToMainWindowMenu( QAction *action, QMenu *mainWindowMenu, const char *textName, const QKeySequence& keySequenceShortcut, const char *pathToIconFile );
@@ -80,6 +84,9 @@ private:
    void  CreateFileMenu();
    void  CreateEditMenu();
    void  CreateHelpMenu();
+   void  CreateSimulateMenu();
+   void  CreateCrazyWidget();
+
    // void  CreateToolBars();
    // void  CreateStatusBar();
 
@@ -99,7 +106,13 @@ private:
    QAction  myHelpAboutAction;
    QAction  myHelpContentsAction;
 
+   // Actions for Simulate menu.
+   QAction  mySimulateStartAction;
 
+   // Class that brokers simulation.
+   QSimStartSimulation  myStartSimulationBroker;
+
+   // Currently the "central widget".
    QTextEdit  myQSimMainWindowTextEdit;
 };
 

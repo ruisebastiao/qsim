@@ -59,7 +59,7 @@ class QSimStartSimulation : public QObject
 
 public:
    // Constructors and destructors.
-   QSimStartSimulation( QWidget* parentWidget ) { this->SetParentWidget(parentWidget);}
+   QSimStartSimulation( QObject* parentWidget ) { this->setParent(parentWidget);}
   ~QSimStartSimulation() {;}
 
 public slots:
@@ -70,12 +70,6 @@ private:
    // Disable default constructors and/or destructors unless they are needed.
    QSimStartSimulation();
 
-   // Private Get/Set methods for class data.
-   QWidget*  GetParentWidget()                         { return myParentWidget; }
-   QWidget*  SetParentWidget( QWidget *parentWidget )  { return myParentWidget = parentWidget; }
-
-   // Class data.
-   QWidget*  myParentWidget;
 };
 
 

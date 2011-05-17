@@ -29,12 +29,12 @@
 # DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR      *
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 # USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
-# ------------------------------------------------------------------
+# -------------------------------------------------------------------------- *
 # List of additional include and library paths for OpenSimAPI.
-# INCLUDEPATH - is the location of directory with header files
-# LIBPATH     - is the location of directory with *.a files
-# LIBS        - contains libraries you want to use in application
-#               Note: LIBS are found along QMAKE_LIBDIR (formerly LIBPATH).
+# INCLUDEPATH  - is the location of directory with .h header files
+# QMAKE_LIBDIR - is the location of directory with .a files (formerly LIBPATH)
+# LIBS         - contains libraries you want to use in application
+#                Note: LIBS are found along QMAKE_LIBDIR (formerly LIBPATH).
 # Note: Enclose names in paths in quotes if there are spaces, e.g., "/Program Files"
 #--------------------------------------------------------------------
 INCLUDEPATH  += /OpenSimToEndUser/sdk/include/
@@ -43,12 +43,9 @@ INCLUDEPATH  += /OpenSimToEndUser/sdk/include/SimTK/include/
 QMAKE_LIBDIR += /OpenSimToEndUser/sdk/lib/
 
 #--------------------------------------------------------------------
-# Platform-specific settings.
-# win32  enabled for Windows platforms
-# unix   enabled for Unix platforms - including macx
-# macx   enabled for Unix platforms - and MacOS platforms
+# Windows only commands here
 #--------------------------------------------------------------------
-win32{             # Windows only commands here
+win32{
 
    CONFIG( release, debug|release ){
    LIBS         += osimCommon.lib
@@ -70,18 +67,26 @@ win32{             # Windows only commands here
    # PATH environment variable, e.g. C:\OpenSimToEndUser\bin is on PATH.
    #-----------------------------------------------------------------
 }
-#---------------------------------------------
-else macx{         # MacOSx only commands here
+
+#--------------------------------------------------------------------
+# MacOSx only commands here
+#--------------------------------------------------------------------
+macx{
    #-----------------------------------------------------------------
    # Ensure .so files are in the executable's folder (best) or listed on computer's
    # DYLD_LIBRARY_PATH environment variable, e.g. /OpenSimToEndUser/bin is on DYLD_LIBRARY_PATH
    #-----------------------------------------------------------------
 }
-#---------------------------------------------
-else unix:!macx{   # Linux only commands here
+
+#--------------------------------------------------------------------
+# Linux only commands here
+#--------------------------------------------------------------------
+unix:!macx{
    #-----------------------------------------------------------------
    # Ensure .so files are in the executable's folder (best) or listed on computer's
    # LD_LIBRARY_PATH environment variable, e.g. /OpenSimToEndUser/bin is on LD_LIBRARY_PATH
    #-----------------------------------------------------------------
 }
+
+
 

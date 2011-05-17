@@ -43,7 +43,7 @@
 namespace QSim {
 
    // Suspend program execution for designated number of milliseconds.
-   inline void  SleepInMilliseconds( const unsigned long numMillisecondsToSleep )  { const clock_t stopClock = numMillisecondsToSleep + std::clock();  while( std::clock() < stopClock ); }
+   inline void  SleepInMilliseconds( const unsigned long numMillisecondsToSleep )  { const clock_t stopClock = numMillisecondsToSleep + std::clock();  while( std::clock() < stopClock ) {;} }
 
 //------------------------------------------------------------------------------
 }  // End of namespace OpenSimQT

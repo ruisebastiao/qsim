@@ -50,12 +50,9 @@
 # CONFIG += windows   (full windows  application when TEMPLATE = app)
 # CONFIG += console   (basic console application when TEMPLATE = app)
 #--------------------------------------------------------------------
-# Platform-specific settings.
-# win32  enabled for Windows platforms
-# unix   enabled for Unix platforms - including macx
-# macx   enabled for Unix platforms - and MacOS platforms
+# Windows only commands here
 #--------------------------------------------------------------------
-win32{             # Windows only commands here
+win32{
 
    TEMPLATE   = vcapp    # Change vcapp to app if not using Microsoft Visual Studio.
    INCLUDEPATH  += /Qt/4.7.2/include/
@@ -63,13 +60,23 @@ win32{             # Windows only commands here
    # DEF_FILE   .def file to be linked against for the application.
    # RC_FILE     resource file for the application.
    # RES_FILE    resource file to be linked against for the application.
-   # Note:       On Windows 32-bit, _may_ have to set environment variables:
-   #             QMAKESPEC   to   win32-msvc2008
-   #             PATH        add  C:\Qt\4.7.2\bin\
+   # Note: On Windows 32-bit, _may_ have to set environment variables:
+   #       QMAKESPEC   to   win32-msvc2008
+   #       PATH        add  C:\Qt\4.7.2\bin\
 }
-#---------------------------------------------
-else macx{         # MacOSx only commands here
+
+#--------------------------------------------------------------------
+# MacOSx only commands here
+#--------------------------------------------------------------------
+macx{
    TEMPLATE   = app
+
+   #-----------------------------------------------------------------
+   # qmake can automatically generate build rules for linking against frameworks in the standard framework directory on Mac OS X,
+   # located at /Library/Frameworks/.  Specify other directories with the QMAKE_LFLAGS linker option.
+   # The framework itself is linked by appending the -framework options and the name of the framework to the LIBS variable.
+   # Example: QMAKE_LFLAGS += -F/path/to/framework/directory/
+   # Example: LIBS += -framework TheFramework
    INCLUDEPATH += /Library/Frameworks/
 
    // On Macintosh OSX, a GUI application must be deployed in a bundle.
@@ -82,8 +89,11 @@ else macx{         # MacOSx only commands here
    // CONFIG -= app_bundle
 
 }
-#---------------------------------------------
-else unix:!macx{   # Linux only commands here
+
+#--------------------------------------------------------------------
+# Linux only commands here
+#--------------------------------------------------------------------
+unix:!macx{
    TEMPLATE   = app
 }
 
@@ -103,11 +113,11 @@ CONFIG    += warn_on            # warn_on  or  warn_off
 # CONFIG += qt  includes core and gui by default.
 # core:         QtCore module contains core non-GUI functionality. All other Qt modules rely on this module.
 # gui:          QtGui  module extends QtCore with GUI functionality.
+# opengl:       QtOpenGL makes it easy to use OpenGL (rendering 3D graphics) in Qt applications.
+#               QtOpenGL widget class opens an OpenGL display buffer where the OpenGL API renders content.
 # network:      QtNetwork module allows easy-to-use portable TCP/IP clients and servers.
 #               High level classes include QHttp and QFtp that implement specific application-level protocols, and
 #               lower-level classes such as QTcpSocket, QTcpServer, and QUdpSocket.
-# opengl:       QtOpenGL makes it easy to use OpenGL (rendering 3D graphics) in Qt applications.
-#               QtOpenGL widget class opens an OpenGL display buffer where the OpenGL API renders content.
 # sql:          QtSql provides data-aware widgets and seamless database integration to Qt.
 # svg:          QtSvd provides Scalable Vector Graphics (SVG 1.1) is a language for 2D graphics in XML and 3GPP mobile phones.
 # xml:          QtXml module provides C++ implementations of SAX (event-based tandard interface for XML parsers, see http://www.saxproject.org) and
@@ -116,8 +126,8 @@ CONFIG    += warn_on            # warn_on  or  warn_off
 CONFIG    += qt
 CONFIG    += core       # Qtcore module is included by default with CONFIG += qt
 CONFIG    += gui        # Qtgui modules is included by default with CONFIG += qt
+CONFIG    += opengl     # QtOpenGL module  (3D Rendering graphics)
 #  CONFIG    += network # QtNetwork module (TCP/IP, http, and sockets)
-#  CONFIG    += opengl  # QtOpenGL module  (3D Rendering graphics)
 #  CONFIG    += sql     # QtSql module     (Database)
 #  CONFIG    += svg     # QtSvg module
 #  CONFIG    += xml     # QtXml module
@@ -125,10 +135,10 @@ CONFIG    += gui        # Qtgui modules is included by default with CONFIG += qt
 
 #--------------------------------------------------------------------
 # List of additional paths e.g., for Qt header and library files.
-# INCLUDEPATH - is the location of directory with header files
-# LIBPATH     - is the location of directory with *.a files
-# LIBS        - contains libraries you want to use in application
-#               Note: LIBS are found along QMAKE_LIBDIR (formerly LIBPATH).
+# INCLUDEPATH  - is the location of directory with .h header files
+# QMAKE_LIBDIR - is the location of directory with .a files (formerly LIBPATH)
+# LIBS         - contains libraries you want to use in application
+#                Note: LIBS are found along QMAKE_LIBDIR (formerly LIBPATH).
 # Note: Enclose names in paths in quotes if there are spaces, e.g., "/Program Files"
 #--------------------------------------------------------------------
 # Header files for source code
@@ -157,6 +167,3 @@ include(QSimLinkedToSimbody.pro)
 # include(QSimLinkedToOpenSimAPI.pro)
 
 
-# Mac/Linux start with libThenNameOfActualLibrary then .so
-# gcc -L/usr/bin/Simbody/lib  specifies the path to the library.
-# gcc -lactualNameOfLibraryFile designates a library to link with.
