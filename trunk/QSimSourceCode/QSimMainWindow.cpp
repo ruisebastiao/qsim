@@ -87,7 +87,7 @@ void QSimMainWindow::CreateFileMenu()
    this->AddActionToMainWindowMenu( &mySaveFileAction, fileMenu, "&Save file", QKeySequence::Save, ":/QSimIcons/SaveFileIcon.png" );
    QObject::connect( &mySaveFileAction, SIGNAL(triggered()), this, SLOT(SaveFileSlot()) );
 
-   this->AddActionToMainWindowMenu( &mySaveFileAsAction, fileMenu, "&Save file as", QKeySequence::SaveAs, ":/QSimIcons/SaveFileAsIcon.png" );
+   this->AddActionToMainWindowMenu( &mySaveFileAsAction, fileMenu, "Save file as", QKeySequence::SaveAs, ":/QSimIcons/SaveFileAsIcon.png" );
    QObject::connect( &mySaveFileAsAction, SIGNAL(triggered()), this, SLOT(SaveFileAsSlot()) );
 
    fileMenu->addSeparator();
