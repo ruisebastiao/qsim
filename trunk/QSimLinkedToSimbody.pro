@@ -37,8 +37,6 @@
 #               Note: LIBS are found along QMAKE_LIBDIR (formerly LIBPATH).
 # Note: Enclose names in paths in quotes if there are spaces, e.g., "/Program Files"
 #--------------------------------------------------------------------
-INCLUDEPATH  += /Simbody/include/
-QMAKE_LIBDIR += /Simbody/lib/
 
 #--------------------------------------------------------------------
 # Platform-specific settings.
@@ -47,6 +45,9 @@ QMAKE_LIBDIR += /Simbody/lib/
 # macx   enabled for Unix platforms - and MacOS platforms
 #--------------------------------------------------------------------
 win32{             # Windows only commands here
+
+   INCLUDEPATH  += /Simbody/include/
+   QMAKE_LIBDIR += /Simbody/lib/
 
    LIBS         += pthreadVC2.lib
    LIBS         += SimTKlapack.lib
@@ -70,30 +71,61 @@ win32{             # Windows only commands here
 #---------------------------------------------
 else macx{         # MacOSx only commands here
 
+   INCLUDEPATH  += /usr/local/SimTK/include
+#  QMAKE_LIBDIR += /usr/local/SimTK/lib
+   LIBS += -L/usr/local/SimTK/lib -lSimTKsimbody
+
+   #-----------------------------------------------------------------
+   # qmake can automatically generate build rules for linking against frameworks in the standard framework directory on Mac OS X,
+   # located at /Library/Frameworks/.  Specify other directories with the QMAKE_LFLAGS linker option.
+   # The framework itself is linked by appending the -framework options and the name of the framework to the LIBS variable.
+   # QMAKE_LFLAGS += -F/path/to/framework/directory/
+   # LIBS += -framework TheFramework
+
 #  LIBS         += pthread
 #  LIBS         += SimTKlapack
 
    CONFIG( release, debug|release ){
-   LIBS         += SimTKsimbody
+#  LIBS         += -lSimTKsimbody
+#  LIBS         += SimTKsimbody
 #  LIBS         += SimTKmath
 #  LIBS         += SimTKcommon
    }
 
    CONFIG( debug, debug|release ){
-   LIBS         += SimTKsimbody_d
+   LIBS         += -lSimTKsimbody_d
+#  LIBS         += SimTKsimbody_d
 #  LIBS         += SimTKmath_d
 #  LIBS         += SimTKcommon_d
    }
+
    #-----------------------------------------------------------------
    # Ensure .so files are in the executable's folder (best) or listed on computer's
    # DYLD_LIBRARY_PATH environment variable, e.g. /Simbody/bin is on DYLD_LIBRARY_PATH
+   # Sherm says LIBS += SimTKsimbody will recursively include the ones it depends on (all).
    #-----------------------------------------------------------------
 }
 #---------------------------------------------
 else unix:!macx{   # Linux only commands here
+
+   INCLUDEPATH  += /usr/local/SimTK/include
+   QMAKE_LIBDIR += /usr/local/SimTK/lib
+#  LIBS += -L/usr/local/SimTK/lib -lSimTKsimbody
+
+   CONFIG( release, debug|release ){
+   LIBS         += -lSimTKsimbody
+#  LIBS         += SimTKsimbody
+   }
+
+   CONFIG( debug, debug|release ){
+   LIBS         += -lSimTKsimbody_d
+#  LIBS         += SimTKsimbody_d
+   }
+
    #-----------------------------------------------------------------
    # Ensure .so files are in the executable's folder (best) or listed on computer's
    # LD_LIBRARY_PATH environment variable, e.g. /Simbody/bin is on LD_LIBRARY_PATH
+   # Sherm says LIBS += SimTKsimbody will recursively include the ones it depends on (all).
    #-----------------------------------------------------------------
 }
 

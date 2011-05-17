@@ -31,12 +31,17 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 # USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 # -------------------------------------------------------------------------- *
-#   Use 1:  To generate the makefile someName.mak for use with gcc or name:
-#           qmake -o makefile QSim.pro
-#   Use 2:  To generate a Microsoft Visual Studio vcproj file:
+#   Use 1:  To generate a Microsoft Visual Studio vcproj file, start a cmd prompt
+#           from a "test" folder and type the following (use path to QSim.pro file)
+#           qmake QSim.pro
+#   Use 2:  Or if that fails to generate a vcproj file, try:
 #           qmake -tp -vc     QSim.pro
-# ------------------------------------------------------------------
-
+#   Use 3:  To generate a normal Macintosh makefile for gcc, try:
+#           qmake -spec macx-g++ -o makefile pathToFile_QSim.pro
+#   Use 4:  To generate a Macintosh XCode project file, type:
+#           gmake -spec macx-xcode pathToFile_QSim.pro
+#   Use 5:  Or try plain vanilla command for use with gcc:
+#           qmake -o makefile QSim.pro
 # ------------------------------------------------------------------
 # TEMPLATE = app      Creates a Makefile to build an application.
 # TEMPLATE = lib      Creates a Makefile to build a library.
@@ -66,6 +71,16 @@ win32{             # Windows only commands here
 else macx{         # MacOSx only commands here
    TEMPLATE   = app
    INCLUDEPATH += /Library/Frameworks/
+
+   // On Macintosh OSX, a GUI application must be deployed in a bundle.
+   // See: http://doc.qt.nokia.com/latest/deployment-mac.html
+   // A bundle is a single entity, allows drag-and-drop installation, and the program easily finds its info in the bundle.
+   // The computer's environment variables are set in the global profile file (located in /etc/profile).
+   // The user's environment variables are set in the .profile file located in the user's home directory.
+   // These files may be hidden.  From a Terminal prompt, view them by typing,  ls -la
+   // To create a Macintosh OSX command line tool (that does not used a bundle", use
+   // CONFIG -= app_bundle
+
 }
 #---------------------------------------------
 else unix:!macx{   # Linux only commands here
@@ -139,7 +154,9 @@ SOURCES      += ./QSimSourceCode/QSimMainWindow.cpp
 # on Windows computer's PATH environment variable, e.g. C:\Simbody\bin is on PATH.
 #--------------------------------------------------------------------
 include(QSimLinkedToSimbody.pro)
-include(QSimLinkedToOpenSimAPI.pro)
+# include(QSimLinkedToOpenSimAPI.pro)
 
 
-
+# Mac/Linux start with libThenNameOfActualLibrary then .so
+# gcc -L/usr/bin/Simbody/lib  specifies the path to the library.
+# gcc -lactualNameOfLibraryFile designates a library to link with.
