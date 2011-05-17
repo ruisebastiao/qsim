@@ -127,7 +127,7 @@ int QSimGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArguments
    QSimStartSimulation startSim( &mainWindowInApplication );
    QPushButton widgetPushButtonToSimulate( "Push button to simulate", &mainWindowInApplication );
    widgetPushButtonToSimulate.resize( 600, 180 );
-   QObject::connect( &widgetPushButtonToSimulate, SIGNAL( clicked() ), &startSim, SLOT( SlotStartSimulationFromMainApplicationWindow() ) );
+   QObject::connect( &widgetPushButtonToSimulate, SIGNAL( clicked() ), &startSim, SLOT( SlotStartSimulationFromThisWindowNoGui() ) );
    mainWindowLayoutManager.addWidget( &widgetPushButtonToSimulate );
 
    // QCheckBox allows for exclusive or non-exclusive selections.

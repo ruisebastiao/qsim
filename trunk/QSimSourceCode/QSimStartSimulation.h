@@ -50,7 +50,7 @@ namespace QSim {
 
 // The following ANSI-standard C++ function separates the Qt portion of this code
 // with the portion of the code that does the simulation-mathematics.
-bool  StartAndRunSimulationMathematicsEngineNoGui( );
+bool  StartAndRunSimulationMathematicsEngineNoGui();
 
 //-----------------------------------------------------------------------------
 class QSimStartSimulation : public QObject
@@ -63,7 +63,6 @@ public:
   ~QSimStartSimulation() {;}
 
 public slots:
-   void  SlotStartSimulationFromMainApplicationWindow();  
    void  SlotStartSimulationFromThisWindowNoGui()  { StartAndRunSimulationMathematicsEngineNoGui(); }
 
 private:

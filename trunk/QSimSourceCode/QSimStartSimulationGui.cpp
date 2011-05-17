@@ -46,44 +46,6 @@ namespace QSim {
 
 
 //------------------------------------------------------------------------------
-void  QSimStartSimulation::SlotStartSimulationFromMainApplicationWindow( )
-{
-#if 0
-   // Create simulation window.
-   QWidget simulationWindow( this->GetParentWidget(), Qt::Popup );
-   simulationWindow.setWindowTitle( "Simulation window" );
-   simulationWindow.setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-
-   // Create layout manager for simulation window,
-   QVBoxLayout simulationWindowLayoutManager( &simulationWindow );
-
-   // Create button to start simulation.
-   QPushButton widgetPushButtonToStartSimulation( "Push button to start simulation", &simulationWindow );
-   widgetPushButtonToStartSimulation.resize( 600, 180 );
-   QObject::connect( &widgetPushButtonToStartSimulation, SIGNAL( clicked() ), this, SLOT( SlotStartSimulationFromThisWindowNoGui() ) );
-   simulationWindowLayoutManager.addWidget( &widgetPushButtonToStartSimulation );
-
-   // Labels are widgets that contain text and that can be formatted with simple HTML-style formatting.
-   QLabel widgetLabel( "<h1><b><i>Hello</i></b> &nbsp;&nbsp; <font color=blue>world!</font></h1> <h2><b><font color=blue><br>Scott, Sherm, Ayman, Peter, Matt, Chand, Mark, <br>Ajay, Sam, Edith, Jennifer, Joy, Jessie, Paul, Melanie, ...</font color><b><br></h2>", &simulationWindow );
-   widgetLabel.setAlignment( Qt::AlignHCenter );
-   simulationWindowLayoutManager.addWidget( &widgetLabel );
-
-   // Show the simulation window and all its children.
-   simulationWindow.show();
-   simulationWindow.repaint();
-   SleepInMilliseconds( 2000 );
-
-   // Possibly load libraries.
-   // QLibrary simbodyLibrary( "Simbody" );
-   // simbodyLibrary.load();
-#endif
-   // Call functions that contain standard C++ (non-Qt) methods to run simulation.
-   this->SlotStartSimulationFromThisWindowNoGui();
-}
-
-
-
-//------------------------------------------------------------------------------
 }  // End of namespace QSim
 
 

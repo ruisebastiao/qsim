@@ -76,7 +76,7 @@ private slots:
    void  HelpHelpSlot()    { ; }
 
    // Slots for Simulate menu.
-   void  SlotStartSimulationFromMainApplicationWindow() { myStartSimulationBroker.SlotStartSimulationFromThisWindowNoGui(); }  
+   void  SlotStartSimulationFromMainApplicationWindow() { StartAndRunSimulationMathematicsEngineNoGui(); }  
 
 private:
    void  AddActionToMainWindowMenu( QAction *action, QMenu *mainWindowMenu, const char *textName, const QKeySequence& keySequenceShortcut, const char *pathToIconFile );
@@ -108,9 +108,6 @@ private:
 
    // Actions for Simulate menu.
    QAction  mySimulateStartAction;
-
-   // Class that brokers simulation.
-   QSimStartSimulation  myStartSimulationBroker;
 
    // Currently the "central widget".
    QTextEdit  myQSimMainWindowTextEdit;

@@ -42,7 +42,7 @@ namespace QSim {
 
 
 //-----------------------------------------------------------------------------
-QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NULL), myOpenFileAction(NULL), mySaveFileAction(NULL), mySaveFileAsAction(NULL), myEditCutAction(NULL), myEditCopyAction(NULL), myEditPasteAction(NULL), myHelpAboutAction(NULL), myHelpContentsAction(NULL), mySimulateStartAction(NULL), myStartSimulationBroker(NULL)
+QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NULL), myOpenFileAction(NULL), mySaveFileAction(NULL), mySaveFileAsAction(NULL), myEditCutAction(NULL), myEditCopyAction(NULL), myEditPasteAction(NULL), myHelpAboutAction(NULL), myHelpContentsAction(NULL), mySimulateStartAction(NULL)
 {
    // Complete the class construction.
    this->setCentralWidget( &myQSimMainWindowTextEdit );
@@ -50,7 +50,6 @@ QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NU
    this->CreateEditMenu();
    this->CreateHelpMenu();
    this->CreateSimulateMenu();
-   myStartSimulationBroker.setParent( this );
    this->CreateCrazyWidget();
 }
 
@@ -145,7 +144,7 @@ void QSimMainWindow::CreateSimulateMenu()
    QMenu* simulateMenu = mainWindowMenuBar->addMenu( tr("&Simulate") );  // Creates/Gets/Owns this menu.
 
    this->AddActionToMainWindowMenu( &mySimulateStartAction, simulateMenu, "&Start", ":/QSimIcons/SimulateStartIcon.png" );
-   QObject::connect( &mySimulateStartAction,   SIGNAL(triggered()), this, SLOT(SlotStartSimulationFromMainApplicationWindow()) );
+   QObject::connect( &mySimulateStartAction,  SIGNAL(triggered()), this, SLOT( SlotStartSimulationFromMainApplicationWindow()) );
 }
 
 
@@ -186,10 +185,9 @@ void QSimMainWindow::CreateCrazyWidget()
    mainWindowLayoutManager.addWidget( &widgetPushButtonToQuit );
 
    // Start a simulation when button is pushed by connecting to a "slot".
-   QSimStartSimulation startSim( &mainWindowInApplication );
    QPushButton widgetPushButtonToSimulate( "Push button to simulate", &mainWindowInApplication );
    widgetPushButtonToSimulate.resize( 600, 180 );
-   QObject::connect( &widgetPushButtonToSimulate, SIGNAL( clicked() ), &startSim, SLOT( SlotStartSimulationFromMainApplicationWindow() ) );
+   QObject::connect( &widgetPushButtonToSimulate, SIGNAL( clicked() ), this, SLOT( SlotStartSimulationFromThisWindowNoGui() ) );
    mainWindowLayoutManager.addWidget( &widgetPushButtonToSimulate );
 
    // QCheckBox allows for exclusive or non-exclusive selections.

@@ -360,8 +360,8 @@ bool  StartAndRunSimulationMathematicsEngineNoGuiInsideExceptionHandling( )
    // The Simbody visualizer must be able to execute the program VisualizerGUI.exe
    // One way for Simbody to find this program is to set the environment variable
    // SimTK_INSTALL_DIR  with a value  FullPathTo/Simbody/bin  folder.
-//   Visualizer viz(system);
-//   system.addEventReporter(new Visualizer::Reporter(viz, 1./30));
+   Visualizer viz(system);
+   system.addEventReporter(new Visualizer::Reporter(viz, 1./30));
 
    // Initialize the system and state.
 
