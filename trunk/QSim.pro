@@ -1,6 +1,6 @@
-#    File:  QSim.pro
-# Purpose:  Creates compiler files (e.g., makefile or .vcproj file).
-#    Info:  http://doc.trolltech.com/4.2/qmake-tutorial.html
+#    File: QSim.pro
+# Purpose: Creates compiler files (e.g., makefile or .vcproj file).
+#    Info: http://doc.trolltech.com/4.2/qmake-tutorial.html
 # -------------------------------------------------------------------------- *
 # QSim was developed with support from Simbios (the NIH National Center      *
 # for Physics-Based Simulation Biological Structures at Stanford) under NIH  *
@@ -36,10 +36,6 @@
 #   Use 2:  To generate a Microsoft Visual Studio vcproj file:
 #           qmake -tp -vc     QSim.pro
 # ------------------------------------------------------------------
-# Note:     On Windows 32-bit, _may_ have to set environment variables:
-#           QMAKESPEC   to   win32-msvc2008
-#           PATH        add  C:\Qt\4.7.2\bin\
-# ------------------------------------------------------------------
 
 # ------------------------------------------------------------------
 # TEMPLATE = app      Creates a Makefile to build an application.
@@ -48,16 +44,41 @@
 # TEMPLATE = vclib    Creates a Visual Studio Project file to build a library.
 # CONFIG += windows   (full windows  application when TEMPLATE = app)
 # CONFIG += console   (basic console application when TEMPLATE = app)
-# ------------------------------------------------------------------
-TEMPLATE   = vcapp
-CONFIG    += windows
-CONFIG    += debug_and_release  # debug  or  release  or  debug_and_release
-CONFIG    += warn_on            # warn_on  or  warn_off
+#--------------------------------------------------------------------
+# Platform-specific settings.
+# win32  enabled for Windows platforms
+# unix   enabled for Unix platforms - including macx
+# macx   enabled for Unix platforms - and MacOS platforms
+#--------------------------------------------------------------------
+win32{             # Windows only commands here
+
+   TEMPLATE   = vcapp    # Change vcapp to app if not using Microsoft Visual Studio.
+   INCLUDEPATH  += /Qt/4.7.2/include/
+
+   # DEF_FILE   .def file to be linked against for the application.
+   # RC_FILE     resource file for the application.
+   # RES_FILE    resource file to be linked against for the application.
+   # Note:       On Windows 32-bit, _may_ have to set environment variables:
+   #             QMAKESPEC   to   win32-msvc2008
+   #             PATH        add  C:\Qt\4.7.2\bin\
+}
+#---------------------------------------------
+else macx{         # MacOSx only commands here
+   TEMPLATE   = app
+   INCLUDEPATH += /Library/Frameworks/
+}
+#---------------------------------------------
+else unix:!macx{   # Linux only commands here
+   TEMPLATE   = app
+}
 
 #--------------------------------------------------------------------
 # Target on Windows is QSim.exe.  On Macintosh/Linux is QSim.
 #--------------------------------------------------------------------
 TARGET    = QSim
+CONFIG    += windows
+CONFIG    += debug_and_release  # debug  or  release  or  debug_and_release
+CONFIG    += warn_on            # warn_on  or  warn_off
 
 #--------------------------------------------------------------------
 # Configuration settings.
@@ -95,9 +116,6 @@ CONFIG    += gui        # Qtgui modules is included by default with CONFIG += qt
 #               Note: LIBS are found along QMAKE_LIBDIR (formerly LIBPATH).
 # Note: Enclose names in paths in quotes if there are spaces, e.g., "/Program Files"
 #--------------------------------------------------------------------
-INCLUDEPATH  += /Qt/4.7.2/include/
-
-#--------------------------------------------------------------------
 # Header files for source code
 #--------------------------------------------------------------------
 HEADERS      += ./QSimSourceCode/CppStandardHeaders.h
@@ -120,80 +138,8 @@ SOURCES      += ./QSimSourceCode/QSimMainWindow.cpp
 # If using Simbody (not OpenSim API), ensure folder containing Simbody .dlls are
 # on Windows computer's PATH environment variable, e.g. C:\Simbody\bin is on PATH.
 #--------------------------------------------------------------------
-INCLUDEPATH  += /Simbody/include/
-QMAKE_LIBDIR += /Simbody/lib/
-
-#--------------------------------------------------------------------
-# List of additional include and library paths for OpenSim API
-# If using OpenSim API ensure folder containing OpenSim API .dlls are on Windows
-# computer's PATH environment variable, e.g. C:\OpenSimToEndUser\bin is on PATH.
-#--------------------------------------------------------------------
-INCLUDEPATH  += /OpenSimToEndUser/sdk/include/
-INCLUDEPATH  += /OpenSimToEndUser/sdk/include/OpenSim/
-INCLUDEPATH  += /OpenSimToEndUser/sdk/include/SimTK/include/
-QMAKE_LIBDIR += /OpenSimToEndUser/sdk/lib/
-
-#--------------------------------------------------------------------
-# Platform-specific settings.
-# win32  enabled for Windows platforms
-# unix   enabled for Unix platforms - including macx
-# macx   enabled for Unix platforms - and MacOS platforms
-#--------------------------------------------------------------------
-win32{
-   # Windows only commands here
-   LIBS         += pthreadVC2.lib
-   LIBS         += SimTKlapack.lib
-
-   CONFIG( release, debug|release ){
-   LIBS         += SimTKsimbody.lib    #  Old: OpenSim_SimTKsimbody.lib
-   LIBS         += SimTKmath.lib       #  Old: OpenSim_SimTKmath.lib
-   LIBS         += SimTKcommon.lib     #  Old: OpenSim_SimTKcommon.lib
-   LIBS         += osimCommon.lib
-   LIBS         += osimSimulation.lib
-   LIBS         += osimAnalyses.lib
-   LIBS         += osimActuators.lib
-   LIBS         += osimTools.lib
-   }
-
-   CONFIG( debug, debug|release ){
-   LIBS         += SimTKsimbody_d.lib
-   LIBS         += SimTKmath_d.lib
-   LIBS         += SimTKcommon_d.lib
-   LIBS         += osimCommon_d.lib
-   LIBS         += osimSimulation_d.lib
-   LIBS         += osimAnalyses_d.lib
-   LIBS         += osimActuators_d.lib
-   LIBS         += osimTools_d.lib
-   }
-
-   # DEF_FILE   .def file to be linked against for the application.
-   # RC_FILE     resource file for the application.
-   # RES_FILE    resource file to be linked against for the application.
-}
-#---------------------------------------------
-else macx{         # MacOSx only commands here
-}
-#---------------------------------------------
-else unix:!macx{   # Linux only commands here
-}
+include(QSimLinkedToSimbody.pro)
+include(QSimLinkedToOpenSimAPI.pro)
 
 
-
-#--------------------------------------------------------------------
-# If using Simbody (not OpenSim API) use the following.
-#--------------------------------------------------------------------
-#  win32:CONFIG(release){
-#  LIBS         += SimTKsimbody.lib
-#  LIBS         += SimTKmath.lib
-#  LIBS         += SimTKcommon.lib
-#  LIBS         += SimTKlapack.lib
-#  LIBS         += pthreadVC2.lib
-#  }
-#  win32:CONFIG(0 || debug){
-#  LIBS         += SimTKsimbody_d.lib
-#  LIBS         += SimTKmath_d.lib
-#  LIBS         += SimTKcommon_d.lib
-#  LIBS         += SimTKlapack.lib
-#  LIBS         += pthreadVC2.lib
-#  }
 
