@@ -42,7 +42,7 @@ namespace QSim {
 
 
 //-----------------------------------------------------------------------------
-QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NULL), myOpenFileAction(NULL), mySaveFileAction(NULL), mySaveFileAsAction(NULL), myEditCopyAction(NULL), myEditCutAction(NULL), myEditPasteAction(NULL), myHelpAboutAction(NULL), myHelpContentsAction(NULL), mySimulateStartAction(NULL), myStartSimulationBroker(NULL)
+QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NULL), myOpenFileAction(NULL), mySaveFileAction(NULL), mySaveFileAsAction(NULL), myEditCutAction(NULL), myEditCopyAction(NULL), myEditPasteAction(NULL), myHelpAboutAction(NULL), myHelpContentsAction(NULL), mySimulateStartAction(NULL), myStartSimulationBroker(NULL)
 {
    // Complete the class construction.
    this->setCentralWidget( &myQSimMainWindowTextEdit );
