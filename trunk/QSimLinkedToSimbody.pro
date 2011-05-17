@@ -37,9 +37,6 @@
 #               Note: LIBS are found along QMAKE_LIBDIR (formerly LIBPATH).
 # Note: Enclose names in paths in quotes if there are spaces, e.g., "/Program Files"
 #--------------------------------------------------------------------
-# Ensure folder containing OpenSimAPI .dlls are on computer's PATH
-# environment variable, e.g. C:\Simbody\bin is on PATH.
-#--------------------------------------------------------------------
 INCLUDEPATH  += /Simbody/include/
 QMAKE_LIBDIR += /Simbody/lib/
 
@@ -49,8 +46,8 @@ QMAKE_LIBDIR += /Simbody/lib/
 # unix   enabled for Unix platforms - including macx
 # macx   enabled for Unix platforms - and MacOS platforms
 #--------------------------------------------------------------------
-win32{
-   # Windows only commands here
+win32{             # Windows only commands here
+
    LIBS         += pthreadVC2.lib
    LIBS         += SimTKlapack.lib
 
@@ -65,12 +62,39 @@ win32{
    LIBS         += SimTKmath_d.lib
    LIBS         += SimTKcommon_d.lib
    }
+   #-----------------------------------------------------------------
+   # Ensure .dlls are in the executable's folder (best) or listed on computer's
+   # PATH environment variable, e.g. C:\Simbody\bin is on PATH.
+   #-----------------------------------------------------------------
 }
 #---------------------------------------------
 else macx{         # MacOSx only commands here
+
+#  LIBS         += pthread
+#  LIBS         += SimTKlapack
+
+   CONFIG( release, debug|release ){
+   LIBS         += SimTKsimbody
+#  LIBS         += SimTKmath
+#  LIBS         += SimTKcommon
+   }
+
+   CONFIG( debug, debug|release ){
+   LIBS         += SimTKsimbody_d
+#  LIBS         += SimTKmath_d
+#  LIBS         += SimTKcommon_d
+   }
+   #-----------------------------------------------------------------
+   # Ensure .so files are in the executable's folder (best) or listed on computer's
+   # DYLD_LIBRARY_PATH environment variable, e.g. /Simbody/bin is on DYLD_LIBRARY_PATH
+   #-----------------------------------------------------------------
 }
 #---------------------------------------------
 else unix:!macx{   # Linux only commands here
+   #-----------------------------------------------------------------
+   # Ensure .so files are in the executable's folder (best) or listed on computer's
+   # LD_LIBRARY_PATH environment variable, e.g. /Simbody/bin is on LD_LIBRARY_PATH
+   #-----------------------------------------------------------------
 }
 
 

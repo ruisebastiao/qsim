@@ -37,9 +37,6 @@
 #               Note: LIBS are found along QMAKE_LIBDIR (formerly LIBPATH).
 # Note: Enclose names in paths in quotes if there are spaces, e.g., "/Program Files"
 #--------------------------------------------------------------------
-# Ensure folder containing OpenSimAPI .dlls are on computer's PATH
-# environment variable, e.g. C:\OpenSimToEndUser\bin is on PATH.
-#--------------------------------------------------------------------
 INCLUDEPATH  += /OpenSimToEndUser/sdk/include/
 INCLUDEPATH  += /OpenSimToEndUser/sdk/include/OpenSim/
 INCLUDEPATH  += /OpenSimToEndUser/sdk/include/SimTK/include/
@@ -51,7 +48,8 @@ QMAKE_LIBDIR += /OpenSimToEndUser/sdk/lib/
 # unix   enabled for Unix platforms - including macx
 # macx   enabled for Unix platforms - and MacOS platforms
 #--------------------------------------------------------------------
-win32{
+win32{             # Windows only commands here
+
    CONFIG( release, debug|release ){
    LIBS         += osimCommon.lib
    LIBS         += osimSimulation.lib
@@ -67,11 +65,23 @@ win32{
    LIBS         += osimActuators_d.lib
    LIBS         += osimTools_d.lib
    }
+   #-----------------------------------------------------------------
+   # Ensure .dlls are in the executable's folder (best) or listed on computer's
+   # PATH environment variable, e.g. C:\OpenSimToEndUser\bin is on PATH.
+   #-----------------------------------------------------------------
 }
 #---------------------------------------------
 else macx{         # MacOSx only commands here
+   #-----------------------------------------------------------------
+   # Ensure .so files are in the executable's folder (best) or listed on computer's
+   # DYLD_LIBRARY_PATH environment variable, e.g. /OpenSimToEndUser/bin is on DYLD_LIBRARY_PATH
+   #-----------------------------------------------------------------
 }
 #---------------------------------------------
 else unix:!macx{   # Linux only commands here
+   #-----------------------------------------------------------------
+   # Ensure .so files are in the executable's folder (best) or listed on computer's
+   # LD_LIBRARY_PATH environment variable, e.g. /OpenSimToEndUser/bin is on LD_LIBRARY_PATH
+   #-----------------------------------------------------------------
 }
 
