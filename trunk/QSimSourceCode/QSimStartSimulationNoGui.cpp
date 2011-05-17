@@ -36,7 +36,7 @@
 * -------------------------------------------------------------------------- */
 // DO NOT #include "QSimStartSimulation.h" or unable to split from Qt
 #include "CppStandardHeaders.h"
-#if 0                             // Change 1 to 0 if want to use Simbody only.
+#if 1                             // Change 1 to 0 if want to use Simbody only.
    #include <SimTKsimbody.h>      // Includes all Simbody header files.
    using namespace SimTK;
 #else
@@ -74,7 +74,7 @@ bool  WriteExceptionToFile( const char* outputString, const char* exceptionStrin
 //-----------------------------------------------------------------------------
 bool  StartAndRunSimulationMathematicsEngineNoGuiInsideExceptionHandling( )
 {
-#if 1
+#if 0
    // Create an OpenSim model and set its name
    Model osimModel;
    osimModel.setName( "tugOfWar" );
