@@ -83,16 +83,14 @@ macx{
 
    CONFIG( release, debug|release ){
    LIBS         += -lSimTKsimbody
-#  LIBS         += SimTKsimbody
-#  LIBS         += SimTKmath
-#  LIBS         += SimTKcommon
+   LIBS         += -lSimTKmath
+   LIBS         += -lSimTKcommon
    }
 
    CONFIG( debug, debug|release ){
    LIBS         += -lSimTKsimbody_d
-#  LIBS         += SimTKsimbody_d
-#  LIBS         += SimTKmath_d
-#  LIBS         += SimTKcommon_d
+   LIBS         += -lSimTKmath_d
+   LIBS         += -lSimTKcommon_d
    }
 
    #-----------------------------------------------------------------
@@ -102,6 +100,7 @@ macx{
    # Ensure .so files are in the executable's folder (best) or listed on computer's
    # DYLD_LIBRARY_PATH environment variable, e.g. /Simbody/bin is on DYLD_LIBRARY_PATH
    # Sherm says LIBS += SimTKsimbody will recursively include the ones it depends on (all).
+   # Alternate way to get gcc to link libraries is: LIBS += -L/usr/local/SimTK/lib -lSimTKsimbody -lSimTKmath  -lSimTKcommon
    #-----------------------------------------------------------------
 }
 
@@ -113,16 +112,17 @@ unix:!macx{
    QMAKE_LFLAGS += -m32
    QMAKE_CFLAGS += -m32
    QMAKE_CXXFLAGS += -m32
-#  LIBS += -L/usr/local/SimTK/lib -lSimTKsimbody
 
    CONFIG( release, debug|release ){
    LIBS         += -lSimTKsimbody
-#  LIBS         += SimTKsimbody
+   LIBS         += -lSimTKmath
+   LIBS         += -lSimTKcommon
    }
 
    CONFIG( debug, debug|release ){
    LIBS         += -lSimTKsimbody_d
-#  LIBS         += SimTKsimbody_d
+   LIBS         += -lSimTKmath_d
+   LIBS         += -lSimTKcommon_d
    }
 
    #-----------------------------------------------------------------
