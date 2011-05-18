@@ -348,12 +348,10 @@ bool  StartAndRunSimulationMathematicsEngineNoGuiInsideExceptionHandling( )
 
    // Create the body and some artwork for it.
    Body::Rigid pendulumBody(MassProperties(1.0, Vec3(0), Inertia(1)));
-   pendulumBody.addDecoration(Transform(), DecorativeSphere(0.1).setColor(Red));
+// pendulumBody.addDecoration(Transform(), DecorativeSphere(0.1).setColor(Red));
 
-   // Add an instance of the body to the multibody system by connecting
-   // it to Ground via a pin mobilizer.
-   MobilizedBody::Pin pendulum(matter.updGround(), Transform(Vec3(0)),
-                               pendulumBody, Transform(Vec3(0, 1, 0)));
+   // Add an instance of the body to the multibody system by connecting it to Ground via a pin mobilizer.
+   MobilizedBody::Pin pendulum(matter.updGround(), Transform(Vec3(0)), pendulumBody, Transform(Vec3(0, 1, 0)));
 
    // Visualize with default options; ask for a report every 1/30 of a second
    // to match the Visualizer's default 30 frames per second rate.
