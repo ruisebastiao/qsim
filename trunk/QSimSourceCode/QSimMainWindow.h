@@ -60,20 +60,22 @@ public:
 
 private slots:
    // Slots for file menu.
-   void  ExitProgramSlot() { QCoreApplication::quit(); }
    void  NewFileSlot()     { ; }  
    void  OpenFileSlot()    { ; }
    void  SaveFileSlot()    { ; }
    void  SaveFileAsSlot()  { ; }
+   void  PrintFileSlot()   { ; }
+   void  ExitProgramSlot() { QCoreApplication::quit(); }
    
    // Slots for edit menu.
    void  EditCutSlot()     { ; }
    void  EditCopySlot()    { ; }
    void  EditPasteSlot()   { ; }
+   void  EditDeleteSlot()  { ; }
 
    // Slots for help menu.
-   void  HelpAboutSlot()   { this->CreateCrazyWidget(); }
-   void  HelpHelpSlot()    { ; }
+   void  HelpAboutSlot()     { this->CreateCrazyWidget(); }
+   void  HelpContentsSlot()  { ; }
 
    // Slots for Simulate menu.
    void  SlotStartSimulationFromMainApplicationWindow() { StartAndRunSimulationMathematicsEngineNoGui(); }  
@@ -96,11 +98,13 @@ private:
    QAction  myOpenFileAction;
    QAction  mySaveFileAction;
    QAction  mySaveFileAsAction;
+   QAction  myPrintFileAction;
 
    // Actions for edit menu.
    QAction  myEditCutAction;
    QAction  myEditCopyAction;
    QAction  myEditPasteAction;
+   QAction  myEditDeleteAction;
 
    // Actions for help menu.
    QAction  myHelpAboutAction;

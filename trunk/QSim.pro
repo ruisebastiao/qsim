@@ -57,12 +57,17 @@ win32{
    TEMPLATE   = vcapp    # Change vcapp to app if not using Microsoft Visual Studio.
    INCLUDEPATH  += /Qt/4.7.2/include/
 
-   # DEF_FILE   .def file to be linked against for the application.
-   # RC_FILE     resource file for the application.
-   # RES_FILE    resource file to be linked against for the application.
+   # Add in Windows-specific resource file (e.g., for displaying an icon with the application).
+   # It seems this file needs to be in the same folder as QSim.pro (at least on Windows).
+   # Info: http://doc.qt.nokia.com/latest/appicon.html
+   RC_FILE = QSimResourceCollectionPCWindows.rc
+
+   # DEF_FILE = blah  .def file to be linked against for the application.
+   # RES_FILE = blah   resource file to be linked against for the application.
    # Note: On Windows 32-bit, _may_ have to set environment variables:
    #       QMAKESPEC   to   win32-msvc2008
    #       PATH        add  C:\Qt\4.7.2\bin\
+
 }
 
 #--------------------------------------------------------------------
@@ -156,6 +161,14 @@ SOURCES      += ./QSimSourceCode/QSimMain.cpp
 SOURCES      += ./QSimSourceCode/QSimStartSimulationGui.cpp
 SOURCES      += ./QSimSourceCode/QSimStartSimulationNoGui.cpp
 SOURCES      += ./QSimSourceCode/QSimMainWindow.cpp
+
+#--------------------------------------------------------------------
+# Resources that are compiled into the binary executable.
+# Info:  http://doc.qt.nokia.com/latest/resources.html
+# Public domain icons: http://www.apache.org/icons/
+# Public domain icons: http://tango.freedesktop.org/Tango_Desktop_Project
+#--------------------------------------------------------------------
+RESOURCES += ./QSimResources/QSimResourceCollectionFile.qrc
 
 #--------------------------------------------------------------------
 # List of additional include and library paths for Simbody.

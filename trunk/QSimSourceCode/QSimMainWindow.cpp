@@ -42,7 +42,7 @@ namespace QSim {
 
 
 //-----------------------------------------------------------------------------
-QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NULL), myOpenFileAction(NULL), mySaveFileAction(NULL), mySaveFileAsAction(NULL), myEditCutAction(NULL), myEditCopyAction(NULL), myEditPasteAction(NULL), myHelpAboutAction(NULL), myHelpContentsAction(NULL), mySimulateStartAction(NULL)
+QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NULL), myOpenFileAction(NULL), mySaveFileAction(NULL), mySaveFileAsAction(NULL), myPrintFileAction(NULL), myEditCutAction(NULL), myEditCopyAction(NULL), myEditPasteAction(NULL), myEditDeleteAction(NULL), myHelpAboutAction(NULL), myHelpContentsAction(NULL), mySimulateStartAction(NULL)
 {
    // Complete the class construction.
    this->setCentralWidget( &myQSimMainWindowTextEdit );
@@ -50,6 +50,15 @@ QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NU
    this->CreateEditMenu();
    this->CreateHelpMenu();
    this->CreateSimulateMenu();
+
+   // The application icon is typically displayed in the top-left corner of an application's top-level windows.
+   // To change the icon of the executable file as presented on the desktop (i.e., prior to application execution),
+   // it is necessary to employ a platform-dependent technique.
+   // See:  http://doc.qt.nokia.com/latest/appicon.html
+   const QIcon mainApplicationWindowIcon( ":/QSim32x32Icono.ico" );
+   this->setWindowIcon( mainApplicationWindowIcon );
+
+   // Display a splash screen.
    this->CreateCrazyWidget();
 }
 
@@ -59,7 +68,14 @@ void  QSimMainWindow::AddActionToMainWindowMenu( QAction *action, QMenu *mainWin
 {
    action->setParent( this );
    action->setText( tr(textName) );
-// action->setIcon( QIcon(pathToIconFile) );
+   if( pathToIconFile && *pathToIconFile )
+   {
+       const QIcon *actionIcon = new QIcon( pathToIconFile );
+	   if( actionIcon && !actionIcon->isNull() )
+	   {
+	      action->setIcon( *actionIcon );
+	   }
+   }
    mainWindowMenu->addAction( action );
 }
 
@@ -81,20 +97,23 @@ void QSimMainWindow::CreateFileMenu()
    QMenuBar* mainWindowMenuBar = this->menuBar();                // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* fileMenu = mainWindowMenuBar->addMenu( tr("&File") );  // Creates/Gets/Owns this menu.
 
-   this->AddActionToMainWindowMenu( &myNewFileAction,  fileMenu, "&New file",  QKeySequence::New,  ":/QSimIcons/NewFileIcon.png" );
+   this->AddActionToMainWindowMenu( &myNewFileAction,  fileMenu, "&New file",  QKeySequence::New,  ":/TangoPublicDomainImages/document-new.png" );
    QObject::connect( &myNewFileAction, SIGNAL(triggered()), this, SLOT(NewFileSlot()) );
 
-   this->AddActionToMainWindowMenu( &myOpenFileAction, fileMenu, "&Open file", QKeySequence::Open, ":/QSimIcons/OpenFileIcon.png" );
+   this->AddActionToMainWindowMenu( &myOpenFileAction, fileMenu, "&Open file", QKeySequence::Open, ":/TangoPublicDomainImages/document-open.png" );
    QObject::connect( &myOpenFileAction, SIGNAL(triggered()), this, SLOT(OpenFileSlot()) );
 
-   this->AddActionToMainWindowMenu( &mySaveFileAction, fileMenu, "&Save file", QKeySequence::Save, ":/QSimIcons/SaveFileIcon.png" );
+   this->AddActionToMainWindowMenu( &mySaveFileAction, fileMenu, "&Save file", QKeySequence::Save, ":/TangoPublicDomainImages/document-save.png" );
    QObject::connect( &mySaveFileAction, SIGNAL(triggered()), this, SLOT(SaveFileSlot()) );
 
-   this->AddActionToMainWindowMenu( &mySaveFileAsAction, fileMenu, "Save file as", QKeySequence::SaveAs, ":/QSimIcons/SaveFileAsIcon.png" );
+   this->AddActionToMainWindowMenu( &mySaveFileAsAction, fileMenu, "Save file as", QKeySequence::SaveAs, ":/TangoPublicDomainImages/document-save-as.png" );
    QObject::connect( &mySaveFileAsAction, SIGNAL(triggered()), this, SLOT(SaveFileAsSlot()) );
 
+   this->AddActionToMainWindowMenu( &myPrintFileAction, fileMenu, "&Print file", QKeySequence::Print, ":/TangoPublicDomainImages/printer.png" );
+   QObject::connect( &myPrintFileAction, SIGNAL(triggered()), this, SLOT(PrintFileSlot()) );
+
    fileMenu->addSeparator();
-   this->AddActionToMainWindowMenu( &myExitProgramAction, fileMenu, "&Quit/Exit program", QKeySequence::Quit, ":/QSimIcons/QuitExitIcon.png" );
+   this->AddActionToMainWindowMenu( &myExitProgramAction, fileMenu, "&Quit/Exit program", QKeySequence::Quit, ":/TangoPublicDomainImages/system-shutdown.png" );
    QObject::connect( &myExitProgramAction, SIGNAL(triggered()), this, SLOT(ExitProgramSlot()) );
 }
 
@@ -109,14 +128,17 @@ void QSimMainWindow::CreateEditMenu()
    QMenuBar* mainWindowMenuBar = this->menuBar();                // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* editMenu = mainWindowMenuBar->addMenu( tr("&Edit") );  // Creates/Gets/Owns this menu.
 
-   this->AddActionToMainWindowMenu( &myEditCutAction,   editMenu, "&Cut",   QKeySequence::Cut,   ":/QSimIcons/EditCutIcon.png" );
+   this->AddActionToMainWindowMenu( &myEditCutAction,   editMenu, "&Cut",   QKeySequence::Cut,   ":/TangoPublicDomainImages/edit-cut.png" );
    QObject::connect( &myEditCutAction,   SIGNAL(triggered()), this, SLOT(EditCutSlot()) );
 
-   this->AddActionToMainWindowMenu( &myEditCopyAction,  editMenu, "&Copy",  QKeySequence::Copy,  ":/QSimIcons/EditCopyIcon.png" );
+   this->AddActionToMainWindowMenu( &myEditCopyAction,  editMenu, "&Copy",  QKeySequence::Copy,  ":/TangoPublicDomainImages/edit-copy.png" );
    QObject::connect( &myEditCopyAction,  SIGNAL(triggered()), this, SLOT(EditCopySlot()) );
 
-   this->AddActionToMainWindowMenu( &myEditPasteAction, editMenu, "&Paste", QKeySequence::Paste, ":/QSimIcons/EditPasteIcon.png" );
+   this->AddActionToMainWindowMenu( &myEditPasteAction, editMenu, "&Paste", QKeySequence::Paste, ":/TangoPublicDomainImages/edit-paste.png" );
    QObject::connect( &myEditPasteAction, SIGNAL(triggered()), this, SLOT(EditPasteSlot()) );
+
+   this->AddActionToMainWindowMenu( &myEditDeleteAction, editMenu, "&Delete", QKeySequence::Delete, ":/TangoPublicDomainImages/edit-delete.png" );
+   QObject::connect( &myEditDeleteAction, SIGNAL(triggered()), this, SLOT(EditDeleteSlot()) );
 }
 
 
@@ -129,10 +151,10 @@ void QSimMainWindow::CreateHelpMenu()
    QMenuBar* mainWindowMenuBar = this->menuBar();                // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* helpMenu = mainWindowMenuBar->addMenu( tr("&Help") );  // Creates/Gets/Owns this menu.
 
-   this->AddActionToMainWindowMenu( &myHelpAboutAction, helpMenu, "&About", ":/QSimIcons/HelpAboutIcon.png" );
+   this->AddActionToMainWindowMenu( &myHelpAboutAction, helpMenu, "&About", ":/QSimApplicationIconC.png" );
    QObject::connect( &myHelpAboutAction,   SIGNAL(triggered()), this, SLOT(HelpAboutSlot()) );
 
-   this->AddActionToMainWindowMenu( &myHelpContentsAction,  helpMenu, "&Help",  QKeySequence::HelpContents,  ":/QSimIcons/HelpContentsIcon.png" );
+   this->AddActionToMainWindowMenu( &myHelpContentsAction,  helpMenu, "&Help",  QKeySequence::HelpContents,  ":/TangoPublicDomainImages/help-browser.png" );
    QObject::connect( &myHelpContentsAction,   SIGNAL(triggered()), this, SLOT(HelpContentsSlot()) );
 }
 
@@ -143,7 +165,7 @@ void QSimMainWindow::CreateSimulateMenu()
    QMenuBar* mainWindowMenuBar = this->menuBar();                        // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* simulateMenu = mainWindowMenuBar->addMenu( tr("&Simulate") );  // Creates/Gets/Owns this menu.
 
-   this->AddActionToMainWindowMenu( &mySimulateStartAction, simulateMenu, "&Start", ":/QSimIcons/SimulateStartIcon.png" );
+   this->AddActionToMainWindowMenu( &mySimulateStartAction, simulateMenu, "&Start", ":/TangoPublicDomainImages/SimulateStartIcon.png" );
    QObject::connect( &mySimulateStartAction,  SIGNAL(triggered()), this, SLOT( SlotStartSimulationFromMainApplicationWindow()) );
 }
 
@@ -181,13 +203,13 @@ void QSimMainWindow::CreateCrazyWidget()
    // A signal can be connected to a function (called a "slot")
    QPushButton widgetPushButtonToQuit( "Push button to quit", &mainWindowInApplication );
    widgetPushButtonToQuit.resize( 600, 180 );
-   QObject::connect( &widgetPushButtonToQuit, SIGNAL( clicked() ), this, SLOT( quit() ) );
+   QObject::connect( &widgetPushButtonToQuit, SIGNAL( clicked() ), this, SLOT( ExitProgramSlot() ) );
    mainWindowLayoutManager.addWidget( &widgetPushButtonToQuit );
 
    // Start a simulation when button is pushed by connecting to a "slot".
    QPushButton widgetPushButtonToSimulate( "Push button to simulate", &mainWindowInApplication );
    widgetPushButtonToSimulate.resize( 600, 180 );
-   QObject::connect( &widgetPushButtonToSimulate, SIGNAL( clicked() ), this, SLOT( SlotStartSimulationFromThisWindowNoGui() ) );
+   QObject::connect( &widgetPushButtonToSimulate, SIGNAL( clicked() ), this, SLOT( SlotStartSimulationFromMainApplicationWindow() ) );
    mainWindowLayoutManager.addWidget( &widgetPushButtonToSimulate );
 
    // QCheckBox allows for exclusive or non-exclusive selections.
