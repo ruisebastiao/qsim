@@ -163,7 +163,7 @@ void QSimMainWindow::CreateSimulateMenu()
    QMenuBar* mainWindowMenuBar = this->menuBar();                        // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* simulateMenu = mainWindowMenuBar->addMenu( tr("&Simulate") );  // Creates/Gets/Owns this menu.
 
-   this->AddActionToMainWindowMenu( mySimulateStartAction, *simulateMenu, tr("&Start"), ":/TangoPublicDomainImages/SimulateStartIcon.png" );
+   this->AddActionToMainWindowMenu( mySimulateStartAction, *simulateMenu, tr("&Start"), ":/TangoPublicDomainImages/media-playback-start.png" );
    QObject::connect( &mySimulateStartAction,  SIGNAL(triggered()), this, SLOT( SlotStartSimulationFromMainApplicationWindow()) );
 }
 
