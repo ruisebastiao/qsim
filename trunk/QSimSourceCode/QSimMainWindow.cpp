@@ -58,7 +58,11 @@ QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NU
    const QIcon mainApplicationWindowIcon( ":/QSimApplicationIconC.ico" );
    this->setWindowIcon( mainApplicationWindowIcon );
 
-   // Make it larger.
+   // Note: It may not be possible to bold-face the title of the main application window as it is controlled by OS, not Qt.
+   //this->setWindowTitle( "QSim" );
+
+   // Size this window (make it larger than usual) and show it.
+   // this->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
    this->resize( 700, 500 );
    this->show();
 
@@ -145,6 +149,7 @@ void QSimMainWindow::CreateHelpMenu()
    QMenu* helpMenu = mainWindowMenuBar->addMenu( tr("&Help") );  // Creates/Gets/Owns this menu.
 
    this->AddActionToMainWindowMenu( myHelpAboutAction, *helpMenu, tr("&About"), ":/ApachePublicDomainImages/world1.png" );
+   //this->AddActionToMainWindowMenu( myHelpAboutAction, *helpMenu, tr("&About"), ":../QSimApplicationIconC.ico" );
    QObject::connect( &myHelpAboutAction,   SIGNAL(triggered()), this, SLOT(HelpAboutSlot()) );
 
    this->AddActionToMainWindowMenu( myHelpContentsAction, *helpMenu, tr("&Help"),  QKeySequence::HelpContents,  ":/TangoPublicDomainImages/help-browser.png" );
@@ -171,7 +176,6 @@ void QSimMainWindow::CreateCrazyWidget()
    // Widgets include labels, buttons, menus, scroll bars, and frames.
    // Widgets can contain other widgets.
    // Widgets are always created hidden to customize before showing (avoiding flicker).
-   // Note: The title of the main application window cannot be made bold, etc., as it is controlled by OS, not Qt.
    QWidget *mainWindowParentNull = NULL;
    Qt::WindowFlags  mainWindowFlags = Qt::Dialog;
    // QMainWindow mainWindowInApplication( mainWindowParentNull, mainWindowFlags );
@@ -318,16 +322,25 @@ void QSimMainWindow::DisplaySplashScreen()
    QWidget splashScreenDialog( this, Qt::Dialog );
    splashScreenDialog.setWindowTitle( "QSim" );
    splashScreenDialog.setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-   // splashScreenDialog.resize( 400, 200 );
 
    // Create layout manager for splash screen.
    QVBoxLayout splashScreenLayoutManager( &splashScreenDialog );
+
+#if 0
+   // Labels are widgets that contain text and that can be formatted with simple HTML-style formatting.
+   QLabel movieLabel( &splashScreenDialog);
+   QMovie animatedGif( ":/MiscImages/RedCircleOnYellowSquarePublicDomain.gif" );
+   movieLabel.setMovie( &animatedGif );
+   movieLabel.setAlignment( Qt::AlignHCenter );
+   splashScreenLayoutManager.addWidget( &movieLabel );
+#endif
 
    // Labels are widgets that contain text and that can be formatted with simple HTML-style formatting.
    QLabel widgetLabel( "<h2><b><font color=blue><br>Hello Scott, Sherm, Ayman, Peter, Matt, Chand, Mark, <br>Ajay, Sam, Edith, Jennifer, Joy, Jessie, Paul, Melanie, ...</font color><b><br></h2>", &splashScreenDialog );
    widgetLabel.setAlignment( Qt::AlignHCenter );
    splashScreenLayoutManager.addWidget( &widgetLabel );
 
+   // Labels can contain pictures of various formats (e.g., BMP, GIF, JPG, PNG, PBM)
    QLabel logoLabel( &splashScreenDialog );
    QPixmap jpgLogoAsPixmap( ":/MiscImages/QSimLogo.jpg", "JPG" );
    logoLabel.setPixmap( jpgLogoAsPixmap );
@@ -335,6 +348,7 @@ void QSimMainWindow::DisplaySplashScreen()
    splashScreenLayoutManager.addWidget( &logoLabel );
 
    // Show the dialog box for a few seconds.
+   // splashScreenDialog.setWindowModality( Qt::WindowModal );
    splashScreenDialog.show();
    splashScreenDialog.repaint();
    SleepInMilliseconds( 3000 );
@@ -386,6 +400,44 @@ void  QSimMainWindow::SaveFileSlot()
 }
 
 
+
+#if 0
+// #include <QAudio>
+//-----------------------------------------------------------------------------
+void  QSimMainWindow::PlayMusicFile()
+{
+   // A Google search for public domain music returned the follow list:
+   // http://www.google.com/Top/Arts/Music/Sound_Files/Classical/MP3/
+   // The William Tell Overture was download from here:
+   // http://www.archive.org/details/WilliamTellOverture_414
+   QMediaPlayer musicPlayer;
+   musicPlayer.setMedia( QUrl::fromLocalFile("/Users/Paul/PublicDomainAudioVideo/william_tell_overture_2.mp3") );
+   musicPlayer.setVolume( 50 );
+   musicPlayer.play();
+}
+#endif
+
+
+#if 0
+//-----------------------------------------------------------------------------
+// #include <QtMultimedia>
+void  QSimMainWindow::PlayVideoFile()
+{
+   // Archive of public domain movies: http://www.archive.org/details/movies
+   // List of public domain movies: http://www.freemediaguide.com/free_public_domain_videos.html
+   // This public domain movie was downloaded from NASA Langely http://lisar.larc.nasa.gov/UTILS/info.cgi?id=LV-2000-00015
+   QMediaPlayer videoPlayer;
+   videoPlayer.setMedia( QUrl::fromLocalFile("/Users/Paul/PublicDomainAudioVideo/NasaLangelyHypersonicAircraftSimulation.mov") );
+
+   QVideoWidget videoWidget( player );
+   videoWidget.show();
+
+   videoPlayer.play();
+}
+#endif
+
+
 //------------------------------------------------------------------------------
 }  // End of namespace QSim
+
 
