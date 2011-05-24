@@ -148,8 +148,8 @@ void QSimMainWindow::CreateHelpMenu()
    QMenuBar* mainWindowMenuBar = this->menuBar();                // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* helpMenu = mainWindowMenuBar->addMenu( tr("&Help") );  // Creates/Gets/Owns this menu.
 
-   this->AddActionToMainWindowMenu( myHelpAboutAction, *helpMenu, tr("&About"), ":/ApachePublicDomainImages/world1.png" );
-   //this->AddActionToMainWindowMenu( myHelpAboutAction, *helpMenu, tr("&About"), ":../QSimApplicationIconC.ico" );
+   //this->AddActionToMainWindowMenu( myHelpAboutAction, *helpMenu, tr("&About"), ":/ApachePublicDomainImages/world1.png" );
+   this->AddActionToMainWindowMenu( myHelpAboutAction, *helpMenu, tr("&About"), ":/QSimApplicationIconC.ico" ); //":../QSimApplicationIconC.ico" );
    QObject::connect( &myHelpAboutAction,   SIGNAL(triggered()), this, SLOT(HelpAboutSlot()) );
 
    this->AddActionToMainWindowMenu( myHelpContentsAction, *helpMenu, tr("&Help"),  QKeySequence::HelpContents,  ":/TangoPublicDomainImages/help-browser.png" );
