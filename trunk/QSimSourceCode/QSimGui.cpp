@@ -72,8 +72,8 @@ int QSimGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArguments
    // Create object to manage application-wide resources.
    QApplication app( numberOfCommandLineArguments, arrayOfCommandLineArguments );
 
+   // Create main application window.
    QSimMainWindow mainApplicationWindow;
-   mainApplicationWindow.show();
 
    // Pass control of application to Qt.
    // User actions generate events (messages), e.g., "mouse press" and "mouse release".

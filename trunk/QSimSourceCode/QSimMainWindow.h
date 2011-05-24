@@ -61,8 +61,8 @@ public:
 private slots:
    // Slots for file menu.
    void  NewFileSlot()     { ; }  
-   void  OpenFileSlot()    { ; }
-   void  SaveFileSlot()    { ; }
+   void  OpenFileSlot();
+   void  SaveFileSlot();
    void  SaveFileAsSlot()  { ; }
    void  PrintFileSlot()   { ; }
    void  ExitProgramSlot() { QCoreApplication::quit(); }
@@ -81,13 +81,14 @@ private slots:
    void  SlotStartSimulationFromMainApplicationWindow() { StartAndRunSimulationMathematicsEngineNoGui(); }  
 
 private:
-   void  AddActionToMainWindowMenu( QAction *action, QMenu *mainWindowMenu, const char *textName, const QKeySequence& keySequenceShortcut, const char *pathToIconFile );
-   void  AddActionToMainWindowMenu( QAction *action, QMenu *mainWindowMenu, const char *textName, const char *pathToIconFile );
+   void  AddActionToMainWindowMenu( QAction& action, QMenu& mainWindowMenu, const QString& textName, const char *pathToIconFile );
+   void  AddActionToMainWindowMenu( QAction& action, QMenu& mainWindowMenu, const QString& textName, const QKeySequence& keySequenceShortcut, const char *pathToIconFile )  { action.setShortcut( keySequenceShortcut );   this->AddActionToMainWindowMenu( action, mainWindowMenu, textName, pathToIconFile ); }
    void  CreateFileMenu();
    void  CreateEditMenu();
    void  CreateHelpMenu();
    void  CreateSimulateMenu();
    void  CreateCrazyWidget();
+   void  DisplaySplashScreen();
 
    // void  CreateToolBars();
    // void  CreateStatusBar();
@@ -112,6 +113,11 @@ private:
 
    // Actions for Simulate menu.
    QAction  mySimulateStartAction;
+
+   // Keep track of the last folder that was used to open or save a file.
+   const QDir&  GetPreviousFileDialogWorkingDirectory( void )             { return myPreviousFileDialogWorkingDirectory; }
+   const QDir&  GetPreviousFileDialogWorkingDirectory( const QDir& dir )  { return myPreviousFileDialogWorkingDirectory = dir; }
+   QDir  myPreviousFileDialogWorkingDirectory;
 
    // Currently the "central widget".
    QTextEdit  myQSimMainWindowTextEdit;

@@ -55,36 +55,29 @@ QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NU
    // To change the icon of the executable file as presented on the desktop (i.e., prior to application execution),
    // it is necessary to employ a platform-dependent technique.
    // See:  http://doc.qt.nokia.com/latest/appicon.html
-   const QIcon mainApplicationWindowIcon( ":/QSim32x32Icono.ico" );
+   const QIcon mainApplicationWindowIcon( ":/QSimApplicationIconC.ico" );
    this->setWindowIcon( mainApplicationWindowIcon );
 
+   // Make it larger.
+   this->resize( 700, 500 );
+   this->show();
+
    // Display a splash screen.
-   this->CreateCrazyWidget();
+   this->DisplaySplashScreen();
 }
 
 
 //------------------------------------------------------------------------------
-void  QSimMainWindow::AddActionToMainWindowMenu( QAction *action, QMenu *mainWindowMenu, const char *textName, const char *pathToIconFile )
+void  QSimMainWindow::AddActionToMainWindowMenu( QAction& action, QMenu& mainWindowMenu, const QString& textName, const char *pathToIconFile )
 {
-   action->setParent( this );
-   action->setText( tr(textName) );
+   action.setParent( this );
+   action.setText( textName );
    if( pathToIconFile && *pathToIconFile )
    {
        const QIcon *actionIcon = new QIcon( pathToIconFile );
-	   if( actionIcon && !actionIcon->isNull() )
-	   {
-	      action->setIcon( *actionIcon );
-	   }
+	   if( actionIcon && !actionIcon->isNull() )  action.setIcon( *actionIcon );
    }
-   mainWindowMenu->addAction( action );
-}
-
-
-//------------------------------------------------------------------------------
-void  QSimMainWindow::AddActionToMainWindowMenu( QAction *action, QMenu *mainWindowMenu, const char *textName, const QKeySequence& keySequenceShortcut, const char *pathToIconFile )
-{
-   action->setShortcut( keySequenceShortcut );
-   this->AddActionToMainWindowMenu( action, mainWindowMenu, textName, pathToIconFile );
+   mainWindowMenu.addAction( &action );
 }
 
 
@@ -97,23 +90,23 @@ void QSimMainWindow::CreateFileMenu()
    QMenuBar* mainWindowMenuBar = this->menuBar();                // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* fileMenu = mainWindowMenuBar->addMenu( tr("&File") );  // Creates/Gets/Owns this menu.
 
-   this->AddActionToMainWindowMenu( &myNewFileAction,  fileMenu, "&New file",  QKeySequence::New,  ":/TangoPublicDomainImages/document-new.png" );
+   this->AddActionToMainWindowMenu( myNewFileAction, *fileMenu, tr("&New file"),  QKeySequence::New,  ":/TangoPublicDomainImages/document-new.png" );
    QObject::connect( &myNewFileAction, SIGNAL(triggered()), this, SLOT(NewFileSlot()) );
 
-   this->AddActionToMainWindowMenu( &myOpenFileAction, fileMenu, "&Open file", QKeySequence::Open, ":/TangoPublicDomainImages/document-open.png" );
+   this->AddActionToMainWindowMenu( myOpenFileAction, *fileMenu, tr("&Open file"), QKeySequence::Open, ":/TangoPublicDomainImages/document-open.png" );
    QObject::connect( &myOpenFileAction, SIGNAL(triggered()), this, SLOT(OpenFileSlot()) );
 
-   this->AddActionToMainWindowMenu( &mySaveFileAction, fileMenu, "&Save file", QKeySequence::Save, ":/TangoPublicDomainImages/document-save.png" );
+   this->AddActionToMainWindowMenu( mySaveFileAction, *fileMenu, tr("&Save file"), QKeySequence::Save, ":/TangoPublicDomainImages/document-save.png" );
    QObject::connect( &mySaveFileAction, SIGNAL(triggered()), this, SLOT(SaveFileSlot()) );
 
-   this->AddActionToMainWindowMenu( &mySaveFileAsAction, fileMenu, "Save file as", QKeySequence::SaveAs, ":/TangoPublicDomainImages/document-save-as.png" );
+   this->AddActionToMainWindowMenu( mySaveFileAsAction, *fileMenu, tr("Save file as"), QKeySequence::SaveAs, ":/TangoPublicDomainImages/document-save-as.png" );
    QObject::connect( &mySaveFileAsAction, SIGNAL(triggered()), this, SLOT(SaveFileAsSlot()) );
 
-   this->AddActionToMainWindowMenu( &myPrintFileAction, fileMenu, "&Print file", QKeySequence::Print, ":/TangoPublicDomainImages/printer.png" );
+   this->AddActionToMainWindowMenu( myPrintFileAction, *fileMenu, tr("&Print file"), QKeySequence::Print, ":/TangoPublicDomainImages/printer.png" );
    QObject::connect( &myPrintFileAction, SIGNAL(triggered()), this, SLOT(PrintFileSlot()) );
 
    fileMenu->addSeparator();
-   this->AddActionToMainWindowMenu( &myExitProgramAction, fileMenu, "&Quit/Exit program", QKeySequence::Quit, ":/TangoPublicDomainImages/system-shutdown.png" );
+   this->AddActionToMainWindowMenu( myExitProgramAction, *fileMenu, tr("&Quit/Exit program"), QKeySequence::Quit, ":/TangoPublicDomainImages/system-shutdown.png" );
    QObject::connect( &myExitProgramAction, SIGNAL(triggered()), this, SLOT(ExitProgramSlot()) );
 }
 
@@ -128,16 +121,16 @@ void QSimMainWindow::CreateEditMenu()
    QMenuBar* mainWindowMenuBar = this->menuBar();                // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* editMenu = mainWindowMenuBar->addMenu( tr("&Edit") );  // Creates/Gets/Owns this menu.
 
-   this->AddActionToMainWindowMenu( &myEditCutAction,   editMenu, "&Cut",   QKeySequence::Cut,   ":/TangoPublicDomainImages/edit-cut.png" );
+   this->AddActionToMainWindowMenu( myEditCutAction, *editMenu, tr("Cu&t"),   QKeySequence::Cut,   ":/TangoPublicDomainImages/edit-cut.png" );
    QObject::connect( &myEditCutAction,   SIGNAL(triggered()), this, SLOT(EditCutSlot()) );
 
-   this->AddActionToMainWindowMenu( &myEditCopyAction,  editMenu, "&Copy",  QKeySequence::Copy,  ":/TangoPublicDomainImages/edit-copy.png" );
+   this->AddActionToMainWindowMenu( myEditCopyAction, *editMenu, tr("&Copy"),  QKeySequence::Copy,  ":/TangoPublicDomainImages/edit-copy.png" );
    QObject::connect( &myEditCopyAction,  SIGNAL(triggered()), this, SLOT(EditCopySlot()) );
 
-   this->AddActionToMainWindowMenu( &myEditPasteAction, editMenu, "&Paste", QKeySequence::Paste, ":/TangoPublicDomainImages/edit-paste.png" );
+   this->AddActionToMainWindowMenu( myEditPasteAction, *editMenu, tr("&Paste"), QKeySequence::Paste, ":/TangoPublicDomainImages/edit-paste.png" );
    QObject::connect( &myEditPasteAction, SIGNAL(triggered()), this, SLOT(EditPasteSlot()) );
 
-   this->AddActionToMainWindowMenu( &myEditDeleteAction, editMenu, "&Delete", QKeySequence::Delete, ":/TangoPublicDomainImages/edit-delete.png" );
+   this->AddActionToMainWindowMenu( myEditDeleteAction, *editMenu, tr("&Delete"), QKeySequence::Delete, ":/TangoPublicDomainImages/edit-delete.png" );
    QObject::connect( &myEditDeleteAction, SIGNAL(triggered()), this, SLOT(EditDeleteSlot()) );
 }
 
@@ -151,10 +144,10 @@ void QSimMainWindow::CreateHelpMenu()
    QMenuBar* mainWindowMenuBar = this->menuBar();                // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* helpMenu = mainWindowMenuBar->addMenu( tr("&Help") );  // Creates/Gets/Owns this menu.
 
-   this->AddActionToMainWindowMenu( &myHelpAboutAction, helpMenu, "&About", ":/QSimApplicationIconC.png" );
+   this->AddActionToMainWindowMenu( myHelpAboutAction, *helpMenu, tr("&About"), ":/ApachePublicDomainImages/world1.png" );
    QObject::connect( &myHelpAboutAction,   SIGNAL(triggered()), this, SLOT(HelpAboutSlot()) );
 
-   this->AddActionToMainWindowMenu( &myHelpContentsAction,  helpMenu, "&Help",  QKeySequence::HelpContents,  ":/TangoPublicDomainImages/help-browser.png" );
+   this->AddActionToMainWindowMenu( myHelpContentsAction, *helpMenu, tr("&Help"),  QKeySequence::HelpContents,  ":/TangoPublicDomainImages/help-browser.png" );
    QObject::connect( &myHelpContentsAction,   SIGNAL(triggered()), this, SLOT(HelpContentsSlot()) );
 }
 
@@ -165,7 +158,7 @@ void QSimMainWindow::CreateSimulateMenu()
    QMenuBar* mainWindowMenuBar = this->menuBar();                        // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* simulateMenu = mainWindowMenuBar->addMenu( tr("&Simulate") );  // Creates/Gets/Owns this menu.
 
-   this->AddActionToMainWindowMenu( &mySimulateStartAction, simulateMenu, "&Start", ":/TangoPublicDomainImages/SimulateStartIcon.png" );
+   this->AddActionToMainWindowMenu( mySimulateStartAction, *simulateMenu, tr("&Start"), ":/TangoPublicDomainImages/SimulateStartIcon.png" );
    QObject::connect( &mySimulateStartAction,  SIGNAL(triggered()), this, SLOT( SlotStartSimulationFromMainApplicationWindow()) );
 }
 
@@ -315,6 +308,81 @@ void QSimMainWindow::CreateCrazyWidget()
    mainWindowInApplication.show();
    mainWindowInApplication.repaint();
    SleepInMilliseconds( 2000 );
+}
+
+
+
+//-----------------------------------------------------------------------------
+void QSimMainWindow::DisplaySplashScreen()
+{
+   QWidget splashScreenDialog( this, Qt::Dialog );
+   splashScreenDialog.setWindowTitle( "QSim" );
+   splashScreenDialog.setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+   // splashScreenDialog.resize( 400, 200 );
+
+   // Create layout manager for splash screen.
+   QVBoxLayout splashScreenLayoutManager( &splashScreenDialog );
+
+   // Labels are widgets that contain text and that can be formatted with simple HTML-style formatting.
+   QLabel widgetLabel( "<h2><b><font color=blue><br>Hello Scott, Sherm, Ayman, Peter, Matt, Chand, Mark, <br>Ajay, Sam, Edith, Jennifer, Joy, Jessie, Paul, Melanie, ...</font color><b><br></h2>", &splashScreenDialog );
+   widgetLabel.setAlignment( Qt::AlignHCenter );
+   splashScreenLayoutManager.addWidget( &widgetLabel );
+
+   QLabel logoLabel( &splashScreenDialog );
+   QPixmap jpgLogoAsPixmap( ":/MiscImages/QSimLogo.jpg", "JPG" );
+   logoLabel.setPixmap( jpgLogoAsPixmap );
+   logoLabel.setAlignment( Qt::AlignHCenter );
+   splashScreenLayoutManager.addWidget( &logoLabel );
+
+   // Show the dialog box for a few seconds.
+   splashScreenDialog.show();
+   splashScreenDialog.repaint();
+   SleepInMilliseconds( 3000 );
+}
+
+
+
+//-----------------------------------------------------------------------------
+void  QSimMainWindow::OpenFileSlot()
+{
+   QFileDialog fileOpenDialog( this, Qt::Dialog );
+   fileOpenDialog.setFileMode( QFileDialog::ExistingFiles );    // Use Directory if only a directory may be selected.  Use AnyFile if can specify a file that does not exist (useful for Save As file dialog).
+   fileOpenDialog.setViewMode( QFileDialog::Detail );           // Use QFileDialog::List for no detail.
+
+   // Note: Separate multiple filters with two semicolons, e.g.:  "Images (*.png *.jpg);;Text files (*.txt);;XML files (*.xml)"
+   fileOpenDialog.setNameFilter( tr("Image Files (*.png *.jpg *.bmp)") );
+
+   if( myPreviousFileDialogWorkingDirectory.exists()  )
+      fileOpenDialog.setDirectory( myPreviousFileDialogWorkingDirectory );
+
+   if( fileOpenDialog.exec() )
+   {
+      QStringList fileNames = fileOpenDialog.selectedFiles();
+	    if( fileNames.count() == 1 )
+         myPreviousFileDialogWorkingDirectory = fileOpenDialog.directory();
+   }
+}
+
+
+//-----------------------------------------------------------------------------
+void  QSimMainWindow::SaveFileSlot()
+{
+   QFileDialog fileSaveDialog( this, Qt::Dialog );
+   fileSaveDialog.setFileMode( QFileDialog::ExistingFiles );  // Use Directory if only a directory may be selected.  Use AnyFile if can specify a file that does not exist (useful for Save As file dialog).
+   fileSaveDialog.setViewMode( QFileDialog::Detail );         // Use QFileDialog::List for no detail.
+
+   // Note: Separate multiple filters with two semicolons, e.g.:  "Images (*.png *.jpg);;Text files (*.txt);;XML files (*.xml)"
+   fileSaveDialog.setNameFilter( tr("Image Files (*.png *.jpg *.bmp)") );
+
+   if( myPreviousFileDialogWorkingDirectory.exists()  )
+      fileSaveDialog.setDirectory( myPreviousFileDialogWorkingDirectory );
+
+   if( fileSaveDialog.exec() )
+   {
+      QStringList fileNames = fileSaveDialog.selectedFiles();
+	    if( fileNames.count() == 1 )
+         myPreviousFileDialogWorkingDirectory = fileSaveDialog.directory();
+   }
 }
 
 
