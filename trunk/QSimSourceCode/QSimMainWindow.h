@@ -61,9 +61,9 @@ public:
 private slots:
    // Slots for file menu.
    void  NewFileSlot()     { ; }  
-   void  OpenFileSlot();
-   void  SaveFileSlot();
-   void  SaveFileAsSlot()  { ; }
+   void  OpenFileSlot()    { this->OpenOrSaveOrSaveAsFile( QFileDialog::AcceptOpen ); }
+   void  SaveFileSlot()    { this->OpenOrSaveOrSaveAsFile( QFileDialog::AcceptSave ); }
+   void  SaveFileAsSlot()  { this->OpenOrSaveOrSaveAsFile( QFileDialog::AcceptSave ); }
    void  PrintFileSlot()   { ; }
    void  ExitProgramSlot() { QCoreApplication::quit(); }
    
@@ -113,6 +113,9 @@ private:
 
    // Actions for Simulate menu.
    QAction  mySimulateStartAction;
+
+   // Main routine for opening or saving files (restores previous directory).
+   void  OpenOrSaveOrSaveAsFile( const QFileDialog::AcceptMode acceptModeOpenOrSave );
 
    // Keep track of the last folder that was used to open or save a file.
    const QDir&  GetPreviousFileDialogWorkingDirectory( void )             { return myPreviousFileDialogWorkingDirectory; }

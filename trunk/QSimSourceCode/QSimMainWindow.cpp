@@ -59,7 +59,7 @@ QSimMainWindow::QSimMainWindow() : myExitProgramAction(NULL), myNewFileAction(NU
    this->setWindowIcon( mainApplicationWindowIcon );
 
    // Note: It may not be possible to bold-face the title of the main application window as it is controlled by OS, not Qt.
-   //this->setWindowTitle( "QSim" );
+   this->setWindowTitle( "QSim" );
 
    // Size this window (make it larger than usual) and show it.
    // this->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
@@ -347,11 +347,28 @@ void QSimMainWindow::DisplaySplashScreen()
 
 
 //-----------------------------------------------------------------------------
-void  QSimMainWindow::OpenFileSlot()
+void  QSimMainWindow::OpenOrSaveOrSaveAsFile( const QFileDialog::AcceptMode acceptModeOpenOrSave )
 {
    QFileDialog fileOpenDialog( this, Qt::Dialog );
-   fileOpenDialog.setFileMode( QFileDialog::ExistingFiles );    // Use Directory if only a directory may be selected.  Use AnyFile if can specify a file that does not exist (useful for Save As file dialog).
-   fileOpenDialog.setViewMode( QFileDialog::Detail );           // Use QFileDialog::List for no detail.
+   fileOpenDialog.setWindowTitle( acceptModeOpenOrSave== QFileDialog::AcceptOpen ? tr("Open file") : tr("Save file") );
+
+   // setAcceptMode can be set to one of the following.
+   // QFileDialog::AcceptOpen   dialog is for opening files.
+   // QFileDialog::AcceptSave   dialog is for saving  files.
+   fileOpenDialog.setAcceptMode( acceptModeOpenOrSave );
+
+   // setFileMode can be set to one of the following.
+   // QFileDialog::AnyFile        The name of a file, whether it exists or not (useful for Save As file dialog).
+   // QFileDialog::ExistingFile   The name of a single existing file.
+   // QFileDialog::Directory      The name of a directory. Both files and directories are displayed.
+   // QFileDialog::ExistingFiles  The names of zero or more existing files.
+   const QFileDialog::FileMode fileMode = acceptModeOpenOrSave == QFileDialog::AcceptOpen ? QFileDialog::ExistingFile : QFileDialog::AnyFile;
+   fileOpenDialog.setFileMode( fileMode );
+
+   // setViewMode can be set to one of the following.
+   // QFileDialog::Detail  Displays an icon, a name, and details for each item in the directory.
+   // QFileDialog::List    Displays only an icon and a name for each item in the directory.
+   fileOpenDialog.setViewMode( QFileDialog::Detail );
 
    // Note: Separate multiple filters with two semicolons, e.g.:  "Images (*.png *.jpg);;Text files (*.txt);;XML files (*.xml)"
    fileOpenDialog.setNameFilter( tr("Image Files (*.png *.jpg *.bmp)") );
@@ -366,29 +383,6 @@ void  QSimMainWindow::OpenFileSlot()
          myPreviousFileDialogWorkingDirectory = fileOpenDialog.directory();
    }
 }
-
-
-//-----------------------------------------------------------------------------
-void  QSimMainWindow::SaveFileSlot()
-{
-   QFileDialog fileSaveDialog( this, Qt::Dialog );
-   fileSaveDialog.setFileMode( QFileDialog::ExistingFiles );  // Use Directory if only a directory may be selected.  Use AnyFile if can specify a file that does not exist (useful for Save As file dialog).
-   fileSaveDialog.setViewMode( QFileDialog::Detail );         // Use QFileDialog::List for no detail.
-
-   // Note: Separate multiple filters with two semicolons, e.g.:  "Images (*.png *.jpg);;Text files (*.txt);;XML files (*.xml)"
-   fileSaveDialog.setNameFilter( tr("Image Files (*.png *.jpg *.bmp)") );
-
-   if( myPreviousFileDialogWorkingDirectory.exists()  )
-      fileSaveDialog.setDirectory( myPreviousFileDialogWorkingDirectory );
-
-   if( fileSaveDialog.exec() )
-   {
-      QStringList fileNames = fileSaveDialog.selectedFiles();
-	    if( fileNames.count() == 1 )
-         myPreviousFileDialogWorkingDirectory = fileSaveDialog.directory();
-   }
-}
-
 
 
 #if 0
