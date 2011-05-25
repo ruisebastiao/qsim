@@ -1,20 +1,20 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-    <file>../QSimApplicationIconC.ico</file>
-    <file>MiscImages/QSimLogo.jpg</file>
-    <file>ApachePublicDomainImages/world1.png</file>
-    <file>TangoPublicDomainImages/media-playback-start.png</file>
-    <file>TangoPublicDomainImages/document-new.png</file>
-    <file>TangoPublicDomainImages/document-open.png</file>
-    <file>TangoPublicDomainImages/document-save-as.png</file>
-    <file>TangoPublicDomainImages/document-save.png</file>
-    <file>TangoPublicDomainImages/edit-copy.png</file>
-    <file>TangoPublicDomainImages/edit-cut.png</file>
-    <file>TangoPublicDomainImages/edit-delete.png</file>
-    <file>TangoPublicDomainImages/edit-paste.png</file>
-    <file>TangoPublicDomainImages/help-browser.png</file>
-    <file>TangoPublicDomainImages/printer.png</file>
-    <file>TangoPublicDomainImages/system-shutdown.png</file>
+     <file>../QSimApplicationIconC.ico</file>
+     <file>MiscImages/QSimLogo.jpg</file>
+     <file>ApachePublicDomainImages/world1.png</file>
+     <file>TangoPublicDomainImages/media-playback-start.png</file>
+     <file>TangoPublicDomainImages/document-new.png</file>
+     <file>TangoPublicDomainImages/document-open.png</file>
+     <file>TangoPublicDomainImages/document-save-as.png</file>
+     <file>TangoPublicDomainImages/document-save.png</file>
+     <file>TangoPublicDomainImages/edit-copy.png</file>
+     <file>TangoPublicDomainImages/edit-cut.png</file>
+     <file>TangoPublicDomainImages/edit-delete.png</file>
+     <file>TangoPublicDomainImages/edit-paste.png</file>
+     <file>TangoPublicDomainImages/help-browser.png</file>
+     <file>TangoPublicDomainImages/printer.png</file>
+     <file>TangoPublicDomainImages/system-shutdown.png</file>
 </qresource>
 </RCC>
 

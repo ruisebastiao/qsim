@@ -337,7 +337,7 @@ bool  StartAndRunSimulationMathematicsEngineNoGuiInsideExceptionHandling( )
    // Save the model to a file
    osimModel.print("tugOfWar_model.osim");
 
-#elif 0
+#elif 1
    // Create the system, with subsystems for the bodies and some forces.
    MultibodySystem system;
    SimbodyMatterSubsystem matter(system);

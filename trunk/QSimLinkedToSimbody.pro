@@ -65,6 +65,10 @@ win32{
    # Ensure .dlls are in the executable's folder (best) or listed on computer's
    # PATH environment variable, e.g. C:\Simbody\bin is on PATH.
    #-----------------------------------------------------------------
+   # Ensure pthreadVC2.dll is being loaded from Simbody's bin folder.
+   # If you are using Apple's itunes and its pthreadVC2.dll is found on the path first,
+   # (before Simbody's version), your Qt application will throw an exception and not run.
+   #-----------------------------------------------------------------
 }
 
 #--------------------------------------------------------------------
@@ -99,7 +103,6 @@ macx{
    # gcc -lactualNameOfLibraryFile designates a library to link with.
    # Ensure .so files are in the executable's folder (best) or listed on computer's
    # DYLD_LIBRARY_PATH environment variable, e.g. /Simbody/bin is on DYLD_LIBRARY_PATH
-   # Sherm says LIBS += SimTKsimbody will recursively include the ones it depends on (all).
    # Alternate way to get gcc to link libraries is: LIBS += -L/usr/local/SimTK/lib -lSimTKsimbody -lSimTKmath  -lSimTKcommon
    #-----------------------------------------------------------------
 }
@@ -131,7 +134,6 @@ unix:!macx{
    # gcc -lactualNameOfLibraryFile designates a library to link with.
    # Ensure .so files are in the executable's folder (best) or listed on computer's
    # LD_LIBRARY_PATH environment variable, e.g. /Simbody/bin is on LD_LIBRARY_PATH
-   # Sherm says LIBS += SimTKsimbody will recursively include the ones it depends on (all).
    #-----------------------------------------------------------------
 }
 

@@ -326,15 +326,6 @@ void QSimMainWindow::DisplaySplashScreen()
    // Create layout manager for splash screen.
    QVBoxLayout splashScreenLayoutManager( &splashScreenDialog );
 
-#if 0
-   // Labels are widgets that contain text and that can be formatted with simple HTML-style formatting.
-   QLabel movieLabel( &splashScreenDialog);
-   QMovie animatedGif( ":/MiscImages/RedCircleOnYellowSquarePublicDomain.gif" );
-   movieLabel.setMovie( &animatedGif );
-   movieLabel.setAlignment( Qt::AlignHCenter );
-   splashScreenLayoutManager.addWidget( &movieLabel );
-#endif
-
    // Labels are widgets that contain text and that can be formatted with simple HTML-style formatting.
    QLabel widgetLabel( "<h2><b><font color=blue><br>Hello Scott, Sherm, Ayman, Peter, Matt, Chand, Mark, <br>Ajay, Sam, Edith, Jennifer, Joy, Jessie, Paul, Melanie, ...</font color><b><br></h2>", &splashScreenDialog );
    widgetLabel.setAlignment( Qt::AlignHCenter );
@@ -348,7 +339,6 @@ void QSimMainWindow::DisplaySplashScreen()
    splashScreenLayoutManager.addWidget( &logoLabel );
 
    // Show the dialog box for a few seconds.
-   // splashScreenDialog.setWindowModality( Qt::WindowModal );
    splashScreenDialog.show();
    splashScreenDialog.repaint();
    SleepInMilliseconds( 3000 );
