@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
-// File:     QSimGui.h
-// Class:    None
-// Parent:   None
-// Purpose:  Main entry point for Qt graphical user interface for QSim.
+// File:     QSimGLWidget.h
+// Class:    QSimGLWidget
+// Parent:   QGLWidget
+// Purpose:  Main widget for OpenQL.
 /* ------------------------------------------------------------------------- *
 * QSim was developed with support from Simbios (the NIH National Center      *
 * for Physics-Based Simulation Biological Structures at Stanford) under NIH  *
@@ -33,17 +33,68 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-#ifndef  QSIMGUI_H__ 
-#define  QSIMGUI_H__
+#ifndef  QSIMGLWIDGET_H__ 
+#define  QSIMGLWIDGET_H__
 #include "CppStandardHeaders.h"
+#include <QtCore>
+#include <QtGui>
+#include <QtOpenGL>
 
 
 //------------------------------------------------------------------------------
 namespace QSim {
 
+// Forward declaration.
+class QtLogo *logo;
 
-// Main entry point for Qt portion of program.
-int  QSimGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArguments[] );
+
+// Note: Qt's QGLWidget helps display OpenGL graphics in a Qt application. 
+// To use it, choose between using QPainter and standard OpenGL rendering commands.
+//-----------------------------------------------------------------------------
+class QSimGLWidget : public QGLWidget
+{
+    Q_OBJECT
+
+public:
+   // Constructors and destructors.
+   QSimGLWidget( QWidget* parentWidget ) { this->setParent(parentWidget);}
+  ~QSimGLWidget() {;}
+public:
+
+   QSize minimumSizeHint() const;
+   QSize sizeHint() const;
+
+public slots:
+   void  SetXRotationAngle( const int angle ) {;}
+   void  SetYRotationAngle( const int angle ) {;}
+   void  SetZRotationAngle( const int angle ) {;}
+
+signals:
+   void  xRotationAngleChanged( const int angle );
+   void  yRotationAngleChanged( const int angle );
+   void  zRotationAngleChanged( const int angle );
+
+protected:
+   // Override parent class QGLWidget virtual functions to perform typical OpenGL tasks.
+   // initializeGL: Sets up the OpenGL rendering context, defines display lists, etc. Gets called once before the first time resizeGL() or paintGL() is called.
+   // paintGL:      Renders the OpenGL scene.  Gets called whenever the widget needs to be updated.
+   // resizeGL:     Sets up the OpenGL viewport, projection, etc. Gets called whenever the widget has been resized (or shown for the first time).
+   void  initializeGL();
+   void  paintGL();
+   void  resizeGL( int width, int height );
+
+   void  MousePressEvent( QMouseEvent *event );
+   void  MouseMoveEvent( QMouseEvent *event );
+
+private:
+   QtLogo *logo;
+   int xRot;
+   int yRot;
+   int zRot;
+   QPoint lastPos;
+   QColor qtGreen;
+   QColor qtPurple;
+};
 
 
 //------------------------------------------------------------------------------
@@ -51,5 +102,6 @@ int  QSimGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArgument
 
 
 //--------------------------------------------------------------------------
-#endif  // QSIMGUI_H__
+#endif  // QSIMGLWIDGET_H__
 //--------------------------------------------------------------------------
+

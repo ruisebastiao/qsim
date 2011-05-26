@@ -31,12 +31,9 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-#include "CppStandardHeaders.h"
-
-
-//------------------------------------------------------------------------------
 #ifndef  QSIMGENERICFUNCTIONS_H__
 #define  QSIMGENERICFUNCTIONS_H__
+#include "CppStandardHeaders.h"
 
 
 //------------------------------------------------------------------------------

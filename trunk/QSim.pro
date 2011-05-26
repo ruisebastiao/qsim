@@ -55,7 +55,7 @@
 win32{
 
    TEMPLATE   = vcapp    # Change vcapp to app if not using Microsoft Visual Studio.
-   INCLUDEPATH  += /Qt/4.7.2/include/
+   INCLUDEPATH += /Qt/4.7.2/include/
 
    # Add in Windows-specific resource file (e.g., for displaying an icon with the application).
    # It seems this file needs to be in the same folder as QSim.pro (at least on Windows).
@@ -104,10 +104,10 @@ unix:!macx{
 #--------------------------------------------------------------------
 # Target on Windows is QSim.exe.  On Macintosh/Linux is QSim.
 #--------------------------------------------------------------------
-TARGET    = QSim
-CONFIG    += windows
-CONFIG    += debug_and_release  # debug  or  release  or  debug_and_release
-CONFIG    += warn_on            # warn_on  or  warn_off
+TARGET  = QSim
+CONFIG  += windows
+CONFIG  += debug_and_release  # debug  or  release  or  debug_and_release
+CONFIG  += warn_on            # warn_on  or  warn_off
 
 #--------------------------------------------------------------------
 # Configuration settings.
@@ -127,14 +127,14 @@ CONFIG    += warn_on            # warn_on  or  warn_off
 # xml:          QtXml module provides C++ implementations of SAX (event-based tandard interface for XML parsers, see http://www.saxproject.org) and
 #               DOM (maps XML document to a tree structure, see http://www.w3.org/DOM/ and QtDom classes)
 #--------------------------------------------------------------------
-CONFIG    += qt
-CONFIG    += core       # Qtcore module is included by default with CONFIG += qt
-CONFIG    += gui        # Qtgui modules is included by default with CONFIG += qt
-CONFIG    += opengl     # QtOpenGL module  (3D Rendering graphics)
-#  CONFIG    += network # QtNetwork module (TCP/IP, http, and sockets)
-#  CONFIG    += sql     # QtSql module     (Database)
-#  CONFIG    += svg     # QtSvg module
-#  CONFIG    += xml     # QtXml module
+CONFIG  += qt
+CONFIG  += core       # Qtcore module is included by default with CONFIG += qt
+CONFIG  += gui        # Qtgui modules is included by default with CONFIG += qt
+QT      += opengl     # QtOpenGL module  (3D Rendering graphics)
+#  QT     += network  # QtNetwork module (TCP/IP, http, and sockets)
+#  QT     += sql      # QtSql module     (Database)
+#  QT     += svg      # QtSvg module
+#  QT     += xml      # QtXml module
 
 
 #--------------------------------------------------------------------
@@ -147,20 +147,21 @@ CONFIG    += opengl     # QtOpenGL module  (3D Rendering graphics)
 #--------------------------------------------------------------------
 # Header files for source code
 #--------------------------------------------------------------------
-HEADERS      += ./QSimSourceCode/CppStandardHeaders.h
-HEADERS      += ./QSimSourceCode/QSimGenericFunctions.h
-HEADERS      += ./QSimSourceCode/QSimGui.h
-HEADERS      += ./QSimSourceCode/QSimStartSimulation.h
-HEADERS      += ./QSimSourceCode/QSimMainWindow.h
+HEADERS  += ./QSimSourceCode/CppStandardHeaders.h
+HEADERS  += ./QSimSourceCode/QSimGenericFunctions.h
+HEADERS  += ./QSimSourceCode/QSimGui.h
+HEADERS  += ./QSimSourceCode/QSimStartSimulation.h
+HEADERS  += ./QSimSourceCode/QSimMainWindow.h
+HEADERS  += ./QSimSourceCode/QSimGLWidget.h
 
 #--------------------------------------------------------------------
 # Source code  (cpp)
 #--------------------------------------------------------------------
-SOURCES      += ./QSimSourceCode/QSimGui.cpp
-SOURCES      += ./QSimSourceCode/QSimMain.cpp
-SOURCES      += ./QSimSourceCode/QSimStartSimulationGui.cpp
-SOURCES      += ./QSimSourceCode/QSimStartSimulationNoGui.cpp
-SOURCES      += ./QSimSourceCode/QSimMainWindow.cpp
+SOURCES  += ./QSimSourceCode/QSimGui.cpp
+SOURCES  += ./QSimSourceCode/QSimMain.cpp
+SOURCES  += ./QSimSourceCode/QSimStartSimulationGui.cpp
+SOURCES  += ./QSimSourceCode/QSimStartSimulationNoGui.cpp
+SOURCES  += ./QSimSourceCode/QSimMainWindow.cpp
 
 #--------------------------------------------------------------------
 # Resources that are compiled into the binary executable.

@@ -36,13 +36,10 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-#include "CppStandardHeaders.h"
-#include <QObject>
-
-
-//------------------------------------------------------------------------------
 #ifndef  OPENSIMQTSTARTSIMULATION_H__ 
 #define  OPENSIMQTSTARTSIMULATION_H__
+#include "CppStandardHeaders.h"
+#include <QObject>
 
 
 //------------------------------------------------------------------------------
