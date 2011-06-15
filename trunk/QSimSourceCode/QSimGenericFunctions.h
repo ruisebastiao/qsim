@@ -42,6 +42,10 @@ namespace QSim {
    // Suspend program execution for designated number of milliseconds.
    inline void  SleepInMilliseconds( const unsigned long numMillisecondsToSleep )  { const clock_t stopClock = numMillisecondsToSleep + std::clock();  while( std::clock() < stopClock ) {;} }
 
+   // Enumerated types related to just x, y, z or signed directions -z -y, -x, +x, +y, +z
+   enum UnsignedXYZDirection{ UnsignedXDirection=0, UnsignedYDirection, UnsignedZDirection };
+   enum SignedXYZDirection{ NegativeZDirection=0, NegativeYDirection, NegativeXDirection, positiveXDirection, positiveYDirection, positiveZDirection };
+    
 //------------------------------------------------------------------------------
 }  // End of namespace OpenSimQT
 
