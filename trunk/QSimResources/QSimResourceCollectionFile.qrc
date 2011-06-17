@@ -2,6 +2,15 @@
 <qresource>
      <file>../QSimApplicationIconC.ico</file>
      <file>MiscImages/QSimLogo.jpg</file>
+     <file>MiscImages/BlueSolidsPublicDomainConeCapTransparent120Pixel.png</file>
+     <file>MiscImages/BlueSolidsPublicDomainConeFullTransparent120Pixel.png</file>
+     <file>MiscImages/BlueSolidsPublicDomainCubeTransparent120Pixel.png</file>
+     <file>MiscImages/BlueSolidsPublicDomainCylinderTransparent120Pixel.png</file>
+     <file>MiscImages/BlueSolidsPublicDomainSphereTransparent120Pixel.png</file>
+     <file>MiscImages/BlueSolidsPublicDomainTorusTransparent120Pixel.png</file>
+     <file>MiscImages/OpenSimTorsoAndLowerExtremityModel.png</file>
+     <file>MiscImages/OpenSimLowerExtremityOnlyModel.png</file>
+     <file>MiscImages/OpenSimLowerLimbModelEdithArnold.png</file>
      <file>ApachePublicDomainImages/world1.png</file>
      <file>TangoPublicDomainImages/media-playback-start.png</file>
      <file>TangoPublicDomainImages/document-new.png</file>
