@@ -1,8 +1,17 @@
 //-----------------------------------------------------------------------------
-// File:     QSimGLWidget.h
-// Class:    QSimGLWidget
-// Parent:   QGLWidget
-// Purpose:  Main widget for OpenQL.
+// File:     QSimGLViewWidget.h
+// Class:    QSimGLViewWidget
+// Parents:  QGLView -> QGLWidget -> QWidget -> (QObject and QPaintDevice)
+// Purpose:  Main Qt widget for OpenQL with 3D camera viewing.
+// Notes:    3D camera views are modified by keyboard and mouse control.
+//           Left-mouse-button drag rotates the camera's position around the viewed object. 
+//           Shift-key and left-mouse-button pans the view in a plane without rotating the viewed object.
+//           Control-key and left-mouse-button drag up/down will zoom in and out.
+//           Mouse wheel (if one is available) will also zoom the view in and out.
+//           Keyboard arrow keys left, right, up, and down keys shift the camera's position around the viewed object.
+//           Shift and Control modify keys the same way they modify the left mouse button above. 
+//           Keyboard Home-key causes the camera position to be reset to its original position.
+//           QGLView also supports stereo viewing (see documentation) but is off by default.
 /* ------------------------------------------------------------------------- *
 * QSim was developed with support from Simbios (the NIH National Center      *
 * for Physics-Based Simulation Biological Structures at Stanford) under NIH  *
@@ -33,75 +42,51 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-#ifndef  QSIMGLWIDGET_H__ 
-#define  QSIMGLWIDGET_H__
+#ifndef  QSIMGLVIEWWIDGET_H__ 
+#define  QSIMGLVIEWWIDGET_H__
 #include "CppStandardHeaders.h"
+#include "QSimGenericFunctions.h"
 #include <QtCore>
 #include <QtGui>
 #include <QtOpenGL>
+#include "qglview.h"
+#include "qglscenenode.h"
+#include "qglbuilder.h"
 
 
 //------------------------------------------------------------------------------
-namespace QSim {
-
-// Forward declaration.
-class QtLogo *logo;
-
-
-// Note: Qt's QGLWidget helps display OpenGL graphics in a Qt application. 
-// To use it, choose between using QPainter and standard OpenGL rendering commands.
-//-----------------------------------------------------------------------------
-class QSimGLWidget : public QGLWidget
+class QSimGLViewWidget : public QGLView
 {
-    Q_OBJECT
+   Q_OBJECT
 
 public:
-   // Constructors and destructors.
-   QSimGLWidget( QWidget* parentWidget ) { this->setParent(parentWidget);}
-  ~QSimGLWidget() {;}
-public:
-
-   QSize minimumSizeHint() const;
-   QSize sizeHint() const;
-
-public slots:
-   void  SetXRotationAngle( const int angle ) {;}
-   void  SetYRotationAngle( const int angle ) {;}
-   void  SetZRotationAngle( const int angle ) {;}
-
-signals:
-   void  xRotationAngleChanged( const int angle );
-   void  yRotationAngleChanged( const int angle );
-   void  zRotationAngleChanged( const int angle );
+   QSimGLViewWidget( QWidget *parent = NULL );
+  ~QSimGLViewWidget() {;}
 
 protected:
-   // Override parent class QGLWidget virtual functions to perform typical OpenGL tasks.
+   // Override parent class QGLView virtual functions to perform typical OpenGL tasks.
    // initializeGL: Sets up the OpenGL rendering context, defines display lists, etc. Gets called once before the first time resizeGL() or paintGL() is called.
    // paintGL:      Renders the OpenGL scene.  Gets called whenever the widget needs to be updated.
-   // resizeGL:     Sets up the OpenGL viewport, projection, etc. Gets called whenever the widget has been resized (or shown for the first time).
-   void  initializeGL();
-   void  paintGL();
-   void  resizeGL( int width, int height );
+   // resizeGL:     Sets up the OpenGL viewport, projection, etc. Gets called whenever the widget has been resized (or shown for the first time).  resizeGL is implemented in QSimGLView class.
+   virtual void  initializeGL( QGLPainter *painter ) { painter->setStandardEffect( QGL::LitMaterial ); } //  this->RegisterPickableNodes(); }
+   virtual void  paintGL( QGLPainter *painter )  { myMostParentSceneNode.draw(painter); }
+   void  resizeGL( int width, int height )  { this->QGLView::resizeGL( width, height ); }
 
-   void  MousePressEvent( QMouseEvent *event );
-   void  MouseMoveEvent( QMouseEvent *event );
+   // Override parent class QGLWidget virtual functions to detect mouse or key-pressed events.
+   // virtual void  mousePressEvent( QMouseEvent *event )  { myLastPos = event->pos(); }
+   // virtual void  mouseMoveEvent(  QMouseEvent *event );
+   virtual void  keyPressEvent( QKeyEvent *event );
+
+   // void initializeGL( QGLPainter *painter );
 
 private:
-   QtLogo *logo;
-   int xRot;
-   int yRot;
-   int zRot;
-   QPoint lastPos;
-   QColor qtGreen;
-   QColor qtPurple;
+   // Register the nodes that are pickable by the user.
+   // void  RegisterPickableNodes();
+
+   // The sole parent of QGLSceneNode is QObject 
+   QGLSceneNode  myMostParentSceneNode;
 };
 
-
-//------------------------------------------------------------------------------
-}  // End of namespace QSim
-
-
 //--------------------------------------------------------------------------
-#endif  // QSIMGLWIDGET_H__
+#endif  // QSIMGLVIEWWIDGET_H__
 //--------------------------------------------------------------------------
-
