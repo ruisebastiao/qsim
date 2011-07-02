@@ -56,6 +56,8 @@ win32{
 
    TEMPLATE   = vcapp    # Change vcapp to app if not using Microsoft Visual Studio.
    INCLUDEPATH += /Qt/4.7.2/include/
+   INCLUDEPATH += /QSimSourceCode/QSimSourceCode/
+   INCLUDEPATH += /QSimSourceCode/QSimSourceCode/GeometryFigures/
 
    # Add in Windows-specific resource file (e.g., for displaying an icon with the application).
    # It seems this file needs to be in the same folder as QSim.pro (at least on Windows).
@@ -68,6 +70,8 @@ win32{
    #       QMAKESPEC   to   win32-msvc2008
    #       PATH        add  C:\Qt\4.7.2\bin\
 
+   # Target is Win32 window application (app only). Proper include paths, compiler flags and libraries are automatically added to the project.
+   CONFIG  += windows 	      
 }
 
 #--------------------------------------------------------------------
@@ -105,7 +109,6 @@ unix:!macx{
 # Target on Windows is QSim.exe.  On Macintosh/Linux is QSim.
 #--------------------------------------------------------------------
 TARGET  = QSim
-CONFIG  += windows
 CONFIG  += debug_and_release  # debug  or  release  or  debug_and_release
 CONFIG  += warn_on            # warn_on  or  warn_off
 
@@ -128,13 +131,13 @@ CONFIG  += warn_on            # warn_on  or  warn_off
 #               DOM (maps XML document to a tree structure, see http://www.w3.org/DOM/ and QtDom classes)
 #--------------------------------------------------------------------
 CONFIG  += qt
-CONFIG  += core       # Qtcore module is included by default with CONFIG += qt
-CONFIG  += gui        # Qtgui modules is included by default with CONFIG += qt
-QT      += opengl     # QtOpenGL module  (3D Rendering graphics)
-#  QT     += network  # QtNetwork module (TCP/IP, http, and sockets)
-#  QT     += sql      # QtSql module     (Database)
-#  QT     += svg      # QtSvg module
-#  QT     += xml      # QtXml module
+QT  += core       # Qt core module is included by default with CONFIG += qt
+QT  += gui        # Qt gui modules is included by default with CONFIG += qt
+QT  += opengl     # QtOpenGL module  (3D Rendering graphics)
+# QT  += network  # QtNetwork module (TCP/IP, http, and sockets)
+# QT  += sql      # QtSql module     (Database)
+# QT  += svg      # QtSvg module
+# QT  += xml      # QtXml module
 
 
 #--------------------------------------------------------------------
@@ -148,19 +151,23 @@ QT      += opengl     # QtOpenGL module  (3D Rendering graphics)
 # Header files for source code
 #--------------------------------------------------------------------
 HEADERS  += ./QSimSourceCode/CppStandardHeaders.h
+HEADERS  += ./QSimSourceCode/QActionHelper.h
+HEADERS  += ./QSimSourceCode/QPlainTextReadWrite.h
 HEADERS  += ./QSimSourceCode/QSimGenericFunctions.h
 HEADERS  += ./QSimSourceCode/QSimGui.h
 HEADERS  += ./QSimSourceCode/QSimStartSimulation.h
 HEADERS  += ./QSimSourceCode/QSimMainWindow.h
-HEADERS  += ./QSimSourceCode/QSimGLWidget.h
+HEADERS  += ./QSimSourceCode/QSimToolBarGeometry.h
 
 #--------------------------------------------------------------------
 # Source code  (cpp)
 #--------------------------------------------------------------------
+SOURCES  += ./QSimSourceCode/QPlainTextReadWrite.cpp
 SOURCES  += ./QSimSourceCode/QSimGui.cpp
 SOURCES  += ./QSimSourceCode/QSimMain.cpp
 SOURCES  += ./QSimSourceCode/QSimStartSimulationGui.cpp
 SOURCES  += ./QSimSourceCode/QSimStartSimulationNoGui.cpp
+SOURCES  += ./QSimSourceCode/QSimToolBarGeometry.cpp
 SOURCES  += ./QSimSourceCode/QSimMainWindow.cpp
 
 #--------------------------------------------------------------------
@@ -177,6 +184,7 @@ RESOURCES += ./QSimResources/QSimResourceCollectionFile.qrc
 # on Windows computer's PATH environment variable, e.g. C:\Simbody\bin is on PATH.
 #--------------------------------------------------------------------
 include(QSimLinkedToSimbody.pro)
+include(QSimLinkedToQt3D.pro)
 # include(QSimLinkedToOpenSimAPI.pro)
 
 
