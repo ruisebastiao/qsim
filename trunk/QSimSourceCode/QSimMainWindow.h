@@ -36,7 +36,11 @@
 #ifndef  QSIMMAINWINDOW_H___ 
 #define  QSIMMAINWINDOW_H___
 #include "CppStandardHeaders.h"
+#include "QActionHelper.h"
+#include "QSimToolBarGeometry.h"
 #include "QSimStartSimulation.h"
+#include "QPlainTextReadWrite.h"
+#include "QSimGLViewWidget.h"
 #include <QtCore>
 #include <QtGui>
 
@@ -71,45 +75,77 @@ private slots:
    void  EditDeleteSlot()  { ; }
 
    // Slots for help menu.
-   void  HelpAboutSlot()     { this->CreateCrazyWidget(); }
-   void  HelpContentsSlot()  { ; }
+   void  HelpAboutSlot()     { this->DisplayHelpAboutScreen(); }
+   void  HelpContentsSlot()  { this->CreateCrazyWidget(); }
 
-   // Slots for Simulate menu.
+   // Slots for simulate menu.
    void  SlotStartSimulationFromMainApplicationWindow() { StartAndRunSimulationMathematicsEngineNoGui(); }  
 
+#if 0
+   // Slots for geometry toolbar.
+   void  DrawSphereSlot()   { ; }
+   void  DrawCubeSlot()     { ; }
+   void  DrawCylinderSlot() { ; }
+   void  DrawConeCapSlot()  { ; }
+   void  DrawConeFullSlot() { ; }
+   void  DrawTorusSlot()    { ; }
+   void  DrawTorsoAndLowerExtremityModelSlot()  { ; }
+   void  DrawLowerExtremityOnlyModelSlot()      { ; }
+   void  DrawLowerLimbModelSlot()               { ; }
+#endif
+
 private:
-   void  AddActionToMainWindowMenu( QAction& action, QMenu& mainWindowMenu, const QString& textName, const char *pathToIconFile );
-   void  AddActionToMainWindowMenu( QAction& action, QMenu& mainWindowMenu, const QString& textName, const QKeySequence& keySequenceShortcut, const char *pathToIconFile )  { action.setShortcut( keySequenceShortcut );   this->AddActionToMainWindowMenu( action, mainWindowMenu, textName, pathToIconFile ); }
+   void  AddAllActionsWhoAreChildrenOfQSimMainWindow();
+   void  AddActionAsChildOfThis( QAction& action, const QString& textName, const char *pathToIconFileOrNull );
+   void  AddActionAsChildOfThis( QAction& action, const QString& textName, const QKeySequence& keySequenceShortcut, const char *pathToIconFileOrNull ) { this->AddActionAsChildOfThis( action, textName, pathToIconFileOrNull );  action.setShortcut( keySequenceShortcut ); }
    void  CreateFileMenu();
    void  CreateEditMenu();
    void  CreateHelpMenu();
    void  CreateSimulateMenu();
    void  CreateCrazyWidget();
+   void  CreateToolbarEditEtc();
+   void  CreateDockWidgets();
+   void  CreateStatusBar();
    void  DisplaySplashScreen();
-
-   // void  CreateToolBars();
-   // void  CreateStatusBar();
+   void  DisplayHelpAboutScreen();
+   void  CreateTextEditor();
 
    // Actions for file menu.
-   QAction  myExitProgramAction;
-   QAction  myNewFileAction;
-   QAction  myOpenFileAction;
-   QAction  mySaveFileAction;
-   QAction  mySaveFileAsAction;
-   QAction  myPrintFileAction;
+   QActionHelper  myExitProgramAction;
+   QActionHelper  myNewFileAction;
+   QActionHelper  myOpenFileAction;
+   QActionHelper  mySaveFileAction;
+   QActionHelper  mySaveFileAsAction;
+   QActionHelper  myPrintFileAction;
 
    // Actions for edit menu.
-   QAction  myEditCutAction;
-   QAction  myEditCopyAction;
-   QAction  myEditPasteAction;
-   QAction  myEditDeleteAction;
+   QActionHelper  myEditCutAction;
+   QActionHelper  myEditCopyAction;
+   QActionHelper  myEditPasteAction;
+   QActionHelper  myEditDeleteAction;
 
-   // Actions for help menu.
-   QAction  myHelpAboutAction;
-   QAction  myHelpContentsAction;
+   // Actions and buttons for geometry toolbar.
+   QSimToolBarGeometry  myToolBarGeometry;
+#if 0
+   QActionHelper  myDrawSphereAction;
+   QActionHelper  myDrawCubeAction;
+   QActionHelper  myDrawCylinderAction;
+   QActionHelper  myDrawConeCapAction;
+   QActionHelper  myDrawConeFullAction;
+   QActionHelper  myDrawTorusAction;
+   QActionHelper  myDrawTorsoAndLowerExtremityAction;
+   QActionHelper  myDrawLowerExtremityOnlyAction;
+   QActionHelper  myDrawLowerLimbAction;
+   QToolButton myDrawSphereToolButton;
+   QToolButton myDrawCubeToolButton;
+#endif
 
    // Actions for Simulate menu.
-   QAction  mySimulateStartAction;
+   QActionHelper  mySimulateStartAction;
+
+   // Actions for help menu.
+   QActionHelper  myHelpAboutAction;
+   QActionHelper  myHelpContentsAction;
 
    // Main routine for opening or saving files (restores previous directory).
    void  OpenOrSaveOrSaveAsFile( const QFileDialog::AcceptMode acceptModeOpenOrSave );
@@ -120,7 +156,9 @@ private:
    QDir  myPreviousFileDialogWorkingDirectory;
 
    // Currently the "central widget".
-   QTextEdit  myQSimMainWindowTextEdit;
+   QSimGLViewWidget  myQSimGLViewWidget;
+   QPlainTextEdit myQSimMainWindowTextEdit;
+//   QPlainTextReadWrite  myQSimMainWindowTextEdit;
 };
 
 
@@ -129,8 +167,6 @@ private:
 
 //------------------------------------------------------------------------------
 }  // End of namespace QSim
-
-
 //--------------------------------------------------------------------------
 #endif  // QSIMMAINWINDOW_H___
 //--------------------------------------------------------------------------

@@ -39,6 +39,9 @@
 //------------------------------------------------------------------------------
 namespace QSim {
 
+   // Random integer in the range from min to max.
+   inline int  GetRandomIntegerInRange( const int min, const int max )  { srand( (unsigned int)(time(NULL)) );  const int range = max + 1 - min;  return min + (rand() % range); } 
+
    // Suspend program execution for designated number of milliseconds.
    inline void  SleepInMilliseconds( const unsigned long numMillisecondsToSleep )  { const clock_t stopClock = numMillisecondsToSleep + std::clock();  while( std::clock() < stopClock ) {;} }
 

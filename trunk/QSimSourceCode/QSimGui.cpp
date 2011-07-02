@@ -77,7 +77,6 @@ int QSimGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArguments
 
    // Pass control of application to Qt.
    // User actions generate events (messages), e.g., "mouse press" and "mouse release".
-   // app.setMainWidget( &widgetPushButton );
    return app.exec();
 }
 
@@ -100,7 +99,7 @@ int QSimGui( int numberOfCommandLineArguments, char *arrayOfCommandLineArguments
    Qt::WindowFlags  mainWindowFlags = Qt::Window;
    // QMainWindow mainWindowInApplication( mainWindowParentNull, mainWindowFlags );
    QWidget mainWindowInApplication( mainWindowParentNull, mainWindowFlags );
-   mainWindowInApplication.setWindowTitle( "QSim" );
+   mainWindowInApplication.setWindowTitle( "QSim:  Easy-to-use Biomechanics Software" );
    mainWindowInApplication.setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
    // mainWindowInApplication.resize( 400, 200 );
 
