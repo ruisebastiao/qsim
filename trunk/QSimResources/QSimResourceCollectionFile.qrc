@@ -1,7 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
      <file>../QSimApplicationIconC.ico</file>
-     <file>MiscImages/QSimLogo.jpg</file>
+     <file>MiscImages/QSimLogoWithNames.jpg</file>
      <file>MiscImages/BlueSolidsPublicDomainConeCapTransparent120Pixel.png</file>
      <file>MiscImages/BlueSolidsPublicDomainConeFullTransparent120Pixel.png</file>
      <file>MiscImages/BlueSolidsPublicDomainCubeTransparent120Pixel.png</file>
