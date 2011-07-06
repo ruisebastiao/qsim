@@ -63,6 +63,15 @@ public:
    QSimGLViewWidget( QWidget *parent = NULL );
   ~QSimGLViewWidget() {;}
 
+   // Add various geometry objects to top-level myMostParentSceneNode.
+   QGLSceneNode*  AddTopLevelSceneNodeGeometryCone(     qreal coneTopDiameter, qreal coneBottomDiameter, qreal coneHeight, const bool solidTopAndBottomCaps )  { return this->AddSceneNodeGeometryCone( myMostParentSceneNode, coneTopDiameter, coneBottomDiameter, coneHeight, solidTopAndBottomCaps, solidTopAndBottomCaps ); }
+   QGLSceneNode*  AddTopLevelSceneNodeGeometryCylinder( qreal cylinderDiameter, qreal cylinderHeight, const bool solidTopAndBottomCaps )                       { return this->AddSceneNodeGeometryCylinder( myMostParentSceneNode, cylinderDiameter, cylinderHeight, solidTopAndBottomCaps, solidTopAndBottomCaps ); }
+   QGLSceneNode*  AddTopLevelSceneNodeGeometryRectangularBox( qreal boxWidth, qreal boxHeight, qreal boxDepth )                                                { return this->AddSceneNodeGeometryRectangularBox( myMostParentSceneNode, boxWidth, boxHeight, boxDepth ); }
+   QGLSceneNode*  AddTopLevelSceneNodeGeometrySphere( qreal sphereDiameter, int smoothnessFactorDefaultIs5 = 5 )                                               { return this->AddSceneNodeGeometrySphere( myMostParentSceneNode, sphereDiameter, smoothnessFactorDefaultIs5 ); }
+
+   // Remove all the nodes that were added directly or indirectly to myMostParentSceneNode.
+   void  RemoveAllSceneNodes( void );
+
 protected:
    // Override parent class QGLView virtual functions to perform typical OpenGL tasks.
    // initializeGL: Sets up the OpenGL rendering context, defines display lists, etc. Gets called once before the first time resizeGL() or paintGL() is called.
@@ -83,7 +92,20 @@ private:
    // Register the nodes that are pickable by the user.
    // void  RegisterPickableNodes();
 
-   // The sole parent of QGLSceneNode is QObject 
+   // TO IMPLEMENT: Keep track of all the objects added to this view by testing if &parentSceneNode == &myMostParentSceneNode
+   QGLSceneNode*  AddTopLevelSceneNodeToList( QGLSceneNode *sceneNode )  { return sceneNode; }
+
+   // Add various geometry objects  to this widget.
+   QGLSceneNode*  AddSceneNodeGeometryCone(           QGLSceneNode &parentSceneNode, qreal coneTopDiameter, qreal coneBottomDiameter, qreal coneHeight, const bool solidTopCap, const bool solidBottomCap );
+   QGLSceneNode*  AddSceneNodeGeometryCylinder(       QGLSceneNode &parentSceneNode, qreal cylinderDiameter, qreal cylinderHeight, const bool solidTopCap, const bool solidBottomCap )   { return this->AddSceneNodeGeometryCone( parentSceneNode, cylinderDiameter, cylinderDiameter, cylinderHeight, solidTopCap, solidBottomCap ); }
+   QGLSceneNode*  AddSceneNodeGeometryRectangularBox( QGLSceneNode &parentSceneNode, qreal boxWidth, qreal boxHeight, qreal boxDepth );
+   QGLSceneNode*  AddSceneNodeGeometrySphere(         QGLSceneNode &parentSceneNode, qreal sphereDiameter, int smoothnessFactorDefaultIs5 = 5 );
+   QGLSceneNode*  AddSceneNodeGeometryTeapot(         QGLSceneNode &parentSceneNode );
+   QGLSceneNode*  AddSceneNodeGeometryTriangle(       QGLSceneNode &parentSceneNode, const QVector3D &vertexA, const QVector3D &vectexB, const QVector3D &vertexC );
+   QGLSceneNode*  AddSceneNodeGeometryTetrahedron(    QGLSceneNode &parentSceneNode, const QVector3D &vertexA, const QVector3D &vertexB, const QVector3D &vertexC, const QVector3D &vertexD );
+
+   // For this widget, need one sceneNode from which all other sceneNodes descend.
+   // Note: The QGLSceneNode class only inherits from from QObject.
    QGLSceneNode  myMostParentSceneNode;
 };
 

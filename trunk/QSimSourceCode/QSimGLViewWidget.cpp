@@ -44,44 +44,31 @@
 * -------------------------------------------------------------------------- */
 #include "QSimGLViewWidget.h"
 #include "qglcamera.h"
-#include "qglcube.h"
+#include "qglcylinder.h"
 #include "qglsphere.h"
 #include "qglteapot.h"
 #include "qglpicknode.h"
+#include "qglcube.h"
+// #include "qvector3darray.h"
 
 
 //------------------------------------------------------------------------------
 QSimGLViewWidget::QSimGLViewWidget( QWidget *parent ) : QGLView(parent)
 {
-   // Create the single node from which all other nodes descend.
+   // For this widget, need one sceneNode from which all other sceneNodes descend.
    myMostParentSceneNode.setParent( this );
 
-   // Construct the geometry of a triangle.
-   QVector3D a( 2,  2, 0);
-   QVector3D b(-2,  2, 0);
-   QVector3D c( 0, -2, 0);
-   QGeometryData triangleABC;
-   triangleABC.appendVertex( a, b, c );
+   // Construct a triangle.
+   QVector3D vertexA( 2,  2, 0);
+   QVector3D vertexB(-2,  2, 0);
+   QVector3D vertexC( 0, -2, 0);
+   QGLSceneNode *triangleSceneNode = this->AddSceneNodeGeometryTriangle( myMostParentSceneNode, vertexA, vertexB, vertexC );
+   triangleSceneNode->setPosition( QVector3D(0.0f, 3.0f, 0.0f) );
 
-   // Construct a triangle builder on the stack and create a triangleSceneNode.
-   // When adding geometry, QGLBuilder automatically creates lighting normals.
-   // Lastly, add the triangleSceneNode to myMostParentSceneNode.
-   QGLBuilder builderTriangle;
-   builderTriangle << triangleABC;
-   QGLSceneNode *triangleSceneNode = builderTriangle.finalizedSceneNode();
-   myMostParentSceneNode.addNode( triangleSceneNode );
-
-   // Construct the geometry of a tetrahedron.
-   QVector3D d( 0,  0, -2 );
-   QGeometryData triangleABD;   triangleABD.appendVertex( a, b, d );
-   QGeometryData triangleACD;   triangleACD.appendVertex( a, c, d );
-   QGeometryData triangleBCD;   triangleBCD.appendVertex( b, c, d );
-   QGLBuilder builderTetrahedron;
-   builderTetrahedron.addTriangles( triangleABC );
-   builderTetrahedron.addTriangles( triangleABD );
-   builderTetrahedron.addTriangles( triangleACD );
-   builderTetrahedron.addTriangles( triangleBCD );
-   QGLSceneNode *tetrahedronSceneNode = builderTetrahedron.finalizedSceneNode();
+   // Construct a tetrahedron.
+   QVector3D vertexD( 0,  0, -2 );
+   QGLSceneNode *tetrahedronSceneNode = this->AddSceneNodeGeometryTetrahedron( myMostParentSceneNode, vertexA, vertexB, vertexC, vertexD );
+   tetrahedronSceneNode->setPosition( QVector3D(5.0f, 0.0f, 1.0f) );
 
    // Sequential rotations to orient tetrahedron.  Otherwise use the following QMatrix4x4 methods.
    // void  rotate ( qreal angle, const QVector3D & vector )
@@ -92,39 +79,10 @@ QSimGLViewWidget::QSimGLViewWidget( QWidget *parent ) : QGLView(parent)
    QQuaternion q2 = QQuaternion::fromAxisAndAngle( 0.0f, 1.0f, 0.0f, 100.0f );
    mat44.rotate( q2 * q1 );
    tetrahedronSceneNode->setLocalTransform( mat44 );
-   tetrahedronSceneNode->setPosition( QVector3D(5.0f, 0.0f, 1.0f) );
-   myMostParentSceneNode.addNode( tetrahedronSceneNode );
-
-   // Construct a cube on the stack.
-   QGLBuilder builderCube;
-   builderCube << QGLCube(1.0f);
-   QGLSceneNode *cubeSceneNode = builderCube.finalizedSceneNode();
-
-   // Purely cosmetic effects (skip this if you like all white).
-   QGLMaterial *china = new QGLMaterial(this);
-   china->setAmbientColor( QColor(192, 150, 128) );
-   china->setSpecularColor( QColor(60, 60, 60) );
-   china->setShininess( 128 );
-   cubeSceneNode->setMaterial(china);
-   cubeSceneNode->setEffect( QGL::LitMaterial );
-
-   // Move the cube a little before adding it to myMostParentSceneNode.
-   cubeSceneNode->setPosition( QVector3D(-1.0f, 0.0f, 1.0f) );
-   myMostParentSceneNode.addNode( cubeSceneNode );
-
-   // Construct a sphere on the stack.
-   QGLBuilder builderSphere;
-   builderSphere << QGLSphere(1.3f);
-   QGLSceneNode *sphereSceneNode = builderSphere.finalizedSceneNode();
-   sphereSceneNode->setPosition( QVector3D(-3.0f, 0.0f, 1.0f) );
-   myMostParentSceneNode.addNode( sphereSceneNode );
 
    // Add the classic teapot to the scene.
-   QGLBuilder builderTeapot;
-   builderTeapot << QGLTeapot();
-   QGLSceneNode *teapotSceneNode = builderTeapot.finalizedSceneNode();
+   QGLSceneNode*  teapotSceneNode = this->AddSceneNodeGeometryTeapot( myMostParentSceneNode );
    teapotSceneNode->setPosition( QVector3D( 2.0f, 0.0f, 2.0f) );
-   myMostParentSceneNode.addNode( teapotSceneNode );
 
    // Purely cosmetic effects (skip this if you like all white).
    QGLMaterial *mat = new QGLMaterial;
@@ -132,13 +90,221 @@ QSimGLViewWidget::QSimGLViewWidget( QWidget *parent ) : QGLView(parent)
    mat->setAmbientColor( QColor(0,   0,   255) );    // Shadows are this color     (Each RGB value is from 0 to 255)
    myMostParentSceneNode.setMaterial( mat );
 
-   // Can move this scene node back so entire scene is initially visable.
+   // Can move this scene node back so entire scene is initially visible.
    myMostParentSceneNode.setPosition( QVector3D(0.0f, 0.0f, 0.0f) );
 
-   // Or move and aim the camera for better viewing.
+   // Or move and aim the camera for better viewing (z direction is out of screen).
    QGLCamera *cameraForThisWidget = this->camera();
    cameraForThisWidget->setEye( QVector3D(5.0f, 0.0f, 25.0f) );
    cameraForThisWidget->rotateEye( cameraForThisWidget->pan(-5) );
+
+   // this->setFocusPolicy( Qt::StrongFocus ) enables keyboard focus to process keyboard events.
+   // Qt::TabFocus    if the widget accepts focus by tabbing.
+   // Qt::ClickFocus  if the widget accepts focus by clicking.
+   // Qt::StrongFocus if the widget accepts focus by either Tab or Click.
+   // Qt::NoFocus     if the widget does not accept focus at all (the default).
+   this->setFocusPolicy( Qt::StrongFocus );
+}
+
+
+//------------------------------------------------------------------------------
+QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryCone( QGLSceneNode &parentSceneNode, qreal coneTopDiameter, qreal coneBottomDiameter, qreal coneHeight, const bool solidTopCap, const bool solidBottomCap )
+{
+   // Ensure dimensions are sensible on entry (set negative or zero arguments to 1).
+   if( coneTopDiameter    <= 0 ) coneTopDiameter    = 1;
+   if( coneBottomDiameter <= 0 ) coneBottomDiameter = 1;
+   if( coneHeight         <= 0 ) coneHeight         = 1;
+
+   // Construct a QGLBuilder on the stack.  When adding geometry, QGLBuilder automatically creates lighting normals.
+   QGLBuilder builder;
+
+   // Create the geometry for the cylinder/cone and add it to the builder.
+   const int numberOfSlicesAlsoCalledFacetsThatRunLengthOfCylinder = 36;
+   const int numberOfLayersThatDivideSidesOfCylinder = 3;
+   builder << QGLCylinder( coneTopDiameter, coneBottomDiameter, coneHeight, numberOfSlicesAlsoCalledFacetsThatRunLengthOfCylinder, numberOfLayersThatDivideSidesOfCylinder, solidTopCap, solidBottomCap );
+
+   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
+   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
+   // finalizedSceneNode must be called once (and only once) after building a scene.
+   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+
+   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will implicitly cleaned up by Qt.
+   sceneNode->setParent( &parentSceneNode );
+   parentSceneNode.addNode( sceneNode );
+
+   // Move it for no particular reason.
+   sceneNode->setPosition( QVector3D(-1.0f, 0.0f, 0.0f) );
+
+   return sceneNode;
+}
+
+
+
+//------------------------------------------------------------------------------
+QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryRectangularBox( QGLSceneNode &parentSceneNode, qreal boxWidth, qreal boxHeight, qreal boxDepth )
+{
+#if 0
+   QGLBuilder builderCube;
+   builderCube << QGLCube(1.0f);
+   QGLSceneNode *cubeSceneNode = builderCube.finalizedSceneNode();
+#endif
+
+   // Ensure dimensions are sensible on entry (set negative or zero arguments to 1).
+   if( boxWidth  <= 0 ) boxWidth  = 1;
+   if( boxHeight <= 0 ) boxHeight = 1;
+   if( boxDepth  <= 0 ) boxDepth  = 1;
+
+   // Construct a QGLBuilder on the stack.  When adding geometry, QGLBuilder automatically creates lighting normals.
+   QGLBuilder builder;
+
+   // Create the vertices for each corner of the bottom of the box.
+   const QVector3D vertexA( 0,        0,        0 );     // Left,  bottom, back  corner of box.
+   const QVector3D vertexB( boxWidth, 0,        0 );     // Right, bottom, back  corner of box.
+   const QVector3D vertexC( boxWidth, 0, boxDepth );     // Right, bottom, front corner of box.
+   const QVector3D vertexD( 0,        0, boxDepth );     // Left,  bottom, front corner of box.
+
+   // Create each triangle on the bottom (with downward-facing outward normals) and add it to the builder.
+   QGeometryData bottomOfBox;   bottomOfBox.appendVertex( vertexA, vertexB, vertexC, vertexD );
+   QGeometryData topOfBox = bottomOfBox.translated( QVector3D(0,boxHeight,0) );
+
+   // Three-step process to extrude the polygons into a box
+   builder.addQuadsInterleaved( bottomOfBox, topOfBox );
+   builder.addTriangulatedFace( bottomOfBox );
+   builder.addTriangulatedFace( topOfBox.reversed() );
+
+   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
+   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
+   // finalizedSceneNode must be called once (and only once) after building a scene.
+   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+
+   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will implicitly cleaned up by Qt.
+   sceneNode->setParent( &parentSceneNode );
+   parentSceneNode.addNode( sceneNode );
+
+#if 0
+   // Purely cosmetic effects (skip this if you like all white).
+   // Also, should probably using a palette here.
+   QGLMaterial *china = new QGLMaterial(this);
+   china->setAmbientColor(  QColor(192, 150, 128) );
+   china->setSpecularColor( QColor(60, 60, 60) );
+   china->setShininess( 128 );
+   sceneNode->setMaterial(china);
+   sceneNode->setEffect( QGL::LitMaterial );
+#endif
+
+   // Move the cube a little for no particular reason.
+   sceneNode->setPosition( QVector3D(-4.0f, 0.0f, 1.0f) );
+
+   return sceneNode;
+}
+
+
+//------------------------------------------------------------------------------
+QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometrySphere( QGLSceneNode &parentSceneNode, qreal sphereDiameter, int smoothnessFactorDefaultIs5 )
+{
+   // Ensure dimensions are sensible on entry (set negative or zero argument to 1).
+   if( sphereDiameter <= 0 ) sphereDiameter = 1;
+
+   // Construct a QGLBuilder on the stack.  When adding geometry, QGLBuilder automatically creates lighting normals.
+   QGLBuilder builder;
+
+   // Create the geometry for a sphere and add it to the builder.
+   // smoothnessFactorDefaultIs5 must be between 1 (rough but small) and 10 (smooth but large).
+   // The default of 5 looks smooth to the eye and has a reasonably small number of triangles.
+   // Here is the cost in number of triangles in ascending order from 1 to 10.
+   // 1 64    2 128     3 256     4 512      5 1024     6 2048     7 4096    8 8192     9 16384     10 32768
+   if(      smoothnessFactorDefaultIs5 < 1  )  smoothnessFactorDefaultIs5 = 1;
+   else if( smoothnessFactorDefaultIs5 > 10 )  smoothnessFactorDefaultIs5 = 10;
+   builder << QGLSphere( sphereDiameter, smoothnessFactorDefaultIs5 );
+
+   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
+   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
+   // finalizedSceneNode must be called once (and only once) after building a scene.
+   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+
+   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will implicitly cleaned up by Qt.
+   sceneNode->setParent( &parentSceneNode );
+   parentSceneNode.addNode( sceneNode );
+
+   // Move this a little bit.
+   sceneNode->setPosition( QVector3D(-3.0f, 0.0f, 1.0f) );
+
+   // Update so geometry is visible before returning.
+   // parentSceneNode.draw( (QGLPainter*)this ); // this->paintThisGLWidget();  // CRASH
+
+   return sceneNode;
+}
+
+
+//------------------------------------------------------------------------------
+QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTeapot( QGLSceneNode &parentSceneNode )
+{
+   // Construct a QGLBuilder on the stack.  When adding geometry, QGLBuilder automatically creates lighting normals.
+   QGLBuilder builder;
+
+   // Create the geometry for a teapot and add it to the builder.
+   builder << QGLTeapot();
+
+   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
+   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
+   // finalizedSceneNode must be called once (and only once) after building a scene.
+   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+
+   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will implicitly cleaned up by Qt.
+   sceneNode->setParent( &parentSceneNode );
+   parentSceneNode.addNode( sceneNode );
+   return sceneNode;
+}
+
+
+//------------------------------------------------------------------------------
+QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTriangle( QGLSceneNode &parentSceneNode, const QVector3D &vertexA, const QVector3D &vertexB, const QVector3D &vertexC )
+{
+   // Construct a QGLBuilder on the stack.  When adding geometry, QGLBuilder automatically creates lighting normals.
+   QGLBuilder builder;
+
+   // Create the geometry for a triangle and add it to the builder.
+   QGeometryData triangleABC;   triangleABC.appendVertex( vertexA, vertexB, vertexC );   builder.addTriangles( triangleABC );
+
+   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
+   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
+   // finalizedSceneNode must be called once (and only once) after building a scene.
+   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+
+   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will implicitly cleaned up by Qt.
+   sceneNode->setParent( &parentSceneNode );
+   parentSceneNode.addNode( sceneNode );
+   return sceneNode;
+}
+
+
+//------------------------------------------------------------------------------
+QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTetrahedron( QGLSceneNode &parentSceneNode, const QVector3D &vertexA, const QVector3D &vertexB, const QVector3D &vertexC, const QVector3D &vertexD )
+{
+   // Construct a QGLBuilder on the stack.  When adding geometry, QGLBuilder automatically creates lighting normals.
+   QGLBuilder builder;
+
+   // Create the geometry for each triangle and add it to the builder.
+   QGeometryData triangleABC;   triangleABC.appendVertex( vertexA, vertexB, vertexC );    builder.addTriangles( triangleABC );
+   QGeometryData triangleABD;   triangleABD.appendVertex( vertexA, vertexB, vertexD );    builder.addTriangles( triangleABD );
+   QGeometryData triangleACD;   triangleACD.appendVertex( vertexA, vertexC, vertexC );    builder.addTriangles( triangleACD );
+   QGeometryData triangleBCD;   triangleBCD.appendVertex( vertexB, vertexC, vertexD );    builder.addTriangles( triangleBCD );
+
+   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
+   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
+   // finalizedSceneNode must be called once (and only once) after building a scene.
+   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+
+   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will implicitly cleaned up by Qt.
+   sceneNode->setParent( &parentSceneNode );
+   parentSceneNode.addNode( sceneNode );
+   return sceneNode;
 }
 
 
@@ -159,8 +325,17 @@ void  QSimGLViewWidget::keyPressEvent( QKeyEvent *event )
       const int widgetWidth  = this->width();
       const int widgetHeight = this->height();
       this->resizeGL( multiplier * widgetWidth, multiplier * widgetHeight );
-      this->paintGL( (QGLPainter*)this );
+      // this->paintGL( (QGLPainter*)this );  // CRASH
    }
+}
+
+
+//------------------------------------------------------------------------------
+void  QSimGLViewWidget::RemoveAllSceneNodes( void )
+{
+   QMessageBox::information( this, tr("Debug message"), tr("Draw Torus is changed to remove all nodes"), QMessageBox::Ok, QMessageBox::NoButton );
+   QList<QGLSceneNode*> recursiveListOfAllChildren = myMostParentSceneNode.allChildren();
+   myMostParentSceneNode.removeNodes( recursiveListOfAllChildren );
 }
 
 

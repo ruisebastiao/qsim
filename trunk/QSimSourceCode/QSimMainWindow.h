@@ -59,20 +59,23 @@ public:
    QSimMainWindow();
   ~QSimMainWindow() {;}
 
+   // Public method for accessing the main windows's GLWidget
+   QSimGLViewWidget&  GetQSimMainWindowGLViewWidget()  { return myQSimGLViewWidget; }
+
 private slots:
    // Slots for file menu.
-   void  NewFileSlot()     { ; }  
+   void  NewFileSlot()     { QMessageBox::information( this, tr("Debug message"), tr("New File Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }  
    void  OpenFileSlot()    { this->OpenOrSaveOrSaveAsFile( QFileDialog::AcceptOpen ); }
    void  SaveFileSlot()    { this->OpenOrSaveOrSaveAsFile( QFileDialog::AcceptSave ); }
    void  SaveFileAsSlot()  { this->OpenOrSaveOrSaveAsFile( QFileDialog::AcceptSave ); }
-   void  PrintFileSlot()   { ; }
+   void  PrintFileSlot()   { QMessageBox::information( this, tr("Debug message"), tr("Print File Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
    void  ExitProgramSlot() { QCoreApplication::quit(); }
    
    // Slots for edit menu.
-   void  EditCutSlot()     { ; }
-   void  EditCopySlot()    { ; }
-   void  EditPasteSlot()   { ; }
-   void  EditDeleteSlot()  { ; }
+   void  EditCutSlot()     { QMessageBox::information( this, tr("Debug message"), tr("Edit Cut Slot"),    QMessageBox::Ok, QMessageBox::NoButton ); }
+   void  EditCopySlot()    { QMessageBox::information( this, tr("Debug message"), tr("Edit Copy Slot"),   QMessageBox::Ok, QMessageBox::NoButton ); }    
+   void  EditPasteSlot()   { QMessageBox::information( this, tr("Debug message"), tr("Edit Paste Slot"),  QMessageBox::Ok, QMessageBox::NoButton ); } 
+   void  EditDeleteSlot()  { QMessageBox::information( this, tr("Debug message"), tr("Edit Delete Slot"), QMessageBox::Ok, QMessageBox::NoButton ); } 
 
    // Slots for help menu.
    void  HelpAboutSlot()     { this->DisplayHelpAboutScreen(); }
@@ -80,19 +83,6 @@ private slots:
 
    // Slots for simulate menu.
    void  SlotStartSimulationFromMainApplicationWindow() { StartAndRunSimulationMathematicsEngineNoGui(); }  
-
-#if 0
-   // Slots for geometry toolbar.
-   void  DrawSphereSlot()   { ; }
-   void  DrawCubeSlot()     { ; }
-   void  DrawCylinderSlot() { ; }
-   void  DrawConeCapSlot()  { ; }
-   void  DrawConeFullSlot() { ; }
-   void  DrawTorusSlot()    { ; }
-   void  DrawTorsoAndLowerExtremityModelSlot()  { ; }
-   void  DrawLowerExtremityOnlyModelSlot()      { ; }
-   void  DrawLowerLimbModelSlot()               { ; }
-#endif
 
 private:
    void  AddAllActionsWhoAreChildrenOfQSimMainWindow();
@@ -126,19 +116,6 @@ private:
 
    // Actions and buttons for geometry toolbar.
    QSimToolBarGeometry  myToolBarGeometry;
-#if 0
-   QActionHelper  myDrawSphereAction;
-   QActionHelper  myDrawCubeAction;
-   QActionHelper  myDrawCylinderAction;
-   QActionHelper  myDrawConeCapAction;
-   QActionHelper  myDrawConeFullAction;
-   QActionHelper  myDrawTorusAction;
-   QActionHelper  myDrawTorsoAndLowerExtremityAction;
-   QActionHelper  myDrawLowerExtremityOnlyAction;
-   QActionHelper  myDrawLowerLimbAction;
-   QToolButton myDrawSphereToolButton;
-   QToolButton myDrawCubeToolButton;
-#endif
 
    // Actions for Simulate menu.
    QActionHelper  mySimulateStartAction;

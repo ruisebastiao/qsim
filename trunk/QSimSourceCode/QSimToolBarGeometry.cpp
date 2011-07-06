@@ -51,8 +51,8 @@ void  QSimToolBarGeometry::AddToolbarGeometryToMainWindow( QSimMainWindow &mainW
    myDrawSphereAction.AddActionHelper( &mainWindow,                 tr("&Sphere"),                                         ":/MiscImages/BlueSolidsPublicDomainSphereTransparent120Pixel.png" );
    QObject::connect( &myDrawSphereAction,                  SIGNAL(triggered()), this, SLOT(DrawSphereSlot()) );
 
-   myDrawCubeAction.AddActionHelper( &mainWindow,                   tr("&Cube"),                                           ":/MiscImages/BlueSolidsPublicDomainCubeTransparent120Pixel.png" );
-   QObject::connect( &myDrawCubeAction,                    SIGNAL(triggered()), this, SLOT(DrawCubeSlot()) );
+   myDrawRectangularBoxAction.AddActionHelper( &mainWindow,         tr("&Rectangular box"),                                ":/MiscImages/BlueSolidsPublicDomainCubeTransparent120Pixel.png" );
+   QObject::connect( &myDrawRectangularBoxAction,          SIGNAL(triggered()), this, SLOT(DrawRectangularBoxSlot()) );
 
    myDrawCylinderAction.AddActionHelper( &mainWindow,               tr("C&ylinder"),                                       ":/MiscImages/BlueSolidsPublicDomainCylinderTransparent120Pixel.png" );
    QObject::connect( &myDrawCylinderAction,                SIGNAL(triggered()), this, SLOT(DrawCylinderSlot()) );
@@ -77,7 +77,7 @@ void  QSimToolBarGeometry::AddToolbarGeometryToMainWindow( QSimMainWindow &mainW
 
    // Associate the tool buttons with their actions and size them.
                myDrawSphereToolButton.setDefaultAction( &myDrawSphereAction );                              myDrawSphereToolButton.setIconSize( QSize(50,50) );
-                 myDrawCubeToolButton.setDefaultAction( &myDrawCubeAction );                                  myDrawCubeToolButton.setIconSize( QSize(50,50) );
+       myDrawRectangularBoxToolButton.setDefaultAction( &myDrawRectangularBoxAction );              myDrawRectangularBoxToolButton.setIconSize( QSize(50,50) );
                  myDrawCylinderButton.setDefaultAction( &myDrawCylinderAction );                              myDrawCylinderButton.setIconSize( QSize(50,50) );
                   myDrawConeCapButton.setDefaultAction( &myDrawConeCapAction );                                myDrawConeCapButton.setIconSize( QSize(50,50) );
                  myDrawConeFullButton.setDefaultAction( &myDrawConeFullAction );                              myDrawConeFullButton.setIconSize( QSize(50,50) );
@@ -95,15 +95,15 @@ void  QSimToolBarGeometry::AddToolbarGeometryToMainWindow( QSimMainWindow &mainW
 
    myGridLayout.setParent( &myToolbarGeometryContainerWidget );
    myGridLayout.setSpacing( 0 );
-   myGridLayout.addWidget( &myDrawSphereToolButton, 0, 0 );
-   myGridLayout.addWidget( &myDrawCubeToolButton,   0, 1 );
-   myGridLayout.addWidget( &myDrawCylinderButton,   1, 0 );
-   myGridLayout.addWidget( &myDrawTorusButton,      1, 1 );
-   myGridLayout.addWidget( &myDrawConeFullButton,   2, 0 );
-   myGridLayout.addWidget( &myDrawConeCapButton,    2, 1 );
-   myGridLayout.addWidget( &myDrawTorsoAndLowerExtremityButton,   3, 0 );
-   myGridLayout.addWidget( &myDrawLowerExtremityOnlyButton,       3, 1 );
-   myGridLayout.addWidget( &myDrawLowerLimbButton,                4, 0 );
+   myGridLayout.addWidget( &myDrawSphereToolButton,             0, 0 );
+   myGridLayout.addWidget( &myDrawRectangularBoxToolButton,     0, 1 );
+   myGridLayout.addWidget( &myDrawCylinderButton,               1, 0 );
+   myGridLayout.addWidget( &myDrawTorusButton,                  1, 1 );
+   myGridLayout.addWidget( &myDrawConeFullButton,               2, 0 );
+   myGridLayout.addWidget( &myDrawConeCapButton,                2, 1 );
+   myGridLayout.addWidget( &myDrawTorsoAndLowerExtremityButton, 3, 0 );
+   myGridLayout.addWidget( &myDrawLowerExtremityOnlyButton,     3, 1 );
+   myGridLayout.addWidget( &myDrawLowerLimbButton,              4, 0 );
 
 
    this->addWidget( &myToolbarGeometryContainerWidget );
@@ -118,6 +118,16 @@ void  QSimToolBarGeometry::AddToolbarGeometryToMainWindow( QSimMainWindow &mainW
    this->setFloatable( false );
    this->setContentsMargins( 0, 0, 0, 0 );  // Separation of contents (left,top,right,bottom)
 }
+
+
+//------------------------------------------------------------------------------
+void  QSimToolBarGeometry::DrawConeCapSlot()         { myMainWindow->GetQSimMainWindowGLViewWidget().AddTopLevelSceneNodeGeometryCone(  2, 1,    2, true ); }
+void  QSimToolBarGeometry::DrawConeFullSlot()        { myMainWindow->GetQSimMainWindowGLViewWidget().AddTopLevelSceneNodeGeometryCone(  2, 0.01, 2, true ); }
+void  QSimToolBarGeometry::DrawCylinderSlot()        { myMainWindow->GetQSimMainWindowGLViewWidget().AddTopLevelSceneNodeGeometryCylinder(    1, 1, true ); }
+void  QSimToolBarGeometry::DrawSphereSlot()          { myMainWindow->GetQSimMainWindowGLViewWidget().AddTopLevelSceneNodeGeometrySphere(1); }
+void  QSimToolBarGeometry::DrawRectangularBoxSlot()  { myMainWindow->GetQSimMainWindowGLViewWidget().AddTopLevelSceneNodeGeometryRectangularBox( 2, 1, 1 ); }
+
+void  QSimToolBarGeometry::DrawTorusSlot()           { myMainWindow->GetQSimMainWindowGLViewWidget().RemoveAllSceneNodes(); }
 
 
 //------------------------------------------------------------------------------

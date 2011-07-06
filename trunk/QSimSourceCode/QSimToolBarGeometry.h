@@ -63,19 +63,19 @@ public:
 
 private slots:
    // Slots for geometry toolbar.
-   void  DrawSphereSlot()                       { QMessageBox::information( this, tr("Debug message"), tr("Draw Sphere Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
-   void  DrawCubeSlot()                         { QMessageBox::information( this, tr("Debug message"), tr("Draw Cube   Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
-   void  DrawCylinderSlot()                     { QMessageBox::information( this, tr("Debug message"), tr("Draw Cylinder Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
-   void  DrawConeCapSlot()                      { QMessageBox::information( this, tr("Debug message"), tr("Draw ConeCap Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
-   void  DrawConeFullSlot()                     { QMessageBox::information( this, tr("Debug message"), tr("Draw ConeFull Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
-   void  DrawTorusSlot()                        { QMessageBox::information( this, tr("Debug message"), tr("Draw Torus Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
-   void  DrawTorsoAndLowerExtremityModelSlot()  { QMessageBox::information( this, tr("Debug message"), tr("Draw Torso++ Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
-   void  DrawLowerExtremityOnlyModelSlot()      { QMessageBox::information( this, tr("Debug message"), tr("Draw LowerExtrem.. Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
+   void  DrawConeCapSlot();
+   void  DrawConeFullSlot();
+   void  DrawCylinderSlot();
+   void  DrawRectangularBoxSlot();
+   void  DrawSphereSlot();
+   void  DrawTorusSlot();
+   void  DrawTorsoAndLowerExtremityModelSlot()  { QMessageBox::information( this, tr("Debug message"), tr("Draw Torso and lower extremity Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
+   void  DrawLowerExtremityOnlyModelSlot()      { QMessageBox::information( this, tr("Debug message"), tr("Draw LowerExtremity only Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
    void  DrawLowerLimbModelSlot()               { QMessageBox::information( this, tr("Debug message"), tr("Draw LowerLimb Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
 
 private:
    // Keep track of the mainWindow.
-   QSimMainWindow*  myMainWindow;
+   QSimMainWindow  *myMainWindow;
 
    // Widget for this toolbar.
    QFrame  myToolbarGeometryContainerWidget;
@@ -85,7 +85,7 @@ private:
 
    // Actions for geometry toolbar.
    QActionHelper  myDrawSphereAction;
-   QActionHelper  myDrawCubeAction;
+   QActionHelper  myDrawRectangularBoxAction;
    QActionHelper  myDrawCylinderAction;
    QActionHelper  myDrawConeCapAction;
    QActionHelper  myDrawConeFullAction;
@@ -96,7 +96,7 @@ private:
 
    // Buttons for geometry toolbar.
    QToolButton  myDrawSphereToolButton;
-   QToolButton  myDrawCubeToolButton;
+   QToolButton  myDrawRectangularBoxToolButton;
    QToolButton  myDrawCylinderButton;
    QToolButton  myDrawConeCapButton;
    QToolButton  myDrawConeFullButton;
