@@ -78,19 +78,24 @@ protected:
    // paintGL:      Renders the OpenGL scene.  Gets called whenever the widget needs to be updated.
    // resizeGL:     Sets up the OpenGL viewport, projection, etc. Gets called whenever the widget has been resized (or shown for the first time).  resizeGL is implemented in QSimGLView class.
    virtual void  initializeGL( QGLPainter *painter ) { painter->setStandardEffect( QGL::LitMaterial ); } //  this->RegisterPickableNodes(); }
-   virtual void  paintGL( QGLPainter *painter )  { myMostParentSceneNode.draw(painter); }
-   void  resizeGL( int width, int height )  { this->QGLView::resizeGL( width, height ); }
+   virtual void  paintGL( QGLPainter *painter )      { myMostParentSceneNode.draw(painter); }
+   void  resizeGL( int width, int height )           { this->QGLView::resizeGL( width, height ); }
 
    // Override parent class QGLWidget virtual functions to detect mouse or key-pressed events.
    // virtual void  mousePressEvent( QMouseEvent *event )  { myLastPos = event->pos(); }
    // virtual void  mouseMoveEvent(  QMouseEvent *event );
    virtual void  keyPressEvent( QKeyEvent *event );
 
-   // void initializeGL( QGLPainter *painter );
+private slots:
+   void  triangleClicked()  { QMessageBox::information( this, tr("Debug message"), tr("Triangle Clicked"), QMessageBox::Ok, QMessageBox::NoButton ); } 
 
 private:
    // Register the nodes that are pickable by the user.
    // void  RegisterPickableNodes();
+
+   // When creating a new object, get a unique ID number.
+   unsigned long int  GetNextUniqueID()  { return myNextUniqueID++; } 
+   unsigned long int  myNextUniqueID;
 
    // TO IMPLEMENT: Keep track of all the objects added to this view by testing if &parentSceneNode == &myMostParentSceneNode
    QGLSceneNode*  AddTopLevelSceneNodeToList( QGLSceneNode *sceneNode )  { return sceneNode; }

@@ -106,7 +106,6 @@ void  QSimMainWindow::AddActionAsChildOfThis( QAction& action, const QString& te
 }
 
 
-
 //------------------------------------------------------------------------------
 void  QSimMainWindow::AddAllActionsWhoAreChildrenOfQSimMainWindow()
 {

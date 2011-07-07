@@ -55,18 +55,30 @@
 //------------------------------------------------------------------------------
 QSimGLViewWidget::QSimGLViewWidget( QWidget *parent ) : QGLView(parent)
 {
+   // Initialize class data.
+   myNextUniqueID = 0;
+
+   // Enable object picking (which is disabled by default).
+   this->setOption( QGLView::ObjectPicking, true );
+
+   // For debugging object picking, render objects with their pick colors instead of normal colors and materials (disabled by default).
+   // this->setOption( QGLView::ShowPicking, true );
+
+   // Ensure that a change to each of the objects contained in this to update the view.
+   QObject::connect( &myMostParentSceneNode, SIGNAL(changed()), this, SLOT(updateGL()) );
+
    // For this widget, need one sceneNode from which all other sceneNodes descend.
-   myMostParentSceneNode.setParent( this );
+   // myMostParentSceneNode.setParent( this );  // Unnecessary and perhaps wrong to do this.
 
    // Construct a triangle.
-   QVector3D vertexA( 2,  2, 0);
-   QVector3D vertexB(-2,  2, 0);
-   QVector3D vertexC( 0, -2, 0);
+   QVector3D vertexA( 0,  0, 0);
+   QVector3D vertexB( 2,  2, 0);
+   QVector3D vertexC(-2,  2, 0);
    QGLSceneNode *triangleSceneNode = this->AddSceneNodeGeometryTriangle( myMostParentSceneNode, vertexA, vertexB, vertexC );
-   triangleSceneNode->setPosition( QVector3D(0.0f, 3.0f, 0.0f) );
+   triangleSceneNode->setPosition( QVector3D(0.0f, 1.0f, -2.0f) );
 
    // Construct a tetrahedron.
-   QVector3D vertexD( 0,  0, -2 );
+   QVector3D vertexD( 0,  2, -2 );
    QGLSceneNode *tetrahedronSceneNode = this->AddSceneNodeGeometryTetrahedron( myMostParentSceneNode, vertexA, vertexB, vertexC, vertexD );
    tetrahedronSceneNode->setPosition( QVector3D(5.0f, 0.0f, 1.0f) );
 
@@ -129,13 +141,17 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryCone( QGLSceneNode &parentS
    QGLSceneNode *sceneNode = builder.finalizedSceneNode();
 
    // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will implicitly cleaned up by Qt.
-   sceneNode->setParent( &parentSceneNode );
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
+   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
    parentSceneNode.addNode( sceneNode );
+   const bool isCylinder = coneTopDiameter == coneBottomDiameter;
+   sceneNode->setObjectName( isCylinder ? "Cylinder" : "Cone" );
 
    // Move it for no particular reason.
-   sceneNode->setPosition( QVector3D(-1.0f, 0.0f, 0.0f) );
+   sceneNode->setPosition( QVector3D( isCylinder ? -1.0f : -2.5f, 0.0f, 0.0f) );
 
+   // Update so geometry is visible before returning.
+   this->QGLView::updateGL();
    return sceneNode;
 }
 
@@ -179,9 +195,10 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryRectangularBox( QGLSceneNod
    QGLSceneNode *sceneNode = builder.finalizedSceneNode();
 
    // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will implicitly cleaned up by Qt.
-   sceneNode->setParent( &parentSceneNode );
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
+   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
    parentSceneNode.addNode( sceneNode );
+   sceneNode->setObjectName( "Rectangular box" );
 
 #if 0
    // Purely cosmetic effects (skip this if you like all white).
@@ -195,8 +212,10 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryRectangularBox( QGLSceneNod
 #endif
 
    // Move the cube a little for no particular reason.
-   sceneNode->setPosition( QVector3D(-4.0f, 0.0f, 1.0f) );
+   sceneNode->setPosition( QVector3D(-2.5f, 2.0f, 1.0f) );
 
+   // Update so geometry is visible before returning.
+   this->QGLView::updateGL();
    return sceneNode;
 }
 
@@ -225,16 +244,16 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometrySphere( QGLSceneNode &paren
    QGLSceneNode *sceneNode = builder.finalizedSceneNode();
 
    // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will implicitly cleaned up by Qt.
-   sceneNode->setParent( &parentSceneNode );
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
+   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
    parentSceneNode.addNode( sceneNode );
+   sceneNode->setObjectName( "Sphere" );
 
    // Move this a little bit.
-   sceneNode->setPosition( QVector3D(-3.0f, 0.0f, 1.0f) );
+   sceneNode->setPosition( QVector3D(-4.0f, 2.0f, 0.0f) );
 
    // Update so geometry is visible before returning.
-   // parentSceneNode.draw( (QGLPainter*)this ); // this->paintThisGLWidget();  // CRASH
-
+   this->QGLView::updateGL();
    return sceneNode;
 }
 
@@ -252,11 +271,15 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTeapot( QGLSceneNode &paren
    // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
    // finalizedSceneNode must be called once (and only once) after building a scene.
    QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+   sceneNode->setObjectName( "Teapot" );
 
    // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will implicitly cleaned up by Qt.
-   sceneNode->setParent( &parentSceneNode );
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
+   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
    parentSceneNode.addNode( sceneNode );
+
+   // Update so geometry is visible before returning.
+   this->QGLView::updateGL();
    return sceneNode;
 }
 
@@ -274,11 +297,22 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTriangle( QGLSceneNode &par
    // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
    // finalizedSceneNode must be called once (and only once) after building a scene.
    QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+   sceneNode->setObjectName( "Triangle" );
 
    // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will implicitly cleaned up by Qt.
-   sceneNode->setParent( &parentSceneNode );
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
+   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
    parentSceneNode.addNode( sceneNode );
+
+   // Register this object for object picking.
+   this->registerObject( this->GetNextUniqueID(), sceneNode );
+
+   // If there is
+   // QObject::connect( sceneNode, SIGNAL(hoverChanged()), this, SIGNAL(changed()) );
+   // QObject::connect( sceneNode, SIGNAL(clicked()),      this, SLOT(triangleClicked()));
+
+   // Update so geometry is visible before returning.
+   this->QGLView::updateGL();
    return sceneNode;
 }
 
@@ -290,20 +324,24 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTetrahedron( QGLSceneNode &
    QGLBuilder builder;
 
    // Create the geometry for each triangle and add it to the builder.
-   QGeometryData triangleABC;   triangleABC.appendVertex( vertexA, vertexB, vertexC );    builder.addTriangles( triangleABC );
-   QGeometryData triangleABD;   triangleABD.appendVertex( vertexA, vertexB, vertexD );    builder.addTriangles( triangleABD );
-   QGeometryData triangleACD;   triangleACD.appendVertex( vertexA, vertexC, vertexC );    builder.addTriangles( triangleACD );
-   QGeometryData triangleBCD;   triangleBCD.appendVertex( vertexB, vertexC, vertexD );    builder.addTriangles( triangleBCD );
+   QGeometryData triangle0;   triangle0.appendVertex( vertexA, vertexB, vertexC );    builder.addTriangles( triangle0 );
+   QGeometryData triangle1;   triangle1.appendVertex( vertexA, vertexD, vertexB );    builder.addTriangles( triangle1 );
+   QGeometryData triangle2;   triangle2.appendVertex( vertexA, vertexC, vertexD );    builder.addTriangles( triangle2 );
+   QGeometryData triangle3;   triangle3.appendVertex( vertexB, vertexD, vertexC );    builder.addTriangles( triangle3 );
 
    // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
    // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
    // finalizedSceneNode must be called once (and only once) after building a scene.
    QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+   sceneNode->setObjectName( "Tetrahedron" );
 
    // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will implicitly cleaned up by Qt.
-   sceneNode->setParent( &parentSceneNode );
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
+   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
    parentSceneNode.addNode( sceneNode );
+
+   // Update so geometry is visible before returning.
+   this->QGLView::updateGL();
    return sceneNode;
 }
 
@@ -325,7 +363,7 @@ void  QSimGLViewWidget::keyPressEvent( QKeyEvent *event )
       const int widgetWidth  = this->width();
       const int widgetHeight = this->height();
       this->resizeGL( multiplier * widgetWidth, multiplier * widgetHeight );
-      // this->paintGL( (QGLPainter*)this );  // CRASH
+      this->updateGL();
    }
 }
 
@@ -334,8 +372,19 @@ void  QSimGLViewWidget::keyPressEvent( QKeyEvent *event )
 void  QSimGLViewWidget::RemoveAllSceneNodes( void )
 {
    QMessageBox::information( this, tr("Debug message"), tr("Draw Torus is changed to remove all nodes"), QMessageBox::Ok, QMessageBox::NoButton );
-   QList<QGLSceneNode*> recursiveListOfAllChildren = myMostParentSceneNode.allChildren();
-   myMostParentSceneNode.removeNodes( recursiveListOfAllChildren );
+
+   // The next two calls remove all the children and disconnects them from their parent, but does not delete/free memory on them.
+   QList<QGLSceneNode*> listOfAllChildrenNodesRecursive = myMostParentSceneNode.allChildren();
+   myMostParentSceneNode.removeNodes( listOfAllChildrenNodesRecursive );
+
+   // For some reason, each call to addNode adds two nodes to allChildren() list but only one to children.
+   // For some reason, must delete the last nodes in the list (before the first) or else it will cause a segmentation fault.
+   while( !listOfAllChildrenNodesRecursive.isEmpty() )
+   {
+      QGLSceneNode* sceneNodei = listOfAllChildrenNodesRecursive.takeLast();
+//    this->deregisterObject( sceneNodei );
+      delete sceneNodei;
+   }
 }
 
 
@@ -345,8 +394,7 @@ void  QSimGLViewWidget::RegisterPickableNodes()
 {
    myMostParentSceneNode.generatePickNodes();
    QList<QGLPickNode*> pickList = myMostParentSceneNode.pickNodes();
-   QList<QGLPickNode*>::const_iterator it = pickList.constBegin();
-   for( ; it != pickList.constEnd(); ++it )
+   for( QList<QGLPickNode*>::const_iterator it = pickList.constBegin();  it != pickList.constEnd();  ++it )
    {
       QGLPickNode *pn = *it;
       pn->disconnect( this );
