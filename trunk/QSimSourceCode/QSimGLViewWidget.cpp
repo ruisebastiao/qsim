@@ -42,7 +42,6 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-#include "QSimGLViewWidget.h"
 #include "qglcamera.h"
 #include "qglcylinder.h"
 #include "qglsphere.h"
@@ -50,6 +49,11 @@
 #include "qglpicknode.h"
 #include "qglcube.h"
 // #include "qvector3darray.h"
+#include "QSimGLViewWidget.h"
+
+
+//------------------------------------------------------------------------------
+namespace QSim {
 
 
 //------------------------------------------------------------------------------
@@ -65,7 +69,7 @@ QSimGLViewWidget::QSimGLViewWidget( QWidget *parent ) : QGLView(parent)
    // this->setOption( QGLView::ShowPicking, true );
 
    // Ensure that a change to each of the objects contained in this to update the view.
-   QObject::connect( &myMostParentSceneNode, SIGNAL(changed()), this, SLOT(updateGL()) );
+   // QObject::connect( &myMostParentSceneNode, SIGNAL(changed()), this, SLOT(updateGL()) );
 
    // For this widget, need one sceneNode from which all other sceneNodes descend.
    // myMostParentSceneNode.setParent( this );  // Unnecessary and perhaps wrong to do this.
@@ -120,6 +124,22 @@ QSimGLViewWidget::QSimGLViewWidget( QWidget *parent ) : QGLView(parent)
 
 
 //------------------------------------------------------------------------------
+static QGLSceneNode*  AddSceneNodeGeometryFromBuilder( QGLSceneNode &parentSceneNode, QGLBuilder &builder )
+{
+   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
+   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
+   // finalizedSceneNode must be called once (and only once) after building a scene.
+   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+
+   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
+   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
+   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
+   parentSceneNode.addNode( sceneNode );
+   return sceneNode;
+}
+
+
+//------------------------------------------------------------------------------
 QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryCone( QGLSceneNode &parentSceneNode, qreal coneTopDiameter, qreal coneBottomDiameter, qreal coneHeight, const bool solidTopCap, const bool solidBottomCap )
 {
    // Ensure dimensions are sensible on entry (set negative or zero arguments to 1).
@@ -135,15 +155,8 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryCone( QGLSceneNode &parentS
    const int numberOfLayersThatDivideSidesOfCylinder = 3;
    builder << QGLCylinder( coneTopDiameter, coneBottomDiameter, coneHeight, numberOfSlicesAlsoCalledFacetsThatRunLengthOfCylinder, numberOfLayersThatDivideSidesOfCylinder, solidTopCap, solidBottomCap );
 
-   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
-   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
-   // finalizedSceneNode must be called once (and only once) after building a scene.
-   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
-
-   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
-   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
-   parentSceneNode.addNode( sceneNode );
+   // Create the sceneNode and add it to parentSceneNode.
+   QGLSceneNode *sceneNode = AddSceneNodeGeometryFromBuilder( parentSceneNode, builder );
    const bool isCylinder = coneTopDiameter == coneBottomDiameter;
    sceneNode->setObjectName( isCylinder ? "Cylinder" : "Cone" );
 
@@ -189,15 +202,8 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryRectangularBox( QGLSceneNod
    builder.addTriangulatedFace( bottomOfBox );
    builder.addTriangulatedFace( topOfBox.reversed() );
 
-   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
-   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
-   // finalizedSceneNode must be called once (and only once) after building a scene.
-   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
-
-   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
-   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
-   parentSceneNode.addNode( sceneNode );
+   // Create the sceneNode and add it to parentSceneNode.
+   QGLSceneNode *sceneNode = AddSceneNodeGeometryFromBuilder( parentSceneNode, builder );
    sceneNode->setObjectName( "Rectangular box" );
 
 #if 0
@@ -238,15 +244,8 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometrySphere( QGLSceneNode &paren
    else if( smoothnessFactorDefaultIs5 > 10 )  smoothnessFactorDefaultIs5 = 10;
    builder << QGLSphere( sphereDiameter, smoothnessFactorDefaultIs5 );
 
-   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
-   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
-   // finalizedSceneNode must be called once (and only once) after building a scene.
-   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
-
-   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
-   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
-   parentSceneNode.addNode( sceneNode );
+   // Create the sceneNode and add it to parentSceneNode.
+   QGLSceneNode *sceneNode = AddSceneNodeGeometryFromBuilder( parentSceneNode, builder );
    sceneNode->setObjectName( "Sphere" );
 
    // Move this a little bit.
@@ -267,16 +266,9 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTeapot( QGLSceneNode &paren
    // Create the geometry for a teapot and add it to the builder.
    builder << QGLTeapot();
 
-   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
-   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
-   // finalizedSceneNode must be called once (and only once) after building a scene.
-   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+   // Create the sceneNode and add it to parentSceneNode.
+   QGLSceneNode *sceneNode = AddSceneNodeGeometryFromBuilder( parentSceneNode, builder );
    sceneNode->setObjectName( "Teapot" );
-
-   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
-   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
-   parentSceneNode.addNode( sceneNode );
 
    // Update so geometry is visible before returning.
    this->QGLView::updateGL();
@@ -293,16 +285,9 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTriangle( QGLSceneNode &par
    // Create the geometry for a triangle and add it to the builder.
    QGeometryData triangleABC;   triangleABC.appendVertex( vertexA, vertexB, vertexC );   builder.addTriangles( triangleABC );
 
-   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
-   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
-   // finalizedSceneNode must be called once (and only once) after building a scene.
-   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+   // Create the sceneNode and add it to parentSceneNode.
+   QGLSceneNode *sceneNode = AddSceneNodeGeometryFromBuilder( parentSceneNode, builder );
    sceneNode->setObjectName( "Triangle" );
-
-   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
-   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
-   parentSceneNode.addNode( sceneNode );
 
    // Register this object for object picking.
    this->registerObject( this->GetNextUniqueID(), sceneNode );
@@ -329,16 +314,9 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTetrahedron( QGLSceneNode &
    QGeometryData triangle2;   triangle2.appendVertex( vertexA, vertexC, vertexD );    builder.addTriangles( triangle2 );
    QGeometryData triangle3;   triangle3.appendVertex( vertexB, vertexD, vertexC );    builder.addTriangles( triangle3 );
 
-   // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
-   // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
-   // finalizedSceneNode must be called once (and only once) after building a scene.
-   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+   // Create the sceneNode and add it to parentSceneNode.
+   QGLSceneNode *sceneNode = AddSceneNodeGeometryFromBuilder( parentSceneNode, builder );
    sceneNode->setObjectName( "Tetrahedron" );
-
-   // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
-   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
-   parentSceneNode.addNode( sceneNode );
 
    // Update so geometry is visible before returning.
    this->QGLView::updateGL();
@@ -403,3 +381,9 @@ void  QSimGLViewWidget::RegisterPickableNodes()
    }
 }
 #endif
+
+
+//------------------------------------------------------------------------------
+}  // End of namespace QSim
+
+

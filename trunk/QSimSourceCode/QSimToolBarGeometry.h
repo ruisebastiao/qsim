@@ -35,10 +35,10 @@
 * -------------------------------------------------------------------------- */
 #ifndef  QSIMTOOLBARGEOMETRY_H___ 
 #define  QSIMTOOLBARGEOMETRY_H___
-#include "CppStandardHeaders.h"
-#include "QActionHelper.h"
 #include <QtCore>
 #include <QtGui>
+#include "CppStandardHeaders.h"
+#include "QActionHelper.h"
 
 
 //------------------------------------------------------------------------------

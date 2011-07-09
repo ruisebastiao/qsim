@@ -35,10 +35,10 @@
 * -------------------------------------------------------------------------- */
 #ifndef  QPLAINTEXTREADWRITE_H__ 
 #define  QPLAINTEXTREADWRITE_H__
-#include "CppStandardHeaders.h"
-#include "QSimGenericFunctions.h"
 #include <QtCore>
 #include <QtGui>
+#include "CppStandardHeaders.h"
+#include "QSimGenericFunctions.h"
 
 
 //------------------------------------------------------------------------------

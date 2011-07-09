@@ -38,8 +38,8 @@
 * -------------------------------------------------------------------------- */
 #ifndef  OPENSIMQTSTARTSIMULATION_H__ 
 #define  OPENSIMQTSTARTSIMULATION_H__
-#include "CppStandardHeaders.h"
 #include <QObject>
+#include "CppStandardHeaders.h"
 
 
 //------------------------------------------------------------------------------

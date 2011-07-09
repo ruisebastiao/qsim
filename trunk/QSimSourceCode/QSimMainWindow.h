@@ -35,15 +35,14 @@
 * -------------------------------------------------------------------------- */
 #ifndef  QSIMMAINWINDOW_H___ 
 #define  QSIMMAINWINDOW_H___
+#include <QtCore>
+#include <QtGui>
 #include "CppStandardHeaders.h"
 #include "QActionHelper.h"
 #include "QSimToolBarGeometry.h"
 #include "QSimStartSimulation.h"
 #include "QPlainTextReadWrite.h"
 #include "QSimGLViewWidget.h"
-#include <QtCore>
-#include <QtGui>
-
 
 //------------------------------------------------------------------------------
 namespace QSim {

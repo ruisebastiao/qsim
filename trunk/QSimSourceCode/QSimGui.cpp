@@ -33,9 +33,6 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-#include "QSimGui.h"
-#include "QSimStartSimulation.h"
-#include "QSimMainWindow.h"
 #include <QtCore>
 #include <QtGui>
 // #include <QtOpenGL>          /* Requires CONFIG += opengl  in qmake file. */
@@ -43,23 +40,9 @@
 // #include <QtSql>             /* Requires CONFIG += sql     in qmake file. */
 // #include <QtSvg>             /* Requires CONFIG += svg     in qmake file. */
 // #include <QtXml>             /* Requires CONFIG += xml     in qmake file. */
-// #include <QtGui/QApplication>
-// #include <QtGui/QWidget>
-// #include <QtGui/QLabel>
-// #include <QtGui/QPushButton>
-// #include <QtGui/QHBoxLayout>
-// #include <QtGui/QSlider>
-// #include <QtGui/QSpinBox>
-// #include <QtGui/QToolBar>
-// #include <QtGui/QToolButton>
-// #include <QtGui/QCheckBox>
-// #include <QtGui/QRadioButton>
-// #include <QtGui/QGroupBox>
-// #include <QtGui/QMenu>
-// #include <QtGui/QProgressBar>
-//------------------------------------------------------------------------------
-// Prototypes for local functions
-//------------------------------------------------------------------------------
+#include "QSimGui.h"
+#include "QSimStartSimulation.h"
+#include "QSimMainWindow.h"
 
 
 //------------------------------------------------------------------------------

@@ -44,14 +44,18 @@
 * -------------------------------------------------------------------------- */
 #ifndef  QSIMGLVIEWWIDGET_H__ 
 #define  QSIMGLVIEWWIDGET_H__
-#include "CppStandardHeaders.h"
-#include "QSimGenericFunctions.h"
 #include <QtCore>
 #include <QtGui>
 #include <QtOpenGL>
 #include "qglview.h"
 #include "qglscenenode.h"
 #include "qglbuilder.h"
+#include "CppStandardHeaders.h"
+#include "QSimGenericFunctions.h"
+#include "QSimScenePickHelper.h"
+
+//------------------------------------------------------------------------------
+namespace QSim {
 
 
 //------------------------------------------------------------------------------
@@ -94,8 +98,8 @@ private:
    // void  RegisterPickableNodes();
 
    // When creating a new object, get a unique ID number.
-   unsigned long int  GetNextUniqueID()  { return myNextUniqueID++; } 
-   unsigned long int  myNextUniqueID;
+   unsigned long GetNextUniqueID()  { return myNextUniqueID++; } 
+   unsigned long myNextUniqueID;
 
    // TO IMPLEMENT: Keep track of all the objects added to this view by testing if &parentSceneNode == &myMostParentSceneNode
    QGLSceneNode*  AddTopLevelSceneNodeToList( QGLSceneNode *sceneNode )  { return sceneNode; }
@@ -114,6 +118,9 @@ private:
    QGLSceneNode  myMostParentSceneNode;
 };
 
+
+//------------------------------------------------------------------------------
+}  // End of namespace QSim
 //--------------------------------------------------------------------------
 #endif  // QSIMGLVIEWWIDGET_H__
 //--------------------------------------------------------------------------
