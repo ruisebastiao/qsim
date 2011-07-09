@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // File:     QSimScenePickHelper.cpp
 // Class:    QSimScenePickHelper
-// Parents:  QGLSceneNode -> QObject
+// Parents:  QObject
 // Purpose:  The following classes work together to allow for picking on-screen objects.
 //           QSimScenePickHelper, QSimScenePickPainter, QSimGLViewWidget.
 /* ------------------------------------------------------------------------- *
