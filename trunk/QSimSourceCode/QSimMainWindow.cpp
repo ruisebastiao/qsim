@@ -58,7 +58,6 @@ QSimMainWindow::QSimMainWindow()
    this->setWindowTitle( "QSim:  Easy-to-use Biomechanics Software" );
 
    // Specify the central widget (required).
-   myQSimGLViewWidget.setParent( this );
    myQSimGLViewWidget.setToolTip( tr("Simulation Graphics Window") );
    this->setCentralWidget( &myQSimGLViewWidget );
 
@@ -70,7 +69,6 @@ QSimMainWindow::QSimMainWindow()
    this->CreateHelpMenu();
    this->CreateToolbarEditEtc();    // Edit tool bar near the top and below menus.
    myToolBarGeometry.AddToolbarGeometryToMainWindow( *this );
-// this->CreateToolbarGeometry();   // Geometry tool bar on left-hand-side.
    this->CreateStatusBar();         // Add a status bar at the bottom of the very bottom of the application (helpful for notes, warnings, and messages).
    this->CreateDockWidgets();       // Create widgets that surround the central widget.
 
@@ -79,8 +77,8 @@ QSimMainWindow::QSimMainWindow()
    this->resize( this->sizeHint() );
    const int screenWidth  = QApplication::desktop()->width();
    const int screenHeight = QApplication::desktop()->height();
-   const int minimumWidgetWidth  = (int)( 0.7*(float)screenWidth  );  // Old minimumWidgetWidth  = 700;
-   const int minimumWidgetHeight = (int)( 0.7*(float)screenHeight );  // Old minimumWidgetHeight = 500;
+   const int minimumWidgetWidth  = (int)( 0.85*(float)screenWidth  );  // Old minimumWidgetWidth  = 700;
+   const int minimumWidgetHeight = (int)( 0.85*(float)screenHeight );  // Old minimumWidgetHeight = 500;
    const int naturalWidgetWidth  = this->width();
    const int naturalWidgetHeight = this->height();
    const int actualWidgetWidth   = naturalWidgetWidth  >= minimumWidgetWidth  ? naturalWidgetWidth  : minimumWidgetWidth;
@@ -94,94 +92,81 @@ QSimMainWindow::QSimMainWindow()
 
 
 //------------------------------------------------------------------------------
-void  QSimMainWindow::AddActionAsChildOfThis( QAction& action, const QString& textName, const char *pathToIconFileOrNull )
-{
-   action.setParent( this );
-   action.setText( textName );
-   if( pathToIconFileOrNull && *pathToIconFileOrNull )
-   {
-      const QIcon *actionIcon = new QIcon( pathToIconFileOrNull );
-      if( actionIcon && !actionIcon->isNull() )  action.setIcon( *actionIcon );
-   }
-}
-
-
-//------------------------------------------------------------------------------
 void  QSimMainWindow::AddAllActionsWhoAreChildrenOfQSimMainWindow()
 {
    // Create actions associated with file menu.
-   myNewFileAction.AddActionHelper( this,                    tr("&New file"),          QKeySequence::New,           ":/TangoPublicDomainImages/document-new.png" );
+   myNewFileAction.AddActionHelper(     tr("&New file"),          QKeySequence::New,           ":/TangoPublicDomainImages/document-new.png" );
    QObject::connect( &myNewFileAction,                     SIGNAL(triggered()), this, SLOT(NewFileSlot()) );
 
-   myOpenFileAction.AddActionHelper( this,                   tr("&Open file"),         QKeySequence::Open,          ":/TangoPublicDomainImages/document-open.png" );
+   myOpenFileAction.AddActionHelper(    tr("&Open file"),         QKeySequence::Open,          ":/TangoPublicDomainImages/document-open.png" );
    QObject::connect( &myOpenFileAction,                    SIGNAL(triggered()), this, SLOT(OpenFileSlot()) );
 
-   mySaveFileAction.AddActionHelper( this,                   tr("&Save file"),         QKeySequence::Save,          ":/TangoPublicDomainImages/document-save.png" );
+   mySaveFileAction.AddActionHelper(    tr("&Save file"),         QKeySequence::Save,          ":/TangoPublicDomainImages/document-save.png" );
    QObject::connect( &mySaveFileAction,                    SIGNAL(triggered()), this, SLOT(SaveFileSlot()) );
 
-   mySaveFileAsAction.AddActionHelper( this,                 tr("Save file as"),       QKeySequence::SaveAs,        ":/TangoPublicDomainImages/document-save-as.png" );
+   mySaveFileAsAction.AddActionHelper(  tr("Save file as"),       QKeySequence::SaveAs,        ":/TangoPublicDomainImages/document-save-as.png" );
    QObject::connect( &mySaveFileAsAction,                  SIGNAL(triggered()), this, SLOT(SaveFileAsSlot()) );
 
-   myPrintFileAction.AddActionHelper( this,                  tr("&Print file"),        QKeySequence::Print,         ":/TangoPublicDomainImages/printer.png" );
+   myPrintFileAction.AddActionHelper(   tr("&Print file"),        QKeySequence::Print,         ":/TangoPublicDomainImages/printer.png" );
    QObject::connect( &myPrintFileAction,                   SIGNAL(triggered()), this, SLOT(PrintFileSlot()) );
 
-   myExitProgramAction.AddActionHelper( this,                tr("&Quit/Exit program"), QKeySequence::Quit,          ":/TangoPublicDomainImages/system-shutdown.png" );
+   myExitProgramAction.AddActionHelper( tr("&Quit/Exit program"), QKeySequence::Quit,          ":/TangoPublicDomainImages/system-shutdown.png" );
    QObject::connect( &myExitProgramAction,                 SIGNAL(triggered()), this, SLOT(ExitProgramSlot()) );
 
 
    // Create actions associated with edit menu.
-   myEditCutAction.AddActionHelper( this,                    tr("Cu&t"),               QKeySequence::Cut,           ":/TangoPublicDomainImages/edit-cut.png" );
+   myEditCutAction.AddActionHelper(    tr("Cu&t"),               QKeySequence::Cut,           ":/TangoPublicDomainImages/edit-cut.png" );
    QObject::connect( &myEditCutAction,                     SIGNAL(triggered()), this, SLOT(EditCutSlot()) );
 
-   myEditCopyAction.AddActionHelper( this,                   tr("&Copy"),              QKeySequence::Copy,          ":/TangoPublicDomainImages/edit-copy.png" );
+   myEditCopyAction.AddActionHelper(   tr("&Copy"),              QKeySequence::Copy,          ":/TangoPublicDomainImages/edit-copy.png" );
    QObject::connect( &myEditCopyAction,                    SIGNAL(triggered()), this, SLOT(EditCopySlot()) );
 
-   myEditPasteAction.AddActionHelper( this,                  tr("&Paste"),             QKeySequence::Paste,         ":/TangoPublicDomainImages/edit-paste.png" );
+   myEditPasteAction.AddActionHelper(  tr("&Paste"),             QKeySequence::Paste,         ":/TangoPublicDomainImages/edit-paste.png" );
    QObject::connect( &myEditPasteAction,                   SIGNAL(triggered()), this, SLOT(EditPasteSlot()) );
 
-   myEditDeleteAction.AddActionHelper( this,                 tr("&Delete"),            QKeySequence::Delete,        ":/TangoPublicDomainImages/edit-delete.png" );
+   myEditDeleteAction.AddActionHelper( tr("&Delete"),            QKeySequence::Delete,        ":/TangoPublicDomainImages/edit-delete.png" );
    QObject::connect( &myEditDeleteAction,                  SIGNAL(triggered()), this, SLOT(EditDeleteSlot()) );
 
 
    // Create actions associated with simulate menu.
-   mySimulateStartAction.AddActionHelper( this,              tr("&Start"),                                          ":/TangoPublicDomainImages/media-playback-start.png" );
+   mySimulateStartAction.AddActionHelper( tr("&Start"),                                          ":/TangoPublicDomainImages/media-playback-start.png" );
    QObject::connect( &mySimulateStartAction,               SIGNAL(triggered()), this, SLOT( SlotStartSimulationFromMainApplicationWindow()) );
 
 
    // Create actions associated with help menu.
-   myHelpAboutAction.AddActionHelper( this,                  tr("&About"),                                          ":/QSimApplicationIconC.ico" ); //or maybe ":../QSimApplicationIconC.ico" or ":/ApachePublicDomainImages/world1.png"
+   myHelpAboutAction.AddActionHelper(     tr("&About"),                                          ":/QSimApplicationIconC.ico" ); //or maybe ":../QSimApplicationIconC.ico" or ":/ApachePublicDomainImages/world1.png"
    QObject::connect( &myHelpAboutAction,                   SIGNAL(triggered()), this, SLOT(HelpAboutSlot()) );
 
-   myHelpContentsAction.AddActionHelper( this,               tr("&Help"),              QKeySequence::HelpContents,  ":/TangoPublicDomainImages/help-browser.png" );
+   myHelpContentsAction.AddActionHelper(  tr("&Help"),              QKeySequence::HelpContents,  ":/TangoPublicDomainImages/help-browser.png" );
    QObject::connect( &myHelpContentsAction,                SIGNAL(triggered()), this, SLOT(HelpContentsSlot()) );
 
 #if 0
    // Create actions associated with drawing geometry.
-   myDrawSphereAction.AddActionHelper( this,                 tr("&Sphere"),                                         ":/MiscImages/BlueSolidsPublicDomainSphereTransparent120Pixel.png" );
+   myDrawSphereAction.AddActionHelper(   tr("&Sphere"),                                         ":/MiscImages/BlueSolidsPublicDomainSphereTransparent120Pixel.png" );
    QObject::connect( &myDrawSphereAction,                  SIGNAL(triggered()), this, SLOT(DrawSphereSlot()) );
 
-   myDrawCubeAction.AddActionHelper( this,                   tr("&Cube"),                                           ":/MiscImages/BlueSolidsPublicDomainCubeTransparent120Pixel.png" );
+   myDrawCubeAction.AddActionHelper(     tr("&Cube"),                                           ":/MiscImages/BlueSolidsPublicDomainCubeTransparent120Pixel.png" );
    QObject::connect( &myDrawCubeAction,                    SIGNAL(triggered()), this, SLOT(DrawCubeSlot()) );
 
-   myDrawCylinderAction.AddActionHelper( this,               tr("C&ylinder"),                                       ":/MiscImages/BlueSolidsPublicDomainCylinderTransparent120Pixel.png" );
+   myDrawCylinderAction.AddActionHelper( tr("C&ylinder"),                                       ":/MiscImages/BlueSolidsPublicDomainCylinderTransparent120Pixel.png" );
    QObject::connect( &myDrawCylinderAction,                SIGNAL(triggered()), this, SLOT(DrawCylinderSlot()) );
 
-   myDrawConeCapAction.AddActionHelper( this,                tr("C&oneCap"),                                        ":/MiscImages/BlueSolidsPublicDomainConeCapTransparent120Pixel.png" );
+   myDrawConeCapAction.AddActionHelper(  tr("C&oneCap"),                                        ":/MiscImages/BlueSolidsPublicDomainConeCapTransparent120Pixel.png" );
    QObject::connect( &myDrawConeCapAction,                 SIGNAL(triggered()), this, SLOT(DrawConeCapSlot()) );
 
-   myDrawConeFullAction.AddActionHelper( this,               tr("Co&neFull"),                                       ":/MiscImages/BlueSolidsPublicDomainConeFullTransparent120Pixel.png" );
+   myDrawConeFullAction.AddActionHelper( tr("Co&neFull"),                                       ":/MiscImages/BlueSolidsPublicDomainConeFullTransparent120Pixel.png" );
    QObject::connect( &myDrawConeFullAction,                SIGNAL(triggered()), this, SLOT(DrawConeFullSlot()) );
 
-   myDrawTorusAction.AddActionHelper( this,                  tr("&Torus"),                                          ":/MiscImages/BlueSolidsPublicDomainTorusTransparent120Pixel.png" );
+   myDrawTorusAction.AddActionHelper(    tr("&Torus"),                                          ":/MiscImages/BlueSolidsPublicDomainTorusTransparent120Pixel.png" );
    QObject::connect( &myDrawTorusAction,                   SIGNAL(triggered()), this, SLOT(DrawTorusSlot()) );
 
-   myDrawTorsoAndLowerExtremityAction.AddActionHelper( this, tr("Torso &and lower extremity"),                      ":/MiscImages/OpenSimTorsoAndLowerExtremityModel.png" );
+   myDrawTorsoAndLowerExtremityAction.AddActionHelper( tr("Torso &and lower extremity"),                      ":/MiscImages/OpenSimTorsoAndLowerExtremityModel.png" );
    QObject::connect( &myDrawTorsoAndLowerExtremityAction,  SIGNAL(triggered()), this, SLOT(DrawTorsoAndLowerExtremityModelSlot()) );
 
-   myDrawLowerExtremityOnlyAction.AddActionHelper( this,     tr("&Lower extremity"),                                ":/MiscImages/OpenSimLowerExtremityOnlyModel.png" );
+   myDrawLowerExtremityOnlyAction.AddActionHelper(     tr("&Lower extremity"),                                ":/MiscImages/OpenSimLowerExtremityOnlyModel.png" );
    QObject::connect( &myDrawLowerExtremityOnlyAction,      SIGNAL(triggered()), this, SLOT(DrawLowerExtremityOnlyModelSlot()) );
 
-   myDrawLowerLimbAction.AddActionHelper( this,              tr("Lo&wer limb"),                                     ":/MiscImages/OpenSimLowerLimbModelEdithArnold.png" );
+   myDrawLowerLimbAction.AddActionHelper(              tr("Lo&wer limb"),                                     ":/MiscImages/OpenSimLowerLimbModelEdithArnold.png" );
    QObject::connect( &myDrawLowerLimbAction,               SIGNAL(triggered()), this, SLOT(DrawLowerLimbModelSlot()) );
 #endif
 }
@@ -273,86 +258,10 @@ void  QSimMainWindow::CreateToolbarEditEtc()
 }
 
 
-#if 0
-//-----------------------------------------------------------------------------
-void QSimMainWindow::CreateToolbarGeometry()
-{
-   // Geometry toolbar is on the left-hand-side of the main window.
-   // The first line below always creates a toolbar at the Qt::TopToolBarArea (whether or not you want it there).
-   // To move it elsewhere, you then must use:  this->addToolBar( Qt::SomeOtherToolBarArea, toolBar );
-   QToolBar *toolBarA = this->addToolBar( tr("Geometry toolbar A") );
-   this->addToolBar( Qt::LeftToolBarArea, toolBarA );
-   toolBarA->setAllowedAreas( Qt::LeftToolBarArea );
-   toolBarA->setMovable( false );
-   toolBarA->setFloatable( false );
-   toolBarA->setContentsMargins( 0, 0, 0, 0 );  // Separation of contents (left,top,right,bottom)
-
-
-   // Associate the tool buttons with their actions and size them.
-   myDrawSphereToolButton.setDefaultAction( &myDrawSphereAction );  myDrawSphereToolButton.setIconSize( QSize(50,50) );
-   myDrawCubeToolButton.setDefaultAction( &myDrawCubeAction );        myDrawCubeToolButton.setIconSize( QSize(50,50) );
-
-   QFrame *frame1 = new QFrame( this );
-   frame1->setFrameShape( QFrame::NoFrame );  // Or QFrame::Box or QFrame::Panel or QFrame::StyledPanel or ...
-   frame1->setFrameShadow( QFrame::Plain );   // Or QFrame::Raised or QFrame::QFrame::Sunken
-   frame1->setLineWidth( 0 );                 // Width of frame (if one is used).
-   frame1->setContentsMargins( 0, 0, 0, 0 );  // Separation of contents (left,top,right,bottom)
-
-   QGridLayout *gridLayout = new QGridLayout( this );
-   gridLayout->setSpacing( 0 );
-   QLabel *dumb1 = new QLabel( "Hello" );
-   QLabel *dumb2 = new QLabel( "World" );
-   gridLayout->addWidget( dumb1, 0, 0 );
-   gridLayout->addWidget( dumb2, 0, 1 );
-   gridLayout->addWidget( &myDrawSphereToolButton, 1, 0 );
-   gridLayout->addWidget( &myDrawCubeToolButton,   1, 1 );
-   frame1->setLayout( gridLayout );
-   toolBarA->addWidget( frame1 );
-
-#if 0
-   toolBarA->setOrientation( Qt::Horizontal );
-   toolBarA->addAction( &myDrawCubeAction     );
-   toolBarA->addAction( &myDrawSphereAction   );
-   toolBarA->addAction( &myDrawConeFullAction  );
-   toolBarA->addAction( &myDrawTorsoAndLowerExtremityAction );
-   toolBarA->addAction( &myDrawLowerExtremityOnlyAction     );
-   toolBarA->addAction( &myDrawLowerLimbAction              );
-
-   // Make the geometry icons a little larger.
-   QSize iconSize = toolBarA->iconSize();
-   toolBarA->setIconSize( 1.4 * iconSize );
-
-   // Add a widget to group toolbuttons.
-   QWidget *wildWidget = new QWidget( this );
-   toolBarA->addWidget( wildWidget );
-   QGridLayout *gridLayout = new QGridLayout( this );
-   gridLayout->addWidget( &QToolButton(this) );
-   gridLayout->addWidget( &QToolButton(this) );
-//   gridLayout->addWidget( toolBarA->addAction(&myDrawLowerLimbAction) );
-
-   // If desirable, create another toolbar below the previous one (on the same vertical line).
-   // Or if desirable, add a "line-break" to create a second vertical column of toolbars/icons.
-   this->addToolBarBreak();
-   QToolBar *toolBarB = this->addToolBar( tr("Geometry toolbar B") );
-   this->addToolBar( Qt::LeftToolBarArea, toolBarB );
-   toolBarB->setAllowedAreas( Qt::LeftToolBarArea );
-   toolBarB->setMovable( false );
-   toolBarB->setFloatable( false );
-   toolBarB->setContentsMargins( 0, 0, 0, 0 );  // Separation of contents (left,top,right,bottom)
-   toolBarB->setOrientation( Qt::Horizontal );
-   toolBarB->addAction( &myDrawCylinderAction );
-   toolBarB->addAction( &myDrawConeCapAction  );
-   toolBarB->addAction( &myDrawTorusAction    );
-#endif
-}
-#endif
-
-
 //------------------------------------------------------------------------------
 void  QSimMainWindow::CreateTextEditor()
 {
    // Set up the message window.
-   myQSimMainWindowTextEdit.setParent( this );
    myQSimMainWindowTextEdit.clear();
 
    // Add text to message window.
@@ -692,7 +601,87 @@ void  QSimMainWindow::PlayVideoFile()
 #endif
 
 
+
+#if 0
+//-----------------------------------------------------------------------------
+void QSimMainWindow::CreateToolbarGeometry()
+{
+   // Geometry toolbar is on the left-hand-side of the main window.
+   // The first line below always creates a toolbar at the Qt::TopToolBarArea (whether or not you want it there).
+   // To move it elsewhere, you then must use:  this->addToolBar( Qt::SomeOtherToolBarArea, toolBar );
+   QToolBar *toolBarA = this->addToolBar( tr("Geometry toolbar A") );
+   this->addToolBar( Qt::LeftToolBarArea, toolBarA );
+   toolBarA->setAllowedAreas( Qt::LeftToolBarArea );
+   toolBarA->setMovable( false );
+   toolBarA->setFloatable( false );
+   toolBarA->setContentsMargins( 0, 0, 0, 0 );  // Separation of contents (left,top,right,bottom)
+
+
+   // Associate the tool buttons with their actions and size them.
+   myDrawSphereToolButton.setDefaultAction( &myDrawSphereAction );  myDrawSphereToolButton.setIconSize( QSize(50,50) );
+   myDrawCubeToolButton.setDefaultAction( &myDrawCubeAction );        myDrawCubeToolButton.setIconSize( QSize(50,50) );
+
+   QFrame *frame1 = new QFrame( this );
+   frame1->setFrameShape( QFrame::NoFrame );  // Or QFrame::Box or QFrame::Panel or QFrame::StyledPanel or ...
+   frame1->setFrameShadow( QFrame::Plain );   // Or QFrame::Raised or QFrame::QFrame::Sunken
+   frame1->setLineWidth( 0 );                 // Width of frame (if one is used).
+   frame1->setContentsMargins( 0, 0, 0, 0 );  // Separation of contents (left,top,right,bottom)
+
+   QGridLayout *gridLayout = new QGridLayout( this );
+   gridLayout->setSpacing( 0 );
+   QLabel *dumb1 = new QLabel( "Hello" );
+   QLabel *dumb2 = new QLabel( "World" );
+   gridLayout->addWidget( dumb1, 0, 0 );
+   gridLayout->addWidget( dumb2, 0, 1 );
+   gridLayout->addWidget( &myDrawSphereToolButton, 1, 0 );
+   gridLayout->addWidget( &myDrawCubeToolButton,   1, 1 );
+   frame1->setLayout( gridLayout );
+   toolBarA->addWidget( frame1 );
+
+#if 0
+   toolBarA->setOrientation( Qt::Horizontal );
+   toolBarA->addAction( &myDrawCubeAction     );
+   toolBarA->addAction( &myDrawSphereAction   );
+   toolBarA->addAction( &myDrawConeFullAction  );
+   toolBarA->addAction( &myDrawTorsoAndLowerExtremityAction );
+   toolBarA->addAction( &myDrawLowerExtremityOnlyAction     );
+   toolBarA->addAction( &myDrawLowerLimbAction              );
+
+   // Make the geometry icons a little larger.
+   QSize iconSize = toolBarA->iconSize();
+   toolBarA->setIconSize( 1.4 * iconSize );
+
+   // Add a widget to group toolbuttons.
+   QWidget *wildWidget = new QWidget( this );
+   toolBarA->addWidget( wildWidget );
+   QGridLayout *gridLayout = new QGridLayout( this );
+   gridLayout->addWidget( &QToolButton(this) );
+   gridLayout->addWidget( &QToolButton(this) );
+//   gridLayout->addWidget( toolBarA->addAction(&myDrawLowerLimbAction) );
+
+   // If desirable, create another toolbar below the previous one (on the same vertical line).
+   // Or if desirable, add a "line-break" to create a second vertical column of toolbars/icons.
+   this->addToolBarBreak();
+   QToolBar *toolBarB = this->addToolBar( tr("Geometry toolbar B") );
+   this->addToolBar( Qt::LeftToolBarArea, toolBarB );
+   toolBarB->setAllowedAreas( Qt::LeftToolBarArea );
+   toolBarB->setMovable( false );
+   toolBarB->setFloatable( false );
+   toolBarB->setContentsMargins( 0, 0, 0, 0 );  // Separation of contents (left,top,right,bottom)
+   toolBarB->setOrientation( Qt::Horizontal );
+   toolBarB->addAction( &myDrawCylinderAction );
+   toolBarB->addAction( &myDrawConeCapAction  );
+   toolBarB->addAction( &myDrawTorusAction    );
+#endif
+}
+#endif
+
+
+
 //------------------------------------------------------------------------------
 }  // End of namespace QSim
+
+
+
 
 

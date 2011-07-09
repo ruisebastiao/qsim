@@ -85,8 +85,6 @@ private slots:
 
 private:
    void  AddAllActionsWhoAreChildrenOfQSimMainWindow();
-   void  AddActionAsChildOfThis( QAction& action, const QString& textName, const char *pathToIconFileOrNull );
-   void  AddActionAsChildOfThis( QAction& action, const QString& textName, const QKeySequence& keySequenceShortcut, const char *pathToIconFileOrNull ) { this->AddActionAsChildOfThis( action, textName, pathToIconFileOrNull );  action.setShortcut( keySequenceShortcut ); }
    void  CreateFileMenu();
    void  CreateEditMenu();
    void  CreateHelpMenu();

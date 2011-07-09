@@ -68,9 +68,6 @@ QSimGLViewWidget::QSimGLViewWidget( QWidget *parent ) : QGLView(parent)
    // Ensure that a change to each of the objects contained in this to update the view.
    // QObject::connect( &myMostParentSceneNode, SIGNAL(changed()), this, SLOT(updateGL()) );
 
-   // For this widget, need one sceneNode from which all other sceneNodes descend.
-   // myMostParentSceneNode.setParent( this );  // Unnecessary and perhaps wrong to do this.
-
    // Construct a triangle.
    QVector3D vertexA( 0,  0, 0);
    QVector3D vertexB( 2,  2, 0);
@@ -129,8 +126,8 @@ static QGLSceneNode*  AddSceneNodeGeometryFromBuilder( QGLSceneNode &parentScene
    QGLSceneNode *sceneNode = builder.finalizedSceneNode();
 
    // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
-   // or documentation claims if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
-   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not have a parent.
+   // or Qt documentation says if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
+   // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not already have a parent.
    parentSceneNode.addNode( sceneNode );
    return sceneNode;
 }

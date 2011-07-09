@@ -48,31 +48,31 @@ void  QSimToolBarGeometry::AddToolbarGeometryToMainWindow( QSimMainWindow &mainW
    myMainWindow = &mainWindow;
 
    // Create actions associated with drawing geometry.
-   myDrawSphereAction.AddActionHelper( &mainWindow,                 tr("&Sphere"),                                         ":/MiscImages/BlueSolidsPublicDomainSphereTransparent120Pixel.png" );
+   myDrawSphereAction.AddActionHelper(                 tr("&Sphere"),                                         ":/MiscImages/BlueSolidsPublicDomainSphereTransparent120Pixel.png" );
    QObject::connect( &myDrawSphereAction,                  SIGNAL(triggered()), this, SLOT(DrawSphereSlot()) );
 
-   myDrawRectangularBoxAction.AddActionHelper( &mainWindow,         tr("&Rectangular box"),                                ":/MiscImages/BlueSolidsPublicDomainCubeTransparent120Pixel.png" );
+   myDrawRectangularBoxAction.AddActionHelper(         tr("&Rectangular box"),                                ":/MiscImages/BlueSolidsPublicDomainCubeTransparent120Pixel.png" );
    QObject::connect( &myDrawRectangularBoxAction,          SIGNAL(triggered()), this, SLOT(DrawRectangularBoxSlot()) );
 
-   myDrawCylinderAction.AddActionHelper( &mainWindow,               tr("C&ylinder"),                                       ":/MiscImages/BlueSolidsPublicDomainCylinderTransparent120Pixel.png" );
+   myDrawCylinderAction.AddActionHelper(               tr("C&ylinder"),                                       ":/MiscImages/BlueSolidsPublicDomainCylinderTransparent120Pixel.png" );
    QObject::connect( &myDrawCylinderAction,                SIGNAL(triggered()), this, SLOT(DrawCylinderSlot()) );
 
-   myDrawConeCapAction.AddActionHelper( &mainWindow,                tr("C&oneCap"),                                        ":/MiscImages/BlueSolidsPublicDomainConeCapTransparent120Pixel.png" );
+   myDrawConeCapAction.AddActionHelper(                tr("C&oneCap"),                                        ":/MiscImages/BlueSolidsPublicDomainConeCapTransparent120Pixel.png" );
    QObject::connect( &myDrawConeCapAction,                 SIGNAL(triggered()), this, SLOT(DrawConeCapSlot()) );
 
-   myDrawConeFullAction.AddActionHelper( &mainWindow,               tr("Co&neFull"),                                       ":/MiscImages/BlueSolidsPublicDomainConeFullTransparent120Pixel.png" );
+   myDrawConeFullAction.AddActionHelper(               tr("Co&neFull"),                                       ":/MiscImages/BlueSolidsPublicDomainConeFullTransparent120Pixel.png" );
    QObject::connect( &myDrawConeFullAction,                SIGNAL(triggered()), this, SLOT(DrawConeFullSlot()) );
 
-   myDrawTorusAction.AddActionHelper( &mainWindow,                  tr("&Torus"),                                          ":/MiscImages/BlueSolidsPublicDomainTorusTransparent120Pixel.png" );
+   myDrawTorusAction.AddActionHelper(                  tr("&Torus"),                                          ":/MiscImages/BlueSolidsPublicDomainTorusTransparent120Pixel.png" );
    QObject::connect( &myDrawTorusAction,                   SIGNAL(triggered()), this, SLOT(DrawTorusSlot()) );
 
-   myDrawTorsoAndLowerExtremityAction.AddActionHelper( &mainWindow, tr("Torso &and lower extremity"),                      ":/MiscImages/OpenSimTorsoAndLowerExtremityModel.png" );
+   myDrawTorsoAndLowerExtremityAction.AddActionHelper( tr("Torso &and lower extremity"),                      ":/MiscImages/OpenSimTorsoAndLowerExtremityModel.png" );
    QObject::connect( &myDrawTorsoAndLowerExtremityAction,  SIGNAL(triggered()), this, SLOT(DrawTorsoAndLowerExtremityModelSlot()) );
 
-   myDrawLowerExtremityOnlyAction.AddActionHelper( &mainWindow,     tr("&Lower extremity"),                                ":/MiscImages/OpenSimLowerExtremityOnlyModel.png" );
+   myDrawLowerExtremityOnlyAction.AddActionHelper(     tr("&Lower extremity"),                                ":/MiscImages/OpenSimLowerExtremityOnlyModel.png" );
    QObject::connect( &myDrawLowerExtremityOnlyAction,      SIGNAL(triggered()), this, SLOT(DrawLowerExtremityOnlyModelSlot()) );
 
-   myDrawLowerLimbAction.AddActionHelper( &mainWindow,              tr("Lo&wer limb"),                                     ":/MiscImages/OpenSimLowerLimbModelEdithArnold.png" );
+   myDrawLowerLimbAction.AddActionHelper(              tr("Lo&wer limb"),                                     ":/MiscImages/OpenSimLowerLimbModelEdithArnold.png" );
    QObject::connect( &myDrawLowerLimbAction,               SIGNAL(triggered()), this, SLOT(DrawLowerLimbModelSlot()) );
 
    // Associate the tool buttons with their actions and size them.
@@ -86,14 +86,12 @@ void  QSimToolBarGeometry::AddToolbarGeometryToMainWindow( QSimMainWindow &mainW
        myDrawLowerExtremityOnlyButton.setDefaultAction( &myDrawLowerExtremityOnlyAction );          myDrawLowerExtremityOnlyButton.setIconSize( QSize(50,50) );
                 myDrawLowerLimbButton.setDefaultAction( &myDrawLowerLimbAction );                            myDrawLowerLimbButton.setIconSize( QSize(50,50) );
 
-   myToolbarGeometryContainerWidget.setParent( &mainWindow );
    myToolbarGeometryContainerWidget.setFrameShape( QFrame::NoFrame );  // Or QFrame::Box or QFrame::Panel or QFrame::StyledPanel or ...
    myToolbarGeometryContainerWidget.setFrameShadow( QFrame::Plain );   // Or QFrame::Raised or QFrame::QFrame::Sunken
    myToolbarGeometryContainerWidget.setLineWidth( 0 );                 // Width of frame (if one is used).
    myToolbarGeometryContainerWidget.setContentsMargins( 0, 0, 0, 0 );  // Separation of contents (left,top,right,bottom)
    myToolbarGeometryContainerWidget.setLayout( &myGridLayout );
 
-   myGridLayout.setParent( &myToolbarGeometryContainerWidget );
    myGridLayout.setSpacing( 0 );
    myGridLayout.addWidget( &myDrawSphereToolButton,             0, 0 );
    myGridLayout.addWidget( &myDrawRectangularBoxToolButton,     0, 1 );

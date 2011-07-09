@@ -2,7 +2,8 @@
 // File:     QSimScenePickHelper.cpp
 // Class:    QSimScenePickHelper
 // Parents:  QGLSceneNode -> QObject
-// Purpose:  Works with QSimGLViewWidget to allow picking on-screen objects.
+// Purpose:  The following classes work together to allow for picking on-screen objects.
+//           QSimScenePickHelper, QSimScenePickPainter, QSimGLViewWidget.
 /* ------------------------------------------------------------------------- *
 * QSim was developed with support from Simbios (the NIH National Center      *
 * for Physics-Based Simulation Biological Structures at Stanford) under NIH  *

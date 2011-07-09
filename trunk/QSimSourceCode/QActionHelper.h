@@ -55,10 +55,9 @@ public:
   ~QActionHelper() {;}
 
    //--------------------------------------------------------------------------
-   void  AddActionHelper( QObject *parentObject, const QString& textName, const QKeySequence& keySequenceShortcut, const char *pathToIconFileOrNull )  { this->AddActionHelper( parentObject, textName, pathToIconFileOrNull );  this->setShortcut( keySequenceShortcut ); }
-   void  AddActionHelper( QObject *parentObject, const QString& textName, const char *pathToIconFileOrNull )
+   void  AddActionHelper( const QString& textName, const QKeySequence& keySequenceShortcut, const char *pathToIconFileOrNull )  { this->AddActionHelper( textName, pathToIconFileOrNull );  this->setShortcut( keySequenceShortcut ); }
+   void  AddActionHelper( const QString& textName, const char *pathToIconFileOrNull )
    {
-      // this->setParent( parentObject );
       this->setText( textName );
       if( pathToIconFileOrNull && *pathToIconFileOrNull )
       {
