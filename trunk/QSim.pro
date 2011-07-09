@@ -55,9 +55,8 @@
 win32{
 
    TEMPLATE   = vcapp    # Change vcapp to app if not using Microsoft Visual Studio.
-   INCLUDEPATH += /Qt/4.7.2/include/
-   INCLUDEPATH += /QSimSourceCode/QSimSourceCode/
-   INCLUDEPATH += /QSimSourceCode/QSimSourceCode/GeometryFigures/
+   INCLUDEPATH += /Qt/4.7.2/include
+   INCLUDEPATH += /QSimSourceCode/QSimSourceCode
 
    # Add in Windows-specific resource file (e.g., for displaying an icon with the application).
    # It seems this file needs to be in the same folder as QSim.pro (at least on Windows).
