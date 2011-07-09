@@ -39,6 +39,8 @@
 #--------------------------------------------------------------------
 HEADERS += ./QSimSourceCode/QSimGLViewWidget.h
 SOURCES += ./QSimSourceCode/QSimGLViewWidget.cpp
+HEADERS += ./QSimSourceCode/QSimScenePickHelper.h
+SOURCES += ./QSimSourceCode/QSimScenePickHelper.cpp
 
 #--------------------------------------------------------------------
 # Windows only commands here
