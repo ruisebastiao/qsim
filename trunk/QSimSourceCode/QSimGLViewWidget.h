@@ -90,20 +90,7 @@ protected:
    // virtual void  mouseMoveEvent(  QMouseEvent *event );
    virtual void  keyPressEvent( QKeyEvent *event );
 
-private slots:
-   void  triangleClicked()  { QMessageBox::information( this, tr("Debug message"), tr("Triangle Clicked"), QMessageBox::Ok, QMessageBox::NoButton ); } 
-
 private:
-   // Register the nodes that are pickable by the user.
-   // void  RegisterPickableNodes();
-
-   // When creating a new object, get a unique ID number.
-   unsigned long GetNextUniqueID()  { return myNextUniqueID++; } 
-   unsigned long myNextUniqueID;
-
-   // TO IMPLEMENT: Keep track of all the objects added to this view by testing if &parentSceneNode == &myMostParentSceneNode
-   QGLSceneNode*  AddTopLevelSceneNodeToList( QGLSceneNode *sceneNode )  { return sceneNode; }
-
    // Add various geometry objects  to this widget.
    QGLSceneNode*  AddSceneNodeGeometryCone(           QGLSceneNode &parentSceneNode, qreal coneTopDiameter, qreal coneBottomDiameter, qreal coneHeight, const bool solidTopCap, const bool solidBottomCap );
    QGLSceneNode*  AddSceneNodeGeometryCylinder(       QGLSceneNode &parentSceneNode, qreal cylinderDiameter, qreal cylinderHeight, const bool solidTopCap, const bool solidBottomCap )   { return this->AddSceneNodeGeometryCone( parentSceneNode, cylinderDiameter, cylinderDiameter, cylinderHeight, solidTopCap, solidBottomCap ); }

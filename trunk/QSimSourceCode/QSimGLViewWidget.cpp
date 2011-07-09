@@ -59,9 +59,6 @@ namespace QSim {
 //------------------------------------------------------------------------------
 QSimGLViewWidget::QSimGLViewWidget( QWidget *parent ) : QGLView(parent)
 {
-   // Initialize class data.
-   myNextUniqueID = 0;
-
    // Enable object picking (which is disabled by default).
    this->setOption( QGLView::ObjectPicking, true );
 
@@ -290,7 +287,7 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTriangle( QGLSceneNode &par
    sceneNode->setObjectName( "Triangle" );
 
    // Register this object for object picking.
-   this->registerObject( this->GetNextUniqueID(), sceneNode );
+   // this->registerObject( this->GetNextUniqueID(), sceneNode );
 
    // If there is
    // QObject::connect( sceneNode, SIGNAL(hoverChanged()), this, SIGNAL(changed()) );

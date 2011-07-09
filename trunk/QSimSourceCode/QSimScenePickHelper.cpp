@@ -44,7 +44,7 @@ namespace QSim {
 
 //------------------------------------------------------------------------------
 //  Class static data
-//unsigned long QSimScenePickHelper::myNextUniqueID = 0;
+unsigned long QSimScenePickHelper::myNextUniqueID = 0;
 
 
 //------------------------------------------------------------------------------
