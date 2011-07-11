@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
-// File:     QSimScenePickHelper.cpp
-// Class:    QSimScenePickHelper
+// File:     QSimScenePickObject.cpp
+// Class:    QSimScenePickObject
 // Parents:  QObject
 // Purpose:  The following classes work together to allow for picking on-screen objects.
-//           QSimScenePickHelper, QSimScenePickPainter, QSimGLViewWidget.
+//           QSimScenePickObject, QSimScenePickListAndPaint, QSimGLViewWidget.
 /* ------------------------------------------------------------------------- *
 * QSim was developed with support from Simbios (the NIH National Center      *
 * for Physics-Based Simulation Biological Structures at Stanford) under NIH  *
@@ -36,7 +36,7 @@
 * -------------------------------------------------------------------------- */
 #include "qglpainter.h"
 #include "qglview.h"
-#include "QSimScenePickHelper.h"
+#include "QSimScenePickObject.h"
 
 
 //------------------------------------------------------------------------------
@@ -45,11 +45,11 @@ namespace QSim {
 
 //------------------------------------------------------------------------------
 //  Class static data
-unsigned long QSimScenePickHelper::myNextUniqueID = 0;
+unsigned long QSimScenePickObject::myNextUniqueID = 0;
 
 
 //------------------------------------------------------------------------------
-QSimScenePickHelper::QSimScenePickHelper( QGLSceneNode &sceneNode ) : mySceneNode(sceneNode)
+QSimScenePickObject::QSimScenePickObject( QGLSceneNode &sceneNode ) : mySceneNode(sceneNode)
 {
    myScale = 1.0f;
    myRotationAngle = 0.0f;
@@ -62,7 +62,7 @@ QSimScenePickHelper::QSimScenePickHelper( QGLSceneNode &sceneNode ) : mySceneNod
 
 
 //------------------------------------------------------------------------------
-void  QSimScenePickHelper::draw( QGLPainter *painter )
+void  QSimScenePickObject::draw( QGLPainter *painter )
 {
    // Position the model at its designated position, scale, and orientation.
    painter->modelViewMatrix().push();
@@ -97,7 +97,7 @@ void  QSimScenePickHelper::draw( QGLPainter *painter )
 
 
 //------------------------------------------------------------------------------
-bool  QSimScenePickHelper::event( QEvent *event )
+bool  QSimScenePickObject::event( QEvent *event )
 {
    // Convert the raw event into a signal representing the user's action.
    if( event->type() == QEvent::MouseButtonPress )

@@ -52,7 +52,6 @@
 #include "qglbuilder.h"
 #include "CppStandardHeaders.h"
 #include "QSimGenericFunctions.h"
-#include "QSimScenePickHelper.h"
 
 //------------------------------------------------------------------------------
 namespace QSim {

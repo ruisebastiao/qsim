@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
-// File:     QSimScenePickPainter.h
-// Class:    QSimScenePickPainter  
-// Parents:  QObject 
+// File:     QSimScenePickListAndPaint.cpp
+// Class:    QSimScenePickListAndPaint
+// Parents:  QObject
 // Purpose:  The following classes work together to allow for picking on-screen objects.
-//           QSimScenePickHelper, QSimScenePickPainter, QSimGLViewWidget.
+//           QSimScenePickObject, QSimScenePickListAndPaint, QSimGLViewWidget.
 /* ------------------------------------------------------------------------- *
 * QSim was developed with support from Simbios (the NIH National Center      *
 * for Physics-Based Simulation Biological Structures at Stanford) under NIH  *
@@ -34,11 +34,10 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-#ifndef  QSIMSCENEPICKPAINTER_H__ 
-#define  QSIMSCENEPICKPAINTER_H__
-#include <QtCore>
 #include "qglpainter.h"
 #include "qglview.h"
+#include "QSimScenePickListAndPaint.h"
+#include "QSimScenePickObject.h"
 
 
 //------------------------------------------------------------------------------
@@ -46,21 +45,30 @@ namespace QSim {
 
 
 //------------------------------------------------------------------------------
-class QSimScenePickPainter : public QObject
+void  QSimScenePickListAndPaint::initialize( QGLView *view, QGLPainter *painter )
 {
-   Q_OBJECT
+   // Initialize all the children (which should all be of type QSimScenePickObject).
+   QList<QObject*> listOfChildren = this->children();
+   for( QList<QObject*>::iterator it = listOfChildren.begin();  it != listOfChildren.end();  ++it )
+   {
+      QSimScenePickObject *obj = qobject_cast<QSimScenePickObject*>( *it );
+      if( obj ) obj->initialize( view, painter );
+   }
+}
 
-public:
-   explicit QSimScenePickPainter() {;}
-           ~QSimScenePickPainter() {;}
 
-   virtual void initialize( QGLView *view, QGLPainter *painter );
-   virtual void draw( QGLPainter *painter );
-};
+//------------------------------------------------------------------------------
+void QSimScenePickListAndPaint::draw( QGLPainter *painter )
+{
+   // Draw all the children (which should all be of type QSimScenePickObject).
+   QList<QObject*> listOfChildren = this->children();
+   for( QList<QObject*>::iterator it = listOfChildren.begin();  it != listOfChildren.end();  ++it )
+   {
+      QSimScenePickObject *obj = qobject_cast<QSimScenePickObject*>( *it );
+      if( obj ) obj->draw( painter );
+   }
+}
 
 
 //------------------------------------------------------------------------------
 }  // End of namespace QSim
-//--------------------------------------------------------------------------
-#endif  // QSIMSCENEPICKPAINTER_H__
-//--------------------------------------------------------------------------

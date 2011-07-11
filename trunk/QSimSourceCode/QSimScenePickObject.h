@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
-// File:     QSimScenePickHelper.h
-// Class:    QSimScenePickHelper  
+// File:     QSimScenePickObject.h
+// Class:    QSimScenePickObject  
 // Parents:  QObject 
 // Purpose:  The following classes work together to allow for picking on-screen objects.
-//           QSimScenePickHelper, QSimScenePickPainter, QSimGLViewWidget.
+//           QSimScenePickObject, QSimScenePickListAndPaint, QSimGLViewWidget.
 /* ------------------------------------------------------------------------- *
 * QSim was developed with support from Simbios (the NIH National Center      *
 * for Physics-Based Simulation Biological Structures at Stanford) under NIH  *
@@ -34,8 +34,8 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-#ifndef  QSIMSCENEPICKHELPER_H__ 
-#define  QSIMSCENEPICKHELPER_H__
+#ifndef  QSIMSCENEPICKOBJECT_H__ 
+#define  QSIMSCENEPICKOBJECT_H__
 #include <QtCore>
 #include <QtGui>
 #include <QtOpenGL>
@@ -51,13 +51,13 @@ namespace QSim {
 
 
 //------------------------------------------------------------------------------
-class QSimScenePickHelper : public QObject
+class QSimScenePickObject : public QObject
 {
    Q_OBJECT
 
 public:
-   explicit QSimScenePickHelper( QGLSceneNode &sceneNode );
-           ~QSimScenePickHelper() {;}
+   explicit QSimScenePickObject( QGLSceneNode &sceneNode );
+           ~QSimScenePickObject() {;}
 
     QVector3D  GetPosition() const                          { return myPosition; }
     void       SetPosition( const QVector3D &newPosition )  { myPosition = newPosition; }
@@ -121,5 +121,5 @@ private:
 //------------------------------------------------------------------------------
 }  // End of namespace QSim
 //--------------------------------------------------------------------------
-#endif  // QSIMSCENEPICKHELPER_H__
+#endif  // QSIMSCENEPICKOBJECT_H__
 //--------------------------------------------------------------------------
