@@ -124,6 +124,8 @@ void  QSimToolBarGeometry::DrawConeFullSlot()        { myMainWindow->GetQSimMain
 void  QSimToolBarGeometry::DrawCylinderSlot()        { myMainWindow->GetQSimMainWindowGLViewWidget().AddTopLevelSceneNodeGeometryCylinder(    1, 1, true ); }
 void  QSimToolBarGeometry::DrawSphereSlot()          { myMainWindow->GetQSimMainWindowGLViewWidget().AddTopLevelSceneNodeGeometrySphere(1); }
 void  QSimToolBarGeometry::DrawRectangularBoxSlot()  { myMainWindow->GetQSimMainWindowGLViewWidget().AddTopLevelSceneNodeGeometryRectangularBox( 2, 1, 1 ); }
+void  QSimToolBarGeometry::DrawLowerLimbModelSlot()  { myMainWindow->GetQSimMainWindowGLViewWidget().AddTopLevelSceneNodeGeometryTeapot(); }
+
 
 void  QSimToolBarGeometry::DrawTorusSlot()           { myMainWindow->GetQSimMainWindowGLViewWidget().RemoveAllSceneNodes(); }
 

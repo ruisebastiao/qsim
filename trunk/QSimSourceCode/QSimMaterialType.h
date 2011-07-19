@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
-// File:     QSimToolBarGeometry.h
-// Class:    QSimToolBarGeometry
-// Parent:   QSimToolBar
-// Purpose:  Geometry toolbar in main window for Qt application.
+// File:     QSimMaterialType.h
+// Class:    QSimMaterialType  
+// Parents:  QGLMaterial 
+// Purpose:  Standard material effects for QSim	 (e.g., metal, wood, china)
 /* ------------------------------------------------------------------------- *
 * QSim was developed with support from Simbios (the NIH National Center      *
 * for Physics-Based Simulation Biological Structures at Stanford) under NIH  *
@@ -33,82 +33,38 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
 * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
 * -------------------------------------------------------------------------- */
-#ifndef  QSIMTOOLBARGEOMETRY_H___ 
-#define  QSIMTOOLBARGEOMETRY_H___
+#ifndef  QSIMMATERIALTYPE_H__ 
+#define  QSIMMATERIALTYPE_H__
 #include <QtCore>
 #include <QtGui>
-#include "CppStandardHeaders.h"
-#include "QActionHelper.h"
+#include <QtOpenGL>
+#include "qglmaterial.h"
 
 
 //------------------------------------------------------------------------------
 namespace QSim {
 
-// Forward declaration
-class QSimMainWindow;
 
 
-//-----------------------------------------------------------------------------
-class QSimToolBarGeometry : public QToolBar
+//------------------------------------------------------------------------------
+class QSimMaterialType : public QGLMaterial
 {
    Q_OBJECT
 
 public:
-   // Constructors and destructors.
-   QSimToolBarGeometry() { myMainWindow = NULL; }
-  ~QSimToolBarGeometry() { myMainWindow = NULL; }
+   QSimMaterialType( QObject* parent, const QColor& ambientColorWhatYouSeeInShadow, const QColor& diffuseColorWhatYouSeeInDirectLight, const QColor& specularColorImportantIfShiny, const qreal shininessBetween0And128 );
+  ~QSimMaterialType()  {;}
 
-   // Completes construction of the class and adds this to the mainWindow.
-   void  AddToolbarGeometryToMainWindow( QSimMainWindow &mainWindow );
-
-private slots:
-   // Slots for geometry toolbar.
-   void  DrawConeCapSlot();
-   void  DrawConeFullSlot();
-   void  DrawCylinderSlot();
-   void  DrawRectangularBoxSlot();
-   void  DrawSphereSlot();
-   void  DrawTorusSlot();
-   void  DrawTorsoAndLowerExtremityModelSlot()  { QMessageBox::information( this, tr("Debug message"), tr("Draw Torso and lower extremity Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
-   void  DrawLowerExtremityOnlyModelSlot()      { QMessageBox::information( this, tr("Debug message"), tr("Draw LowerExtremity only Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }
-   void  DrawLowerLimbModelSlot();
-
-private:
-   // Keep track of the mainWindow.
-   QSimMainWindow  *myMainWindow;
-
-   // Widget for this toolbar.
-   QFrame  myToolbarGeometryContainerWidget;
-   
-   // Layout for this toolbar.
-   QGridLayout  myGridLayout;
-
-   // Actions for geometry toolbar.
-   QActionHelper  myDrawSphereAction;
-   QActionHelper  myDrawRectangularBoxAction;
-   QActionHelper  myDrawCylinderAction;
-   QActionHelper  myDrawConeCapAction;
-   QActionHelper  myDrawConeFullAction;
-   QActionHelper  myDrawTorusAction;
-   QActionHelper  myDrawTorsoAndLowerExtremityAction;
-   QActionHelper  myDrawLowerExtremityOnlyAction;
-   QActionHelper  myDrawLowerLimbAction;
-
-   // Buttons for geometry toolbar.
-   QToolButton  myDrawSphereToolButton;
-   QToolButton  myDrawRectangularBoxToolButton;
-   QToolButton  myDrawCylinderButton;
-   QToolButton  myDrawConeCapButton;
-   QToolButton  myDrawConeFullButton;
-   QToolButton  myDrawTorusButton;
-   QToolButton  myDrawTorsoAndLowerExtremityButton;
-   QToolButton  myDrawLowerExtremityOnlyButton;
-   QToolButton  myDrawLowerLimbButton;
+   // Some standard materials for objects (built-in).
+   static QSimMaterialType&  GetChinaMaterialStandard(); 
+   static QSimMaterialType&  GetChinaMaterialHighlight(); 
+   static QSimMaterialType&  GetMetalMaterialStandard(); 
+   static QSimMaterialType&  GetMetalMaterialHighlight(); 
 };
 
 
 //------------------------------------------------------------------------------
 }  // End of namespace QSim
 //--------------------------------------------------------------------------
-#endif  // QSIMTOOLBARGEOMETRY_H___
+#endif  // QSIMMATERIALTYPE_H__
 //--------------------------------------------------------------------------

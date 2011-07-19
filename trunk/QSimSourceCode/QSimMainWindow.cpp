@@ -58,7 +58,6 @@ QSimMainWindow::QSimMainWindow()
    this->setWindowTitle( "QSim:  Easy-to-use Biomechanics Software" );
 
    // Specify the central widget (required).
-   myQSimGLViewWidget.setToolTip( tr("Simulation Graphics Window") );
    this->setCentralWidget( &myQSimGLViewWidget );
 
    // Create the actions then add them to various menus and toolbars.

@@ -52,6 +52,7 @@
 #include "qglbuilder.h"
 #include "CppStandardHeaders.h"
 #include "QSimGenericFunctions.h"
+#include "QSimSceneNode.h"
 
 //------------------------------------------------------------------------------
 namespace QSim {
@@ -67,10 +68,11 @@ public:
   ~QSimGLViewWidget() {;}
 
    // Add various geometry objects to top-level myMostParentSceneNode.
-   QGLSceneNode*  AddTopLevelSceneNodeGeometryCone(     qreal coneTopDiameter, qreal coneBottomDiameter, qreal coneHeight, const bool solidTopAndBottomCaps )  { return this->AddSceneNodeGeometryCone( myMostParentSceneNode, coneTopDiameter, coneBottomDiameter, coneHeight, solidTopAndBottomCaps, solidTopAndBottomCaps ); }
-   QGLSceneNode*  AddTopLevelSceneNodeGeometryCylinder( qreal cylinderDiameter, qreal cylinderHeight, const bool solidTopAndBottomCaps )                       { return this->AddSceneNodeGeometryCylinder( myMostParentSceneNode, cylinderDiameter, cylinderHeight, solidTopAndBottomCaps, solidTopAndBottomCaps ); }
-   QGLSceneNode*  AddTopLevelSceneNodeGeometryRectangularBox( qreal boxWidth, qreal boxHeight, qreal boxDepth )                                                { return this->AddSceneNodeGeometryRectangularBox( myMostParentSceneNode, boxWidth, boxHeight, boxDepth ); }
-   QGLSceneNode*  AddTopLevelSceneNodeGeometrySphere( qreal sphereDiameter, int smoothnessFactorDefaultIs5 = 5 )                                               { return this->AddSceneNodeGeometrySphere( myMostParentSceneNode, sphereDiameter, smoothnessFactorDefaultIs5 ); }
+   QSimSceneNode*  AddTopLevelSceneNodeGeometryCone(     qreal coneTopDiameter, qreal coneBottomDiameter, qreal coneHeight, const bool solidTopAndBottomCaps )  { return this->AddSceneNodeGeometryCone( myMostParentSceneNode, true, coneTopDiameter, coneBottomDiameter, coneHeight, solidTopAndBottomCaps, solidTopAndBottomCaps ); }
+   QSimSceneNode*  AddTopLevelSceneNodeGeometryCylinder( qreal cylinderDiameter, qreal cylinderHeight, const bool solidTopAndBottomCaps )                       { return this->AddSceneNodeGeometryCylinder( myMostParentSceneNode, true, cylinderDiameter, cylinderHeight, solidTopAndBottomCaps, solidTopAndBottomCaps ); }
+   QSimSceneNode*  AddTopLevelSceneNodeGeometryRectangularBox( qreal boxWidth, qreal boxHeight, qreal boxDepth )                                                { return this->AddSceneNodeGeometryRectangularBox( myMostParentSceneNode, true, boxWidth, boxHeight, boxDepth ); }
+   QSimSceneNode*  AddTopLevelSceneNodeGeometrySphere( qreal sphereDiameter, int smoothnessFactorDefaultIs5 = 5 )                                               { return this->AddSceneNodeGeometrySphere( myMostParentSceneNode, true, sphereDiameter, smoothnessFactorDefaultIs5 ); }
+   QSimSceneNode*  AddTopLevelSceneNodeGeometryTeapot( )                                                                                                        { return this->AddSceneNodeGeometryTeapot( myMostParentSceneNode, true ); }
 
    // Remove all the nodes that were added directly or indirectly to myMostParentSceneNode.
    void  RemoveAllSceneNodes( void );
@@ -80,8 +82,8 @@ protected:
    // initializeGL: Sets up the OpenGL rendering context, defines display lists, etc. Gets called once before the first time resizeGL() or paintGL() is called.
    // paintGL:      Renders the OpenGL scene.  Gets called whenever the widget needs to be updated.
    // resizeGL:     Sets up the OpenGL viewport, projection, etc. Gets called whenever the widget has been resized (or shown for the first time).  resizeGL is implemented in QSimGLView class.
-   virtual void  initializeGL( QGLPainter *painter ) { painter->setStandardEffect( QGL::LitMaterial ); } //  this->RegisterPickableNodes(); }
-   virtual void  paintGL( QGLPainter *painter )      { myMostParentSceneNode.draw(painter); }
+   virtual void  initializeGL( QGLPainter *painter ) { if( painter ) { painter->setStandardEffect( QGL::LitMaterial );   this->InitializeAllDrawObjectsInQSimGLViewWidget(*painter);} }
+   virtual void  paintGL( QGLPainter *painter )      { if( painter ) this->DrawAllObjectsInQSimGLViewWidget(*painter); }
    void  resizeGL( int width, int height )           { this->QGLView::resizeGL( width, height ); }
 
    // Override parent class QGLWidget virtual functions to detect mouse or key-pressed events.
@@ -91,17 +93,30 @@ protected:
 
 private:
    // Add various geometry objects  to this widget.
-   QGLSceneNode*  AddSceneNodeGeometryCone(           QGLSceneNode &parentSceneNode, qreal coneTopDiameter, qreal coneBottomDiameter, qreal coneHeight, const bool solidTopCap, const bool solidBottomCap );
-   QGLSceneNode*  AddSceneNodeGeometryCylinder(       QGLSceneNode &parentSceneNode, qreal cylinderDiameter, qreal cylinderHeight, const bool solidTopCap, const bool solidBottomCap )   { return this->AddSceneNodeGeometryCone( parentSceneNode, cylinderDiameter, cylinderDiameter, cylinderHeight, solidTopCap, solidBottomCap ); }
-   QGLSceneNode*  AddSceneNodeGeometryRectangularBox( QGLSceneNode &parentSceneNode, qreal boxWidth, qreal boxHeight, qreal boxDepth );
-   QGLSceneNode*  AddSceneNodeGeometrySphere(         QGLSceneNode &parentSceneNode, qreal sphereDiameter, int smoothnessFactorDefaultIs5 = 5 );
-   QGLSceneNode*  AddSceneNodeGeometryTeapot(         QGLSceneNode &parentSceneNode );
-   QGLSceneNode*  AddSceneNodeGeometryTriangle(       QGLSceneNode &parentSceneNode, const QVector3D &vertexA, const QVector3D &vectexB, const QVector3D &vertexC );
-   QGLSceneNode*  AddSceneNodeGeometryTetrahedron(    QGLSceneNode &parentSceneNode, const QVector3D &vertexA, const QVector3D &vertexB, const QVector3D &vertexC, const QVector3D &vertexD );
+   QSimSceneNode*  AddSceneNodeGeometryFromBuilder( QGLSceneNode& parentSceneNode, QGLBuilder& builder, const char* objectNameOrNull );
+   QSimSceneNode*  AddSceneNodeGeometryCone(           QGLSceneNode &parentSceneNode, const bool shouldUpdateGL, qreal coneTopDiameter, qreal coneBottomDiameter, qreal coneHeight, const bool solidTopCap, const bool solidBottomCap );
+   QSimSceneNode*  AddSceneNodeGeometryCylinder(       QGLSceneNode &parentSceneNode, const bool shouldUpdateGL, qreal cylinderDiameter, qreal cylinderHeight, const bool solidTopCap, const bool solidBottomCap )   { return this->AddSceneNodeGeometryCone( parentSceneNode, shouldUpdateGL, cylinderDiameter, cylinderDiameter, cylinderHeight, solidTopCap, solidBottomCap ); }
+   QSimSceneNode*  AddSceneNodeGeometryRectangularBox( QGLSceneNode &parentSceneNode, const bool shouldUpdateGL, qreal boxWidth, qreal boxHeight, qreal boxDepth );
+   QSimSceneNode*  AddSceneNodeGeometrySphere(         QGLSceneNode &parentSceneNode, const bool shouldUpdateGL, qreal sphereDiameter, int smoothnessFactorDefaultIs5 = 5 );
+   QSimSceneNode*  AddSceneNodeGeometryTeapot(         QGLSceneNode &parentSceneNode, const bool shouldUpdateGL );
+   QSimSceneNode*  AddSceneNodeGeometryTriangle(       QGLSceneNode &parentSceneNode, const bool shouldUpdateGL, const QVector3D &vertexA, const QVector3D &vectexB, const QVector3D &vertexC );
+   QSimSceneNode*  AddSceneNodeGeometryTetrahedron(    QGLSceneNode &parentSceneNode, const bool shouldUpdateGL, const QVector3D &vertexA, const QVector3D &vertexB, const QVector3D &vertexC, const QVector3D &vertexD );
 
    // For this widget, need one sceneNode from which all other sceneNodes descend.
-   // Note: The QGLSceneNode class only inherits from from QObject.
+   // Note: The QGLSceneNode class only inherits from QObject.
    QGLSceneNode  myMostParentSceneNode;
+
+   // List of all on-screen objects that need to be painted.
+   QList<QSimSceneNode*>  myListOfAllObjectsThatNeedToBePainted;
+   void  InitializeAllDrawObjectsInQSimGLViewWidget( QGLPainter& painter )  {;} // for( QList<QSimSceneNode*>::iterator it = myListOfAllObjectsThatNeedToBePainted.begin();  it != myListOfAllObjectsThatNeedToBePainted.end();  ++it )  { QSimSceneNode* obj = *it;  if(obj) obj->RegisterQSimSceneNodeToBePickable( *this, painter ); } }
+   void  DrawAllObjectsInQSimGLViewWidget( QGLPainter& painter )            { for( QList<QSimSceneNode*>::iterator it = myListOfAllObjectsThatNeedToBePainted.begin();  it != myListOfAllObjectsThatNeedToBePainted.end();  ++it )  { QSimSceneNode* obj = *it;  if(obj) obj->DrawOpenGLForQSimSceneNode( painter ); } }
+
+//*********************************************************************************
+//*********************************************************************************
+public:
+
+signals:
+   void SignalToUpdateGL();
 };
 
 

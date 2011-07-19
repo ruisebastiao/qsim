@@ -48,8 +48,8 @@
 #include "qglteapot.h"
 #include "qglpicknode.h"
 #include "qglcube.h"
-// #include "qvector3darray.h"
 #include "QSimGLViewWidget.h"
+#include "QSimMaterialType.h"
 
 
 //------------------------------------------------------------------------------
@@ -59,43 +59,45 @@ namespace QSim {
 //------------------------------------------------------------------------------
 QSimGLViewWidget::QSimGLViewWidget( QWidget *parent ) : QGLView(parent)
 {
+   // Reserve space for on-screen objects that need to be painted.
+   myListOfAllObjectsThatNeedToBePainted.reserve( 100 );
+
    // Enable object picking (which is disabled by default).
    this->setOption( QGLView::ObjectPicking, true );
 
-   // For debugging object picking, render objects with their pick colors instead of normal colors and materials (disabled by default).
-   // this->setOption( QGLView::ShowPicking, true );
-
-   // Ensure that a change to each of the objects contained in this to update the view.
-   // QObject::connect( &myMostParentSceneNode, SIGNAL(changed()), this, SLOT(updateGL()) );
+   // Ensure that a change to one of the objects updates the view.
+   QObject::connect( this, SIGNAL(SignalToUpdateGL()), this, SLOT(updateGL()) );
 
    // Construct a triangle.
    QVector3D vertexA( 0,  0, 0);
    QVector3D vertexB( 2,  2, 0);
    QVector3D vertexC(-2,  2, 0);
-   QGLSceneNode *triangleSceneNode = this->AddSceneNodeGeometryTriangle( myMostParentSceneNode, vertexA, vertexB, vertexC );
-   triangleSceneNode->setPosition( QVector3D(0.0f, 1.0f, -2.0f) );
+   QSimSceneNode* triangleSceneNode = this->AddSceneNodeGeometryTriangle( myMostParentSceneNode, false, vertexA, vertexB, vertexC );
+   triangleSceneNode->SetPosition( QVector3D(0.0f, 1.0f, -2.0f) );
 
    // Construct a tetrahedron.
    QVector3D vertexD( 0,  2, -2 );
-   QGLSceneNode *tetrahedronSceneNode = this->AddSceneNodeGeometryTetrahedron( myMostParentSceneNode, vertexA, vertexB, vertexC, vertexD );
-   tetrahedronSceneNode->setPosition( QVector3D(5.0f, 0.0f, 1.0f) );
-
-   // Sequential rotations to orient tetrahedron.  Otherwise use the following QMatrix4x4 methods.
-   // void  rotate ( qreal angle, const QVector3D & vector )
-   // void  rotate ( const QQuaternion & quaternion )
-   // void  rotate ( qreal angle, qreal x, qreal y, qreal z = 0.0f )
-   QMatrix4x4 mat44;
-   QQuaternion q1 = QQuaternion::fromAxisAndAngle( 1.0f, 0.0f, 0.0f, 270.0f );
-   QQuaternion q2 = QQuaternion::fromAxisAndAngle( 0.0f, 1.0f, 0.0f, 100.0f );
-   mat44.rotate( q2 * q1 );
-   tetrahedronSceneNode->setLocalTransform( mat44 );
+   QSimSceneNode* tetrahedronSceneNode = this->AddSceneNodeGeometryTetrahedron( myMostParentSceneNode, false, vertexA, vertexB, vertexC, vertexD );
+   tetrahedronSceneNode->SetPosition( QVector3D(5.0f, 0.0f, 1.0f) );
 
    // Add the classic teapot to the scene.
-   QGLSceneNode*  teapotSceneNode = this->AddSceneNodeGeometryTeapot( myMostParentSceneNode );
-   teapotSceneNode->setPosition( QVector3D( 2.0f, 0.0f, 2.0f) );
+   QSimSceneNode* teapotSceneNode = this->AddSceneNodeGeometryTeapot( myMostParentSceneNode, false );
+   teapotSceneNode->SetPosition( QVector3D( 2.0f, 0.0f, 2.0f) );
+
+   // Add a sphere to the scene.
+   QSimSceneNode* sphere1 = this->AddSceneNodeGeometrySphere( myMostParentSceneNode, true, 1.0, 7 );
+   sphere1->SetPosition( QVector3D( 1.0, 0.0, 0.5) );
+
+   // Add a sphere to the scene.
+   QSimSceneNode* sphere2 = this->AddSceneNodeGeometrySphere( myMostParentSceneNode, true, 1.0, 7 );
+   sphere2->SetPosition( QVector3D( 2.0, 0.0, 0.5) );
+
+   // Add a cylinder to the scene.
+   QSimSceneNode* cylinder1 = this->AddSceneNodeGeometryCylinder( myMostParentSceneNode, true, 1.0, 0.5, true, true );
+   cylinder1->SetPosition( QVector3D( 0.0, 0.0, 0.0) );
 
    // Purely cosmetic effects (skip this if you like all white).
-   QGLMaterial *mat = new QGLMaterial;
+   QGLMaterial*  mat = new QGLMaterial;
    mat->setDiffuseColor( QColor(255, 255, 0)   );    // Direct light is this color (Each RGB value is from 0 to 255)
    mat->setAmbientColor( QColor(0,   0,   255) );    // Shadows are this color     (Each RGB value is from 0 to 255)
    myMostParentSceneNode.setMaterial( mat );
@@ -118,23 +120,34 @@ QSimGLViewWidget::QSimGLViewWidget( QWidget *parent ) : QGLView(parent)
 
 
 //------------------------------------------------------------------------------
-static QGLSceneNode*  AddSceneNodeGeometryFromBuilder( QGLSceneNode &parentSceneNode, QGLBuilder &builder )
+QSimSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryFromBuilder( QGLSceneNode &parentSceneNode, QGLBuilder &builder, const char* objectNameOrNull )
 {
    // Finish the building of this geometry, optimize it for rendering, and return a pointer to the detached top-level scene node (root node).
    // Since the sceneNode is detached from the builder object, the builder may be deleted or go out of scope while sceneNode lives on.
    // finalizedSceneNode must be called once (and only once) after building a scene.
-   QGLSceneNode *sceneNode = builder.finalizedSceneNode();
+   QGLSceneNode* sceneNode = builder.finalizedSceneNode();
 
    // The calling method takes ownership of the returned sceneNode and should either explicitly call delete sceneNode when it is not longer needed,
    // or Qt documentation says if you call sceneNode->setParent(),  sceneNode will be implicitly cleaned up by Qt.
    // Note: parentSceneNode.addNode( sceneNode) will call sceneNode->setParent( &parentSceneNode ) if sceneNode does not already have a parent.
    parentSceneNode.addNode( sceneNode );
-   return sceneNode;
+
+   // Now, create a QSimSceneNode for this sceneNode and add it to the list that keeps track of painting and later deletion.
+   QSimSceneNode* qSimSceneObject = new QSimSceneNode( *sceneNode, *this );
+   myListOfAllObjectsThatNeedToBePainted.append( qSimSceneObject );
+
+   // Name the object or assign the default name "Object".
+   qSimSceneObject->setObjectName( objectNameOrNull != NULL ? objectNameOrNull : "Object" );
+
+   // Make the object selectable by user.
+   qSimSceneObject->RegisterQSimSceneNodeToBePickable( *this );
+
+   return qSimSceneObject;
 }
 
 
 //------------------------------------------------------------------------------
-QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryCone( QGLSceneNode &parentSceneNode, qreal coneTopDiameter, qreal coneBottomDiameter, qreal coneHeight, const bool solidTopCap, const bool solidBottomCap )
+QSimSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryCone( QGLSceneNode &parentSceneNode, const bool shouldUpdateGL, qreal coneTopDiameter, qreal coneBottomDiameter, qreal coneHeight, const bool solidTopCap, const bool solidBottomCap )
 {
    // Ensure dimensions are sensible on entry (set negative or zero arguments to 1).
    if( coneTopDiameter    <= 0 ) coneTopDiameter    = 1;
@@ -150,22 +163,25 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryCone( QGLSceneNode &parentS
    builder << QGLCylinder( coneTopDiameter, coneBottomDiameter, coneHeight, numberOfSlicesAlsoCalledFacetsThatRunLengthOfCylinder, numberOfLayersThatDivideSidesOfCylinder, solidTopCap, solidBottomCap );
 
    // Create the sceneNode and add it to parentSceneNode.
-   QGLSceneNode *sceneNode = AddSceneNodeGeometryFromBuilder( parentSceneNode, builder );
    const bool isCylinder = coneTopDiameter == coneBottomDiameter;
-   sceneNode->setObjectName( isCylinder ? "Cylinder" : "Cone" );
+   const char *objectName = isCylinder ? "Cylinder" : "Cone";
+   QSimSceneNode *sceneNode = this->AddSceneNodeGeometryFromBuilder( parentSceneNode, builder, objectName );
+   sceneNode->SetMaterialStandard(  &(QSimMaterialType::GetMetalMaterialStandard()) );
+   sceneNode->SetMaterialHighlight( &(QSimMaterialType::GetMetalMaterialHighlight()) );
+   sceneNode->SetAbstractEffect( NULL );
 
    // Move it for no particular reason.
-   sceneNode->setPosition( QVector3D( isCylinder ? -1.0f : -2.5f, 0.0f, 0.0f) );
+   sceneNode->SetPosition( QVector3D( isCylinder ? -1.0f : -2.5f, 0.0f, 0.0f) );
 
-   // Update so geometry is visible before returning.
-   this->QGLView::updateGL();
+   // Possibly update so geometry is visible before returning.
+   if( shouldUpdateGL ) this->QGLView::updateGL();
    return sceneNode;
 }
 
 
 
 //------------------------------------------------------------------------------
-QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryRectangularBox( QGLSceneNode &parentSceneNode, qreal boxWidth, qreal boxHeight, qreal boxDepth )
+QSimSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryRectangularBox( QGLSceneNode &parentSceneNode, const bool shouldUpdateGL, qreal boxWidth, qreal boxHeight, qreal boxDepth )
 {
 #if 0
    QGLBuilder builderCube;
@@ -197,31 +213,23 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryRectangularBox( QGLSceneNod
    builder.addTriangulatedFace( topOfBox.reversed() );
 
    // Create the sceneNode and add it to parentSceneNode.
-   QGLSceneNode *sceneNode = AddSceneNodeGeometryFromBuilder( parentSceneNode, builder );
-   sceneNode->setObjectName( "Rectangular box" );
+   QSimSceneNode* sceneNode = this->AddSceneNodeGeometryFromBuilder( parentSceneNode, builder, "Rectangular box" );
+   sceneNode->SetMaterialStandard(  &(QSimMaterialType::GetMetalMaterialStandard()) );
+   sceneNode->SetMaterialHighlight( &(QSimMaterialType::GetMetalMaterialHighlight()) );
+   sceneNode->SetAbstractEffect( NULL );
 
-#if 0
-   // Purely cosmetic effects (skip this if you like all white).
-   // Also, should probably using a palette here.
-   QGLMaterial *china = new QGLMaterial(this);
-   china->setAmbientColor(  QColor(192, 150, 128) );
-   china->setSpecularColor( QColor(60, 60, 60) );
-   china->setShininess( 128 );
-   sceneNode->setMaterial(china);
-   sceneNode->setEffect( QGL::LitMaterial );
-#endif
+   // Move it for no particular reason.
+   sceneNode->SetRotationAngleInDegreesAndVector( 275, QVector3D(1,0,0) );
+   sceneNode->SetPosition( QVector3D(-1.7f, -0.58f, 0.0f) );
 
-   // Move the cube a little for no particular reason.
-   sceneNode->setPosition( QVector3D(-2.5f, 2.0f, 1.0f) );
-
-   // Update so geometry is visible before returning.
-   this->QGLView::updateGL();
+   // Possibly update so geometry is visible before returning.
+   if( shouldUpdateGL ) this->QGLView::updateGL();
    return sceneNode;
 }
 
 
 //------------------------------------------------------------------------------
-QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometrySphere( QGLSceneNode &parentSceneNode, qreal sphereDiameter, int smoothnessFactorDefaultIs5 )
+QSimSceneNode*  QSimGLViewWidget::AddSceneNodeGeometrySphere( QGLSceneNode &parentSceneNode, const bool shouldUpdateGL, qreal sphereDiameter, int smoothnessFactorDefaultIs5 )
 {
    // Ensure dimensions are sensible on entry (set negative or zero argument to 1).
    if( sphereDiameter <= 0 ) sphereDiameter = 1;
@@ -239,20 +247,22 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometrySphere( QGLSceneNode &paren
    builder << QGLSphere( sphereDiameter, smoothnessFactorDefaultIs5 );
 
    // Create the sceneNode and add it to parentSceneNode.
-   QGLSceneNode *sceneNode = AddSceneNodeGeometryFromBuilder( parentSceneNode, builder );
-   sceneNode->setObjectName( "Sphere" );
+   QSimSceneNode* sceneNode = this->AddSceneNodeGeometryFromBuilder( parentSceneNode, builder, "Sphere" );
+   sceneNode->SetMaterialStandard(  &(QSimMaterialType::GetChinaMaterialStandard()) );
+   sceneNode->SetMaterialHighlight( &(QSimMaterialType::GetChinaMaterialHighlight()) );
+   sceneNode->SetAbstractEffect( NULL );
 
    // Move this a little bit.
-   sceneNode->setPosition( QVector3D(-4.0f, 2.0f, 0.0f) );
+   sceneNode->SetPosition( QVector3D(-4.0f, 2.0f, 0.0f) );
 
-   // Update so geometry is visible before returning.
-   this->QGLView::updateGL();
+   // Possibly update so geometry is visible before returning.
+   if( shouldUpdateGL ) this->QGLView::updateGL();
    return sceneNode;
 }
 
 
 //------------------------------------------------------------------------------
-QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTeapot( QGLSceneNode &parentSceneNode )
+QSimSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTeapot( QGLSceneNode &parentSceneNode, const bool shouldUpdateGL )
 {
    // Construct a QGLBuilder on the stack.  When adding geometry, QGLBuilder automatically creates lighting normals.
    QGLBuilder builder;
@@ -261,17 +271,19 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTeapot( QGLSceneNode &paren
    builder << QGLTeapot();
 
    // Create the sceneNode and add it to parentSceneNode.
-   QGLSceneNode *sceneNode = AddSceneNodeGeometryFromBuilder( parentSceneNode, builder );
-   sceneNode->setObjectName( "Teapot" );
+   QSimSceneNode* sceneNode = this->AddSceneNodeGeometryFromBuilder( parentSceneNode, builder, "Teapot" );
+   sceneNode->SetMaterialStandard(  &(QSimMaterialType::GetChinaMaterialStandard()) );
+   sceneNode->SetMaterialHighlight( &(QSimMaterialType::GetChinaMaterialHighlight()) );
+   sceneNode->SetAbstractEffect( NULL );
 
-   // Update so geometry is visible before returning.
-   this->QGLView::updateGL();
+   // Possibly update so geometry is visible before returning.
+   if( shouldUpdateGL ) this->QGLView::updateGL();
    return sceneNode;
 }
 
 
 //------------------------------------------------------------------------------
-QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTriangle( QGLSceneNode &parentSceneNode, const QVector3D &vertexA, const QVector3D &vertexB, const QVector3D &vertexC )
+QSimSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTriangle( QGLSceneNode &parentSceneNode, const bool shouldUpdateGL, const QVector3D &vertexA, const QVector3D &vertexB, const QVector3D &vertexC )
 {
    // Construct a QGLBuilder on the stack.  When adding geometry, QGLBuilder automatically creates lighting normals.
    QGLBuilder builder;
@@ -280,15 +292,10 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTriangle( QGLSceneNode &par
    QGeometryData triangleABC;   triangleABC.appendVertex( vertexA, vertexB, vertexC );   builder.addTriangles( triangleABC );
 
    // Create the sceneNode and add it to parentSceneNode.
-   QGLSceneNode *sceneNode = AddSceneNodeGeometryFromBuilder( parentSceneNode, builder );
-   sceneNode->setObjectName( "Triangle" );
-
-   // Register this object for object picking.
-   // this->registerObject( this->GetNextUniqueID(), sceneNode );
-
-   // If there is
-   // QObject::connect( sceneNode, SIGNAL(hoverChanged()), this, SIGNAL(changed()) );
-   // QObject::connect( sceneNode, SIGNAL(clicked()),      this, SLOT(triangleClicked()));
+   QSimSceneNode* sceneNode = this->AddSceneNodeGeometryFromBuilder( parentSceneNode, builder, "Triangle" );
+   sceneNode->SetMaterialStandard(  &(QSimMaterialType::GetMetalMaterialStandard()) );
+   sceneNode->SetMaterialHighlight( &(QSimMaterialType::GetMetalMaterialHighlight()) );
+   sceneNode->SetAbstractEffect( NULL );
 
    // Update so geometry is visible before returning.
    this->QGLView::updateGL();
@@ -297,7 +304,7 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTriangle( QGLSceneNode &par
 
 
 //------------------------------------------------------------------------------
-QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTetrahedron( QGLSceneNode &parentSceneNode, const QVector3D &vertexA, const QVector3D &vertexB, const QVector3D &vertexC, const QVector3D &vertexD )
+QSimSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTetrahedron( QGLSceneNode &parentSceneNode, const bool shouldUpdateGL, const QVector3D &vertexA, const QVector3D &vertexB, const QVector3D &vertexC, const QVector3D &vertexD )
 {
    // Construct a QGLBuilder on the stack.  When adding geometry, QGLBuilder automatically creates lighting normals.
    QGLBuilder builder;
@@ -309,11 +316,13 @@ QGLSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTetrahedron( QGLSceneNode &
    QGeometryData triangle3;   triangle3.appendVertex( vertexB, vertexD, vertexC );    builder.addTriangles( triangle3 );
 
    // Create the sceneNode and add it to parentSceneNode.
-   QGLSceneNode *sceneNode = AddSceneNodeGeometryFromBuilder( parentSceneNode, builder );
-   sceneNode->setObjectName( "Tetrahedron" );
+   QSimSceneNode* sceneNode = this->AddSceneNodeGeometryFromBuilder( parentSceneNode, builder, "Tetrahedron" );
+   sceneNode->SetMaterialStandard(  &(QSimMaterialType::GetMetalMaterialStandard()) );
+   sceneNode->SetMaterialHighlight( &(QSimMaterialType::GetMetalMaterialHighlight()) );
+   sceneNode->SetAbstractEffect( NULL );
 
-   // Update so geometry is visible before returning.
-   this->QGLView::updateGL();
+   // Possibly update so geometry is visible before returning.
+   if( shouldUpdateGL ) this->QGLView::updateGL();
    return sceneNode;
 }
 
@@ -327,6 +336,9 @@ void  QSimGLViewWidget::keyPressEvent( QKeyEvent *event )
    {
       case Qt::Key_Plus:   multiplier = 1.5;   break;
       case Qt::Key_Minus:  multiplier = 0.7;   break;
+      case Qt::Key_Tab:    // Tab key turns ShowPicking option on and off which helps show what the pick buffer looks like.
+                           this->setOption( QGLView::ShowPicking, ((options() & QGLView::ShowPicking) == 0) );
+                           this->updateGL();
    }
 
    // Resize and paint only if non-zero, non-unity multiplier.
@@ -337,6 +349,9 @@ void  QSimGLViewWidget::keyPressEvent( QKeyEvent *event )
       this->resizeGL( multiplier * widgetWidth, multiplier * widgetHeight );
       this->updateGL();
    }
+
+   // Pass the event to parent class.
+   QGLView::keyPressEvent( event );
 }
 
 
