@@ -37,12 +37,12 @@
 #                Note: LIBS are found along QMAKE_LIBDIR (formerly LIBPATH).
 # Note: Enclose names in paths in quotes if there are spaces, e.g., "/Program Files"
 #--------------------------------------------------------------------
+HEADERS += ./QSimSourceCode/QSimMaterialType.h
+SOURCES += ./QSimSourceCode/QSimMaterialType.cpp
 HEADERS += ./QSimSourceCode/QSimGLViewWidget.h
 SOURCES += ./QSimSourceCode/QSimGLViewWidget.cpp
-HEADERS += ./QSimSourceCode/QSimScenePickObject.h
-SOURCES += ./QSimSourceCode/QSimScenePickObject.cpp
-HEADERS += ./QSimSourceCode/QSimScenePickListAndPaint.h
-SOURCES += ./QSimSourceCode/QSimScenePickListAndPaint.cpp
+HEADERS += ./QSimSourceCode/QSimSceneNode.h
+SOURCES += ./QSimSourceCode/QSimSceneNode.cpp
 
 #--------------------------------------------------------------------
 # Windows only commands here
