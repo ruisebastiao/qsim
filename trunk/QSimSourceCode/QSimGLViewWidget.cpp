@@ -50,6 +50,7 @@
 #include "qglcube.h"
 #include "QSimGLViewWidget.h"
 #include "QSimMaterialType.h"
+#include "QSimMainWindow.h"
 
 
 //------------------------------------------------------------------------------
@@ -67,6 +68,9 @@ QSimGLViewWidget::QSimGLViewWidget( QWidget *parent ) : QGLView(parent)
 
    // Ensure that a change to one of the objects updates the view.
    QObject::connect( this, SIGNAL(SignalToUpdateGL()), this, SLOT(updateGL()) );
+
+   // Associate this with the main window that holds it.
+   this->SetQSimMainWindowThatHoldsQSimGLViewWidget( NULL );
 
    // Construct a triangle.
    QVector3D vertexA( 0,  0, 0);
@@ -134,7 +138,7 @@ QSimSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryFromBuilder( QGLSceneNode 
 
    // Now, create a QSimSceneNode for this sceneNode and add it to the list that keeps track of painting and later deletion.
    QSimSceneNode* qSimSceneObject = new QSimSceneNode( *sceneNode, *this );
-   myListOfAllObjectsThatNeedToBePainted.append( qSimSceneObject );
+   this->AddQSimSceneNodeToListOfObjectsThatNeedToBePainted( qSimSceneObject );
 
    // Name the object or assign the default name "Object".
    qSimSceneObject->setObjectName( objectNameOrNull != NULL ? objectNameOrNull : "Object" );
@@ -328,14 +332,26 @@ QSimSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTetrahedron( QGLSceneNode 
 
 
 //------------------------------------------------------------------------------
-void  QSimGLViewWidget::keyPressEvent( QKeyEvent *event )
+void  QSimGLViewWidget::DeleteSelectedObjectInQSimGLViewWidget()
+{
+   for( QList<QSimSceneNode*>::iterator it = myListOfAllObjectsThatNeedToBePainted.begin();  it != myListOfAllObjectsThatNeedToBePainted.end();  ++it )  
+   { 
+      QSimSceneNode* sceneNode = *it;  
+      if( sceneNode && sceneNode->GetObjectIsSelected() ) 
+         this->RemoveQSimSceneNodeToListOfObjectsThatNeedToBePainted( sceneNode );  
+   }
+}
+
+
+//------------------------------------------------------------------------------
+void  QSimGLViewWidget::keyPressEvent( QKeyEvent* event )
 {
    // To enable this code, set the following before the user presses any keys:  this->setFocusPolicy( Qt::StrongFocus );
    double multiplier = 1.0;
    switch( event->key() )
    {
-      case Qt::Key_Plus:   multiplier = 1.5;   break;
-      case Qt::Key_Minus:  multiplier = 0.7;   break;
+      case Qt::Key_Plus:   multiplier = 1.5;        break;
+      case Qt::Key_Minus:  multiplier = 0.7;        break;
       case Qt::Key_Tab:    // Tab key turns ShowPicking option on and off which helps show what the pick buffer looks like.
                            this->setOption( QGLView::ShowPicking, ((options() & QGLView::ShowPicking) == 0) );
                            this->updateGL();
@@ -363,15 +379,26 @@ void  QSimGLViewWidget::RemoveAllSceneNodes( void )
    // The next two calls remove all the children and disconnects them from their parent, but does not delete/free memory on them.
    QList<QGLSceneNode*> listOfAllChildrenNodesRecursive = myMostParentSceneNode.allChildren();
    myMostParentSceneNode.removeNodes( listOfAllChildrenNodesRecursive );
+  
+   // Remove all objects from list to be painted.
+   while( !myListOfAllObjectsThatNeedToBePainted.isEmpty() )
+      myListOfAllObjectsThatNeedToBePainted.removeLast();
 
    // For some reason, each call to addNode adds two nodes to allChildren() list but only one to children.
    // For some reason, must delete the last nodes in the list (before the first) or else it will cause a segmentation fault.
    while( !listOfAllChildrenNodesRecursive.isEmpty() )
    {
       QGLSceneNode* sceneNodei = listOfAllChildrenNodesRecursive.takeLast();
-//    this->deregisterObject( sceneNodei );
       delete sceneNodei;
    }
+}
+
+
+//------------------------------------------------------------------------------
+void   QSimGLViewWidget::WriteMessageToMainWindowStatusBarFromGLViewWidget( const QString& message, const uint lengthOfTimeInMillisecondsOr0ForIndefintely )
+{
+   QSimMainWindow* isMainWindow = this->GetQSimMainWindowThatHoldsQSimGLViewWidget(); 
+   if( isMainWindow ) isMainWindow->WriteMessageToMainWindowStatusBar( message, lengthOfTimeInMillisecondsOr0ForIndefintely ); 
 }
 
 

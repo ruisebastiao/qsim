@@ -59,17 +59,18 @@ QSimMainWindow::QSimMainWindow()
 
    // Specify the central widget (required).
    this->setCentralWidget( &myQSimGLViewWidget );
+   myQSimGLViewWidget.SetQSimMainWindowThatHoldsQSimGLViewWidget( this );
 
    // Create the actions then add them to various menus and toolbars.
    this->AddAllActionsWhoAreChildrenOfQSimMainWindow();
-   this->CreateFileMenu();
-   this->CreateEditMenu();
-   this->CreateSimulateMenu();
-   this->CreateHelpMenu();
-   this->CreateToolbarEditEtc();    // Edit tool bar near the top and below menus.
+   this->CreateMainWindowFileMenu();
+   this->CreateMainWindowEditMenu();
+   this->CreateMainWindowSimulateMenu();
+   this->CreateMainWindowHelpMenu();
+   this->CreateMainWindowToolbarEditEtc();    // Edit tool bar near the top and below menus.
    myToolBarGeometry.AddToolbarGeometryToMainWindow( *this );
-   this->CreateStatusBar();         // Add a status bar at the bottom of the very bottom of the application (helpful for notes, warnings, and messages).
-   this->CreateDockWidgets();       // Create widgets that surround the central widget.
+   this->CreateMainWindowStatusBar();         
+   this->CreateMainWindowDockWidgets();       // Create widgets that surround the central widget.
 
    // Size this window in pixels (possibly making it larger than usual or maximized) and show it.
    this->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
@@ -172,7 +173,7 @@ void  QSimMainWindow::AddAllActionsWhoAreChildrenOfQSimMainWindow()
 
 
 //-----------------------------------------------------------------------------
-void QSimMainWindow::CreateFileMenu()
+void QSimMainWindow::CreateMainWindowFileMenu()
 {
    // Create actions (user-interface objects inserted into widgets) that allow a program to standardize
    // performance and keeps in sync identical commands invoked via menus, toolbar buttons, and/or keyboard shortcuts.
@@ -190,7 +191,7 @@ void QSimMainWindow::CreateFileMenu()
 
 
 //-----------------------------------------------------------------------------
-void QSimMainWindow::CreateEditMenu()
+void QSimMainWindow::CreateMainWindowEditMenu()
 {
    // Create actions (user-interface objects inserted into widgets) that allow a program to standardize
    // performance and keeps in sync identical commands invoked via menus, toolbar buttons, and/or keyboard shortcuts.
@@ -205,7 +206,7 @@ void QSimMainWindow::CreateEditMenu()
 
 
 //-----------------------------------------------------------------------------
-void QSimMainWindow::CreateHelpMenu()
+void QSimMainWindow::CreateMainWindowHelpMenu()
 {
    // Create actions (user-interface objects inserted into widgets) that allow a program to standardize
    // performance and keeps in sync identical commands invoked via menus, toolbar buttons, and/or keyboard shortcuts.
@@ -218,7 +219,7 @@ void QSimMainWindow::CreateHelpMenu()
 
 
 //-----------------------------------------------------------------------------
-void QSimMainWindow::CreateSimulateMenu()
+void QSimMainWindow::CreateMainWindowSimulateMenu()
 {
    QMenuBar* mainWindowMenuBar = this->menuBar();                        // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* simulateMenu = mainWindowMenuBar->addMenu( tr("&Simulate") );  // Creates/Gets/Owns this menu.
@@ -227,16 +228,10 @@ void QSimMainWindow::CreateSimulateMenu()
 
 
 //------------------------------------------------------------------------------
-void  QSimMainWindow::CreateStatusBar()
-{
-   // Second arguments instructs on how many milliseconds to show message (or 0 for indefinitely)
-   // this->statusBar()->showMessage( tr("Status messages go here"), 9000  );
-   this->statusBar()->showMessage( tr("Status messages go here"), 0 );
-}
 
 
 //------------------------------------------------------------------------------
-void  QSimMainWindow::CreateToolbarEditEtc()
+void  QSimMainWindow::CreateMainWindowToolbarEditEtc()
 {
    // Toolbars on main window (resource is allocated and probably deleted by QSimMainWindow).
    // setAllowedAreas are Qt::TopToolBarArea, BottomToolBarArea, Qt::LeftToolBarArea, Qt::RightToolBarArea.
@@ -281,7 +276,7 @@ void  QSimMainWindow::CreateTextEditor()
 
 
 //------------------------------------------------------------------------------
-void  QSimMainWindow::CreateDockWidgets()
+void  QSimMainWindow::CreateMainWindowDockWidgets()
 {
   // Although there may be dockWidgets on top, left, right, and bottom of main widget,
   // there can be multiple rows or columns of dockWidgets by setDockNestingEnabled( true ).

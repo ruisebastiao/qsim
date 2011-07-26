@@ -52,7 +52,7 @@ unsigned long  QSimSceneNode::myNextUniqueID = 0;
 QSimSceneNode::QSimSceneNode( QGLSceneNode &sceneNode, QSimGLViewWidget& viewWidgetForPickableObject ) : QObject(&sceneNode), myQGLSceneNode(sceneNode)
 {
    this->InitializeQSimSceneNode();
-   this->SetSceneObjectPickable( &viewWidgetForPickableObject );
+   this->SetSceneObjectPickable( viewWidgetForPickableObject );
 }
 
 
@@ -84,6 +84,16 @@ void  QSimSceneNode::DrawOpenGLForQSimSceneNode( QGLPainter& painter )
    // Draw the geometry.
    myQGLSceneNode.draw( &painter );
 
+   // If hovering on the object, update the status bar.
+   if( this->GetHoverStatus() && this->GetQSimGLViewWidgetIfPickable()  )
+   {
+      const QString objectName = this->objectName();
+      const unsigned long objectId = this->GetObjectId();
+      QString messageToStatusBar;
+      QTextStream( &messageToStatusBar ) << objectName << "[" << objectId << "]";
+      this->GetQSimGLViewWidgetIfPickable()->WriteMessageToMainWindowStatusBarFromGLViewWidget( messageToStatusBar, 0 );
+   }
+
    // Turn off the user effect, if present.
    if( myAbstractEffect ) painter.setStandardEffect( QGL::LitMaterial );
 
@@ -96,7 +106,7 @@ void  QSimSceneNode::DrawOpenGLForQSimSceneNode( QGLPainter& painter )
 
 
 //------------------------------------------------------------------------------
-bool  QSimSceneNode::event( QEvent *event )
+bool  QSimSceneNode::event( QEvent* event )
 {
    // Convert the raw event into a signal representing the user's action.
    if( event->type() == QEvent::MouseButtonPress )
@@ -134,18 +144,16 @@ bool  QSimSceneNode::event( QEvent *event )
 
 
 //------------------------------------------------------------------------------
-void  QSimSceneNode::ObjectWasSelected()
+void  QSimSceneNode::ObjectWasDoubleClicked()
 {
-   const QString objectName = this->objectName();
-   const unsigned long objectId = this->GetObjectId();
-   QString message;
-   QTextStream( &message ) << "Object clicked.    Name = " << objectName << ".    ID = " << objectId;
+   QString message( "TBD: Dialog box with object properties" );
    QMessageBox::information( NULL, tr("Debug message"), message, QMessageBox::Ok, QMessageBox::NoButton );
+   this->SetObjectIsSelected( true );
 }
 
 
 //------------------------------------------------------------------------------
-void  QSimSceneNode::SetSceneObjectPickable( QSimGLViewWidget *viewWidgetIfPickableOrNullIfNotPickable )
+void  QSimSceneNode::SetSceneObjectPickableToNullDeregisterDisconnect()
 {
    // If already registered and connected, deregister this object (must also do this before object is destroyed) and disconnect signals.
    if( myViewWidgetIfPickableOrNullIfNotPickable != NULL )
@@ -154,15 +162,22 @@ void  QSimSceneNode::SetSceneObjectPickable( QSimGLViewWidget *viewWidgetIfPicka
       this->disconnect();
       myViewWidgetIfPickableOrNullIfNotPickable = NULL;
    }
+}
 
-   // Possibly register this object for object picking and connect signals to listen to mouse/other events.
-   if( viewWidgetIfPickableOrNullIfNotPickable != NULL )
-   {
-      myViewWidgetIfPickableOrNullIfNotPickable = viewWidgetIfPickableOrNullIfNotPickable;
-      myViewWidgetIfPickableOrNullIfNotPickable->registerObject( this->GetObjectId(), &(this->GetQGLSceneNode()) );
-      QObject::connect( this,  SIGNAL(mouseHoverChanged()),  myViewWidgetIfPickableOrNullIfNotPickable, SIGNAL(SignalToUpdateGL()) );
-      QObject::connect( this,  SIGNAL(mouseButtonClicked()), this, SLOT(ObjectWasSelected())  );
-   }
+
+//------------------------------------------------------------------------------
+void  QSimSceneNode::SetSceneObjectPickable( QSimGLViewWidget& viewWidgetIfPickableOrNullIfNotPickable )
+{
+   // If already registered and connected, deregister this object (must also do this before object is destroyed) and disconnect signals.
+   this->SetSceneObjectPickableToNullDeregisterDisconnect();
+
+   // Register this object for object picking and connect signals to listen to mouse/other events.
+   myViewWidgetIfPickableOrNullIfNotPickable = &viewWidgetIfPickableOrNullIfNotPickable;
+   myViewWidgetIfPickableOrNullIfNotPickable->registerObject( this->GetObjectId(), &(this->GetQGLSceneNode()) );
+   QObject::connect( this,  SIGNAL(mouseHoverChanged()),  myViewWidgetIfPickableOrNullIfNotPickable, SIGNAL(SignalToUpdateGL()) );
+   QObject::connect( this,  SIGNAL(mouseButtonClicked()),       this, SLOT(ObjectWasSelected())  );
+   QObject::connect( this,  SIGNAL(mouseButtonDoubleClicked()), this, SLOT(ObjectWasDoubleClicked())  );
+
 }
 
 

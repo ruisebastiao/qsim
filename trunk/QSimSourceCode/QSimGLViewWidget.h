@@ -57,6 +57,8 @@
 //------------------------------------------------------------------------------
 namespace QSim {
 
+// Forward declarations
+class QSimMainWindow;
 
 //------------------------------------------------------------------------------
 class QSimGLViewWidget : public QGLView
@@ -74,8 +76,16 @@ public:
    QSimSceneNode*  AddTopLevelSceneNodeGeometrySphere( qreal sphereDiameter, int smoothnessFactorDefaultIs5 = 5 )                                               { return this->AddSceneNodeGeometrySphere( myMostParentSceneNode, true, sphereDiameter, smoothnessFactorDefaultIs5 ); }
    QSimSceneNode*  AddTopLevelSceneNodeGeometryTeapot( )                                                                                                        { return this->AddSceneNodeGeometryTeapot( myMostParentSceneNode, true ); }
 
+   // User may select one ore more objects for deletion.
+   void  DeleteSelectedObjectInQSimGLViewWidget();
+
    // Remove all the nodes that were added directly or indirectly to myMostParentSceneNode.
    void  RemoveAllSceneNodes( void );
+
+   // Associate this QSimGLViewWidget with the widget it contains.
+   void             SetQSimMainWindowThatHoldsQSimGLViewWidget( QSimMainWindow* windowThatHoldsThis )  { myQSimMainWindowThatHoldsThisQSimGLViewWidget = windowThatHoldsThis; }
+   QSimMainWindow*  GetQSimMainWindowThatHoldsQSimGLViewWidget()   { return myQSimMainWindowThatHoldsThisQSimGLViewWidget; }
+   void             WriteMessageToMainWindowStatusBarFromGLViewWidget( const QString& message, const uint lengthOfTimeInMillisecondsOr0ForIndefintely );
 
 protected:
    // Override parent class QGLView virtual functions to perform typical OpenGL tasks.
@@ -87,9 +97,9 @@ protected:
    void  resizeGL( int width, int height )           { this->QGLView::resizeGL( width, height ); }
 
    // Override parent class QGLWidget virtual functions to detect mouse or key-pressed events.
-   // virtual void  mousePressEvent( QMouseEvent *event )  { myLastPos = event->pos(); }
-   // virtual void  mouseMoveEvent(  QMouseEvent *event );
-   virtual void  keyPressEvent( QKeyEvent *event );
+   // virtual void  mousePressEvent( QMouseEvent* event )  { myLastPos = event->pos(); }
+   // virtual void  mouseMoveEvent(  QMouseEvent* event );
+   virtual void  keyPressEvent( QKeyEvent* event );
 
 private:
    // Add various geometry objects  to this widget.
@@ -108,8 +118,13 @@ private:
 
    // List of all on-screen objects that need to be painted.
    QList<QSimSceneNode*>  myListOfAllObjectsThatNeedToBePainted;
-   void  InitializeAllDrawObjectsInQSimGLViewWidget( QGLPainter& painter )  {;} // for( QList<QSimSceneNode*>::iterator it = myListOfAllObjectsThatNeedToBePainted.begin();  it != myListOfAllObjectsThatNeedToBePainted.end();  ++it )  { QSimSceneNode* obj = *it;  if(obj) obj->RegisterQSimSceneNodeToBePickable( *this, painter ); } }
-   void  DrawAllObjectsInQSimGLViewWidget( QGLPainter& painter )            { for( QList<QSimSceneNode*>::iterator it = myListOfAllObjectsThatNeedToBePainted.begin();  it != myListOfAllObjectsThatNeedToBePainted.end();  ++it )  { QSimSceneNode* obj = *it;  if(obj) obj->DrawOpenGLForQSimSceneNode( painter ); } }
+   void  AddQSimSceneNodeToListOfObjectsThatNeedToBePainted( QSimSceneNode* qSimSceneObject )        { myListOfAllObjectsThatNeedToBePainted.append( qSimSceneObject ); }
+   void  RemoveQSimSceneNodeToListOfObjectsThatNeedToBePainted( QSimSceneNode* qSimSceneObject )     { myListOfAllObjectsThatNeedToBePainted.removeAll( qSimSceneObject ); }
+   void  InitializeAllDrawObjectsInQSimGLViewWidget( QGLPainter& painter )                           {;} // for( QList<QSimSceneNode*>::iterator it = myListOfAllObjectsThatNeedToBePainted.begin();  it != myListOfAllObjectsThatNeedToBePainted.end();  ++it )  { QSimSceneNode* obj = *it;  if(obj) obj->RegisterQSimSceneNodeToBePickable( *this, painter ); } }
+   void  DrawAllObjectsInQSimGLViewWidget( QGLPainter& painter )                                     { for( QList<QSimSceneNode*>::iterator it = myListOfAllObjectsThatNeedToBePainted.begin();  it != myListOfAllObjectsThatNeedToBePainted.end();  ++it )  { QSimSceneNode* obj = *it;  if(obj) obj->DrawOpenGLForQSimSceneNode( painter ); } }
+
+   // Associate this QSimGLViewWidget with the widget it contains.
+   QSimMainWindow*  myQSimMainWindowThatHoldsThisQSimGLViewWidget;
 
 //*********************************************************************************
 //*********************************************************************************

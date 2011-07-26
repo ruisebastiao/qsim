@@ -61,6 +61,9 @@ public:
    // Public method for accessing the main windows's GLWidget
    QSimGLViewWidget&  GetQSimMainWindowGLViewWidget()  { return myQSimGLViewWidget; }
 
+   // Write a message to the status bar.
+   void  WriteMessageToMainWindowStatusBar( const QString& message, const uint lengthOfTimeInMillisecondsOr0ForIndefintely )  { this->statusBar()->showMessage(message,lengthOfTimeInMillisecondsOr0ForIndefintely); }
+
 private slots:
    // Slots for file menu.
    void  NewFileSlot()     { QMessageBox::information( this, tr("Debug message"), tr("New File Slot"), QMessageBox::Ok, QMessageBox::NoButton ); }  
@@ -74,7 +77,7 @@ private slots:
    void  EditCutSlot()     { QMessageBox::information( this, tr("Debug message"), tr("Edit Cut Slot"),    QMessageBox::Ok, QMessageBox::NoButton ); }
    void  EditCopySlot()    { QMessageBox::information( this, tr("Debug message"), tr("Edit Copy Slot"),   QMessageBox::Ok, QMessageBox::NoButton ); }    
    void  EditPasteSlot()   { QMessageBox::information( this, tr("Debug message"), tr("Edit Paste Slot"),  QMessageBox::Ok, QMessageBox::NoButton ); } 
-   void  EditDeleteSlot()  { QMessageBox::information( this, tr("Debug message"), tr("Edit Delete Slot"), QMessageBox::Ok, QMessageBox::NoButton ); } 
+   void  EditDeleteSlot()  { this->GetQSimMainWindowGLViewWidget().DeleteSelectedObjectInQSimGLViewWidget(); } 
 
    // Slots for help menu.
    void  HelpAboutSlot()     { this->DisplayHelpAboutScreen(); }
@@ -85,17 +88,19 @@ private slots:
 
 private:
    void  AddAllActionsWhoAreChildrenOfQSimMainWindow();
-   void  CreateFileMenu();
-   void  CreateEditMenu();
-   void  CreateHelpMenu();
-   void  CreateSimulateMenu();
+   void  CreateMainWindowFileMenu();
+   void  CreateMainWindowEditMenu();
+   void  CreateMainWindowSimulateMenu();
+   void  CreateMainWindowHelpMenu();
    void  CreateCrazyWidget();
-   void  CreateToolbarEditEtc();
-   void  CreateDockWidgets();
-   void  CreateStatusBar();
+   void  CreateMainWindowToolbarEditEtc();
+   void  CreateMainWindowDockWidgets();
    void  DisplaySplashScreen();
    void  DisplayHelpAboutScreen();
    void  CreateTextEditor();
+
+   // Add a status bar at the bottom of the very bottom of the application (helpful for notes, warnings, and messages).
+   void  CreateMainWindowStatusBar()  { this->WriteMessageToMainWindowStatusBar( tr("Status message"), 0 ); }
 
    // Actions for file menu.
    QActionHelper  myExitProgramAction;

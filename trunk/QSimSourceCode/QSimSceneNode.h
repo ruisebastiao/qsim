@@ -62,7 +62,7 @@ public:
    // Constructors and destructors.
    explicit QSimSceneNode( QGLSceneNode& sceneNode ) : QObject(&sceneNode), myQGLSceneNode(sceneNode)  { this->InitializeQSimSceneNode(); }
             QSimSceneNode( QGLSceneNode& sceneNode, QSimGLViewWidget& viewWidgetIfPickableOrNullIfNotPickable );
-           ~QSimSceneNode() { this->SetSceneObjectPickable(NULL); }
+           ~QSimSceneNode()  { this->SetSceneObjectPickableToNullDeregisterDisconnect(); }
 
    // This object can be rotated by a certain angle (in degrees) about a certain vector.
    void  SetRotationAngleInDegreesAndVector( const qreal newRotationAngleInDegrees, const QVector3D& newRotationVector ) { this->SetRotationAngleInDegrees(newRotationAngleInDegrees); this->SetRotationVector(newRotationVector); }
@@ -77,12 +77,18 @@ public:
    void          SetMaterialStandard(  QGLMaterial* newMaterial )  { myMaterialStandard  = newMaterial; }
    void          SetMaterialHighlight( QGLMaterial* newMaterial )  { myMaterialHighlight = newMaterial; }
 
+   // Keep track of whether or not the object was selected (or should be de-selected).
+   void  SetObjectIsSelected( const bool tf )  { myObjectIsSelected = tf; }
+   bool  GetObjectIsSelected()                 { return myObjectIsSelected; }
+
    QGLAbstractEffect*  GetAbstractEffect() const                                 { return myAbstractEffect; }
    void                SetAbstractEffect( QGLAbstractEffect* newAbstractEffect ) { myAbstractEffect = newAbstractEffect; }
 
    // Determine whether or not this object can be picked by the user.
-   void  SetSceneObjectPickable( QSimGLViewWidget* viewWidgetIfPickableOrNullIfNotPickable );
-   bool  IsSceneObjectPickable( )  { return myViewWidgetIfPickableOrNullIfNotPickable != NULL; }
+   void               SetSceneObjectPickableToNullDeregisterDisconnect();
+   void               SetSceneObjectPickable( QSimGLViewWidget& viewWidgetIfPickableOrNullIfNotPickable );
+   QSimGLViewWidget*  GetQSimGLViewWidgetIfPickable()  { return myViewWidgetIfPickableOrNullIfNotPickable; }
+   bool               IsSceneObjectPickable( )  { return this->GetQSimGLViewWidgetIfPickable() != NULL; }
 
    // Each instance of this class is always associated with a QGLSceneNode.
          QGLSceneNode&  GetQGLSceneNode()        { return myQGLSceneNode; }
@@ -108,11 +114,12 @@ protected:
    bool  event( QEvent *e );
 
 private slots:
-   void  ObjectWasSelected();
+   void  ObjectWasSelected()        { this->SetObjectIsSelected( true ); }
+   void  ObjectWasDoubleClicked();
 
 private:
    // Initialize all the relevant fields in this object.
-   void  InitializeQSimSceneNode()  { myAbstractEffect = NULL;  myMaterialStandard = myMaterialHighlight = NULL;  myViewWidgetIfPickableOrNullIfNotPickable = NULL;  this->SetHoverStatus(false);  this->SetRotationAngleInDegreesAndVector( 0, QVector3D(1,0,0) );  this->SetPosition( QVector3D(1,0,0) );  this->SetScale(1.0);  this->SetObjectId( QSimSceneNode::GetNextUniqueID() ); }
+   void  InitializeQSimSceneNode()  { myAbstractEffect = NULL;  myMaterialStandard = myMaterialHighlight = NULL;  myViewWidgetIfPickableOrNullIfNotPickable = NULL;  this->SetHoverStatus(false);  this->SetRotationAngleInDegreesAndVector( 0, QVector3D(1,0,0) );  this->SetPosition( QVector3D(1,0,0) );  this->SetScale(1.0);  this->SetObjectId( QSimSceneNode::GetNextUniqueID() );  this->SetObjectIsSelected(false); }
 
    // This object can be rotated by a certain angle (in degrees) about a certain vector.
    qreal      myRotationAngleInDegrees;
@@ -134,6 +141,9 @@ private:
    bool  myHoverStatus;
    void  SetHoverStatus( const bool newHoverStatus )  { myHoverStatus = newHoverStatus; }
    bool  GetHoverStatus()                             { return myHoverStatus; }
+
+   // Keep track of whether or not the object was selected (or should be de-selected).
+   bool  myObjectIsSelected;
 
    // Need to check out what this is.
    QGLAbstractEffect* myAbstractEffect;
