@@ -184,6 +184,6 @@ RESOURCES += ./QSimResources/QSimResourceCollectionFile.qrc
 #--------------------------------------------------------------------
 include(QSimLinkedToSimbody.pro)
 include(QSimLinkedToQt3D.pro)
-# include(QSimLinkedToOpenSimAPI.pro)
+include(QSimLinkedToOpenSimAPI.pro)
 
 
