@@ -39,7 +39,7 @@
 #if 1                             // Change 1 to 0 if want to use Simbody only.
    #include <SimTKsimbody.h>      // Includes all Simbody header files.
    using namespace SimTK;
-#else
+// #else
    #include <OpenSim.h>           // Includes all OSimAPI header files.
    namespace OSimAPI = OpenSim;   // Avoid confusion between QSim and OpenSim namespaces
    using namespace OSimAPI;
@@ -74,7 +74,48 @@ bool  WriteExceptionToFile( const char* outputString, const char* exceptionStrin
 //-----------------------------------------------------------------------------
 bool  StartAndRunSimulationMathematicsEngineNoGuiInsideExceptionHandling( )
 {
-#if 0
+   // Create the system, with subsystems for the bodies and some forces.
+   MultibodySystem system;
+   SimbodyMatterSubsystem matter(system);
+   GeneralForceSubsystem forces(system);
+
+   // Add gravity as a force element.
+   SimTK::Force::UniformGravity gravity(forces, matter, Vec3(0, -9.8, 0));
+
+   // Create the body and some artwork for it.
+   SimTK::Body::Rigid pendulumBody(MassProperties(1.0, Vec3(0), Inertia(1)));
+   // pendulumBody.addDecoration(Transform(), DecorativeSphere(0.1).setColor(Red));
+
+   // Add an instance of the body to the multibody system by connecting it to Ground via a pin mobilizer.
+   MobilizedBody::Pin pendulum(matter.updGround(), Transform(Vec3(0)), pendulumBody, Transform(Vec3(0, 1, 0)));
+
+   // Visualize with default options; ask for a report every 1/30 of a second
+   // to match the Visualizer's default 30 frames per second rate.
+   // The Simbody visualizer must be able to execute the program VisualizerGUI.exe
+   // One way for Simbody to find this program is to set the environment variable
+   // SimTK_INSTALL_DIR  with a value  FullPathTo/Simbody/bin  folder.
+   Visualizer viz(system);
+   system.addEventReporter(new Visualizer::Reporter(viz, 1./30));
+
+   // Initialize the system and state.
+   system.realizeTopology();
+   State state = system.getDefaultState();
+   pendulum.setOneU(state, 0, 1.0); // initial velocity 1 rad/sec
+
+   // Simulate it.
+   RungeKuttaMersonIntegrator integ(system);
+   TimeStepper ts(system, integ);
+   ts.initialize(state);
+   ts.stepTo(10.0);
+
+   // Simulation completed properly
+   return true;
+}
+
+
+//-----------------------------------------------------------------------------
+bool  StartAndRunOpenSimApiEngineNoGuiInsideExceptionHandling()
+{
    // Create an OpenSim model and set its name
    Model osimModel;
    osimModel.setName( "tugOfWar" );
@@ -337,59 +378,22 @@ bool  StartAndRunSimulationMathematicsEngineNoGuiInsideExceptionHandling( )
    // Save the model to a file
    osimModel.print("tugOfWar_model.osim");
 
-#elif 1
-   // Create the system, with subsystems for the bodies and some forces.
-   MultibodySystem system;
-   SimbodyMatterSubsystem matter(system);
-   GeneralForceSubsystem forces(system);
-
-   // Add gravity as a force element.
-   Force::UniformGravity gravity(forces, matter, Vec3(0, -9.8, 0));
-
-   // Create the body and some artwork for it.
-   Body::Rigid pendulumBody(MassProperties(1.0, Vec3(0), Inertia(1)));
-// pendulumBody.addDecoration(Transform(), DecorativeSphere(0.1).setColor(Red));
-
-   // Add an instance of the body to the multibody system by connecting it to Ground via a pin mobilizer.
-   MobilizedBody::Pin pendulum(matter.updGround(), Transform(Vec3(0)), pendulumBody, Transform(Vec3(0, 1, 0)));
-
-   // Visualize with default options; ask for a report every 1/30 of a second
-   // to match the Visualizer's default 30 frames per second rate.
-   // The Simbody visualizer must be able to execute the program VisualizerGUI.exe
-   // One way for Simbody to find this program is to set the environment variable
-   // SimTK_INSTALL_DIR  with a value  FullPathTo/Simbody/bin  folder.
-   Visualizer viz(system);
-   system.addEventReporter(new Visualizer::Reporter(viz, 1./30));
-
-   // Initialize the system and state.
-
-   system.realizeTopology();
-   State state = system.getDefaultState();
-   pendulum.setOneU(state, 0, 1.0); // initial velocity 1 rad/sec
-
-   // Simulate it.
-
-   RungeKuttaMersonIntegrator integ(system);
-   TimeStepper ts(system, integ);
-   ts.initialize(state);
-   ts.stepTo(10.0);
-
-#endif
-
    // Simulation completed properly
    return true;
 }
 
 
+
 //-----------------------------------------------------------------------------
-bool  StartAndRunSimulationMathematicsEngineNoGui( )
+bool  StartAndRunSimulationMathematicsEngineNoGui( const bool trueForSimbodyFalseForOpenSimApi )
 {
 
    // The try-catch code in this main routine catches exceptions thrown by functions in the
    // try block, e.g., catching an exception that occurs when a NULL pointer is de-referenced.
    try
    {
-      return StartAndRunSimulationMathematicsEngineNoGuiInsideExceptionHandling( );
+      if( trueForSimbodyFalseForOpenSimApi ) return StartAndRunSimulationMathematicsEngineNoGuiInsideExceptionHandling();
+      else                                   return StartAndRunOpenSimApiEngineNoGuiInsideExceptionHandling();
    }
 
    // This catch statement handles certain types of exceptions

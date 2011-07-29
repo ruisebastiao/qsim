@@ -47,7 +47,8 @@ namespace QSim {
 
 // The following ANSI-standard C++ function separates the Qt portion of this code
 // with the portion of the code that does the simulation-mathematics.
-bool  StartAndRunSimulationMathematicsEngineNoGui();
+bool  StartAndRunSimulationMathematicsEngineNoGui( const bool trueForSimbodyFalseForOpenSimApi );
+
 
 //-----------------------------------------------------------------------------
 class QSimStartSimulation : public QObject
@@ -60,7 +61,8 @@ public:
   ~QSimStartSimulation() {;}
 
 public slots:
-   void  SlotStartSimulationFromThisWindowNoGui()  { StartAndRunSimulationMathematicsEngineNoGui(); }
+   void  SlotStartSimulationFromThisWindowNoGuiSimbody()     { StartAndRunSimulationMathematicsEngineNoGui( true  ); }
+   void  SlotStartSimulationFromThisWindowNoGuiOpenSimApi()  { StartAndRunSimulationMathematicsEngineNoGui( false ); }
 
 private:
    // Disable default constructors and/or destructors unless they are needed.

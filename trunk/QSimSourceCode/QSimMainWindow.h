@@ -84,7 +84,8 @@ private slots:
    void  HelpContentsSlot()  { this->CreateCrazyWidget(); }
 
    // Slots for simulate menu.
-   void  SlotStartSimulationFromMainApplicationWindow() { StartAndRunSimulationMathematicsEngineNoGui(); }  
+   void  SlotStartSimulationFromMainApplicationWindowSimbody()    { StartAndRunSimulationMathematicsEngineNoGui( true  ); }  
+   void  SlotStartSimulationFromMainApplicationWindowOpenSimApi() { StartAndRunSimulationMathematicsEngineNoGui( false ); }  
 
 private:
    void  AddAllActionsWhoAreChildrenOfQSimMainWindow();
@@ -120,7 +121,8 @@ private:
    QSimToolBarGeometry  myToolBarGeometry;
 
    // Actions for Simulate menu.
-   QActionHelper  mySimulateStartAction;
+   QActionHelper  mySimulateStartSimbodyAction;
+   QActionHelper  mySimulateStartOpenSimApiAction;
 
    // Actions for help menu.
    QActionHelper  myHelpAboutAction;

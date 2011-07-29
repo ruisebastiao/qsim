@@ -334,12 +334,19 @@ QSimSceneNode*  QSimGLViewWidget::AddSceneNodeGeometryTetrahedron( QGLSceneNode 
 //------------------------------------------------------------------------------
 void  QSimGLViewWidget::DeleteSelectedObjectInQSimGLViewWidget()
 {
+   bool shouldUpdateGL = false;
    for( QList<QSimSceneNode*>::iterator it = myListOfAllObjectsThatNeedToBePainted.begin();  it != myListOfAllObjectsThatNeedToBePainted.end();  ++it )  
    { 
       QSimSceneNode* sceneNode = *it;  
       if( sceneNode && sceneNode->GetObjectIsSelected() ) 
-         this->RemoveQSimSceneNodeToListOfObjectsThatNeedToBePainted( sceneNode );  
+      {
+         this->RemoveQSimSceneNodeToListOfObjectsThatNeedToBePainted( sceneNode ); 
+         shouldUpdateGL = true;
+      }
    }
+
+   // If anything was removed, update to make geometry disappear before returning.
+   if( shouldUpdateGL ) this->QGLView::updateGL();
 }
 
 

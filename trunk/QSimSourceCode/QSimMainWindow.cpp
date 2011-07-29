@@ -129,8 +129,11 @@ void  QSimMainWindow::AddAllActionsWhoAreChildrenOfQSimMainWindow()
 
 
    // Create actions associated with simulate menu.
-   mySimulateStartAction.AddActionHelper( tr("&Start"),                                          ":/TangoPublicDomainImages/media-playback-start.png" );
-   QObject::connect( &mySimulateStartAction,               SIGNAL(triggered()), this, SLOT( SlotStartSimulationFromMainApplicationWindow()) );
+   mySimulateStartSimbodyAction.AddActionHelper( tr("&Start Simbody"),                        ":/TangoPublicDomainImages/media-playback-start.png" );
+   QObject::connect( &mySimulateStartSimbodyAction,         SIGNAL(triggered()), this, SLOT( SlotStartSimulationFromMainApplicationWindowSimbody()) );
+   
+   mySimulateStartOpenSimApiAction.AddActionHelper( tr("&Start OpenSimApi"),                  ":/TangoPublicDomainImages/media-playback-start.png" );
+   QObject::connect( &mySimulateStartOpenSimApiAction,      SIGNAL(triggered()), this, SLOT( SlotStartSimulationFromMainApplicationWindowOpenSimApi()) );
 
 
    // Create actions associated with help menu.
@@ -223,7 +226,8 @@ void QSimMainWindow::CreateMainWindowSimulateMenu()
 {
    QMenuBar* mainWindowMenuBar = this->menuBar();                        // Creates/Gets/Owns QMainWindow menuBar.
    QMenu* simulateMenu = mainWindowMenuBar->addMenu( tr("&Simulate") );  // Creates/Gets/Owns this menu.
-   simulateMenu->addAction( &mySimulateStartAction );
+   simulateMenu->addAction( &mySimulateStartSimbodyAction );
+   simulateMenu->addAction( &mySimulateStartOpenSimApiAction );
 }
 
 
@@ -339,7 +343,7 @@ void QSimMainWindow::CreateCrazyWidget()
    // Start a simulation when button is pushed by connecting to a "slot".
    QPushButton widgetPushButtonToSimulate( "Push button to simulate", &mainWindowInApplication );
    widgetPushButtonToSimulate.resize( 600, 180 );
-   QObject::connect( &widgetPushButtonToSimulate, SIGNAL( clicked() ), this, SLOT( SlotStartSimulationFromMainApplicationWindow() ) );
+   QObject::connect( &widgetPushButtonToSimulate, SIGNAL( clicked() ), this, SLOT( SlotStartSimulationFromMainApplicationWindowSimbody() ) );
    mainWindowLayoutManager.addWidget( &widgetPushButtonToSimulate );
 
    // QCheckBox allows for exclusive or non-exclusive selections.
