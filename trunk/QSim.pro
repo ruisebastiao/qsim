@@ -1,4 +1,4 @@
-#    File: QSim.pro
+#    File:  QSim.pro  
 # Purpose: Creates compiler files (e.g., makefile or .vcproj file).
 #    Info: http://doc.trolltech.com/4.2/qmake-tutorial.html
 # ----------------------------------------------------------------------------- 
