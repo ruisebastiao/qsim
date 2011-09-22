@@ -87,7 +87,7 @@ private:
    // Associated widget if this dialog is part of a tab dialog box.
    const QSimRigidBodyTabWidget*  myAssociatedWidgetIfTabDialog;
 
-   // Layout for this dialog.
+   // Layout manager for this dialog.
    QGridLayout  myGridLayout;
 
    // Button to push for user to upload an image file.

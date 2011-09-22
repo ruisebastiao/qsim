@@ -176,6 +176,7 @@ SOURCES  += ./QSimSourceCode/QSimMainWindow.cpp
 SOURCES  += ./QSimSourceCode/QSimRigidBodyTabWidget.cpp
 SOURCES  += ./QSimSourceCode/QImageViewerDialog.cpp
 SOURCES  += ./QSimSourceCode/QImageViewerLabel.cpp
+SOURCES  += ./QSimSourceCode/QSimRigidBodyPositionDialog.cpp
 
 #--------------------------------------------------------------------
 # Resources that are compiled into the binary executable.

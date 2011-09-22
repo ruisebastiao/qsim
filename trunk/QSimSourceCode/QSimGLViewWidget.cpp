@@ -430,6 +430,10 @@ void  QSimGLViewWidget::RemoveAllSceneNodes( void )
 //------------------------------------------------------------------------------
 void  QSimGLViewWidget::RemoveSelectedSceneNodesFromQSimGLViewWidget()
 {
+   // Currently there is a crash error in the code here.
+   QMessageBox::information( this, tr("Debug message"), tr("To avoid a crash in the code, we are ignoring your request to delete the object"), QMessageBox::Ok, QMessageBox::NoButton ); 
+   return;
+
    bool shouldUpdateGL = false;
    for( QList<QSimSceneNode*>::iterator it = myListOfAllObjectsThatNeedToBePainted.begin();  it != myListOfAllObjectsThatNeedToBePainted.end();  ++it )
    {
