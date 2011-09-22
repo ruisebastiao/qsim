@@ -1,0 +1,86 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+     <file>../QSimApplicationIconC.ico</file>
+     <file>MiscImages/QSimLogoWithNames.jpg</file>
+     <file>MiscImages/QSimLogo.jpg</file>  
+     <file>MiscImages/BlueSolidsPublicDomainConeCapTransparent120Pixel.png</file>
+     <file>MiscImages/BlueSolidsPublicDomainConeFullTransparent120Pixel.png</file>
+     <file>MiscImages/BlueSolidsPublicDomainCubeTransparent120Pixel.png</file>
+     <file>MiscImages/BlueSolidsPublicDomainCylinderTransparent120Pixel.png</file>
+     <file>MiscImages/BlueSolidsPublicDomainSphereTransparent120Pixel.png</file>
+     <file>MiscImages/BlueSolidsPublicDomainTorusTransparent120Pixel.png</file>
+     <file>MiscImages/OpenSimTorsoAndLowerExtremityModel.png</file>
+     <file>MiscImages/OpenSimLowerExtremityOnlyModel.png</file>
+     <file>MiscImages/OpenSimLowerLimbModelEdithArnold.png</file>
+     <file>ApachePublicDomainImages/world1.png</file>
+     <file>TangoPublicDomainImages/media-playback-start.png</file>
+     <file>TangoPublicDomainImages/document-new.png</file>
+     <file>TangoPublicDomainImages/document-open.png</file>
+     <file>TangoPublicDomainImages/document-save-as.png</file>
+     <file>TangoPublicDomainImages/document-save.png</file>
+     <file>TangoPublicDomainImages/edit-copy.png</file>
+     <file>TangoPublicDomainImages/edit-cut.png</file>
+     <file>TangoPublicDomainImages/edit-delete.png</file>
+     <file>TangoPublicDomainImages/edit-paste.png</file>
+     <file>TangoPublicDomainImages/help-browser.png</file>
+     <file>TangoPublicDomainImages/printer.png</file>
+     <file>TangoPublicDomainImages/system-shutdown.png</file>
+     <file>TextureGraphics/TextureBlueRays.jpg</file>
+     <file>TextureGraphics/TextureBlueSky.jpg</file>
+     <file>TextureGraphics/TextureBrickWall1.jpg</file>
+     <file>TextureGraphics/TextureBrickWall2.jpg</file>
+     <file>TextureGraphics/TextureCanvasMaterial.jpg</file>
+     <file>TextureGraphics/TextureChocolate.jpg</file>
+     <file>TextureGraphics/TextureFire1.jpg</file>
+     <file>TextureGraphics/TextureFire2.jpg</file>
+     <file>TextureGraphics/TextureFlowerGarden.jpg</file>
+     <file>TextureGraphics/TextureGrassAndSky.jpg</file>
+     <file>TextureGraphics/TextureGreenHedge.jpg</file>
+     <file>TextureGraphics/TextureGreenMoss.jpg</file>
+     <file>TextureGraphics/TextureIceCubes.jpg</file>
+     <file>TextureGraphics/TextureMapleLeaf.jpg</file>
+     <file>TextureGraphics/TextureMetalChain.jpg</file>
+     <file>TextureGraphics/TextureMetalPebbled.jpg</file>
+     <file>TextureGraphics/TextureOranges.jpg</file>
+     <file>TextureGraphics/TexturePalmLeaf.jpg</file>
+     <file>TextureGraphics/TexturePaperCrumpled.jpg</file>
+     <file>TextureGraphics/TexturePaperRough.jpg</file>
+     <file>TextureGraphics/TexturePaperSmooth.jpg</file>
+     <file>TextureGraphics/TexturePinkFeather.jpg</file>
+     <file>TextureGraphics/TexturePoolWater.jpg</file>
+     <file>TextureGraphics/TextureRainbowAbstract.jpg</file>
+     <file>TextureGraphics/TextureRedAbstract1.jpg</file>
+     <file>TextureGraphics/TextureRedAbstract2.jpg</file>
+     <file>TextureGraphics/TextureRedTulips.jpg</file>
+     <file>TextureGraphics/TextureSand.jpg</file>
+     <file>TextureGraphics/TextureSeaBed.jpg</file>
+     <file>TextureGraphics/TextureSkyBlueWithClouds.jpg</file>
+     <file>TextureGraphics/TextureSnow1.jpg</file>
+     <file>TextureGraphics/TextureSnow2.jpg</file>
+     <file>TextureGraphics/TextureSoil.jpg</file>
+     <file>TextureGraphics/TextureSoilCracked.jpg</file>
+     <file>TextureGraphics/TextureSolarPanels.jpg</file>
+     <file>TextureGraphics/TextureStoneWall1.jpg</file>
+     <file>TextureGraphics/TextureStoneWall2.jpg</file>
+     <file>TextureGraphics/TextureSunsetSerengeti.jpg</file>
+     <file>TextureGraphics/TextureTreesPinkBloom.jpg</file>
+     <file>TextureGraphics/TextureWarmBackground.jpg</file>
+     <file>TextureGraphics/TextureWoodBoardwalk.jpg</file>
+     <file>TextureGraphics/TextureWoodGrain.jpg</file>
+     <file>TextureGraphics/TextureWoodOak.jpg</file>
+     <file>TextureGraphics/TextureWoodSlats.jpg</file>
+     <file>TextureGraphics/TextureWoodWalnut.jpg</file>
+</qresource>
+</RCC>
+
+
+
+
+
+
+
+
+
+
+
+
