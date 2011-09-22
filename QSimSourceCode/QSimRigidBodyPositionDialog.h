@@ -53,8 +53,22 @@ class QSimRigidBodyPositionDialog : public QDialog
 
 public:
    // Constructors and destructors.
-   QSimRigidBodyPositionDialog()  {;}
+   QSimRigidBodyPositionDialog();
   ~QSimRigidBodyPositionDialog()  {;}
+
+private:
+
+   // Add position label, line edit input box, orientation label, line edit input box.
+   void   AddLabelInputLineSpaceLabelInputLine( const unsigned int rowNumber );
+
+   // Layout manager for this dialog.
+   QGridLayout  myGridLayout;
+
+   // Input for x,y,z position and Euler BodyXYZ angles.
+   QLabel    myPositionLabel[3];
+   QLabel    myOrientationLabel[3];
+   QLineEdit myPositionInputDialog[3];
+   QLineEdit myOrientationInputDialog[3];
 
 };
 
