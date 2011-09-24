@@ -64,11 +64,19 @@ private:
    // Layout manager for this dialog.
    QGridLayout  myGridLayout;
 
+   // Layout widget for OK and Cancel buttons.
+   QWidget      myWidgetForOkAndCancelButtons;
+   QHBoxLayout  myHorizontalBoxLayoutForOkAndCancelButtons;
+
    // Input for x,y,z position and Euler BodyXYZ angles.
    QLabel    myPositionLabel[3];
    QLabel    myOrientationLabel[3];
    QLineEdit myPositionInputDialog[3];
    QLineEdit myOrientationInputDialog[3];
+
+   // Buttons for OK and Cancel
+   QPushButton  myOkButton;
+   QPushButton  myCancelButton;
 
 };
 
