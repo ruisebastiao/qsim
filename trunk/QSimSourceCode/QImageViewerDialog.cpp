@@ -97,6 +97,8 @@ const QPixmap*  QImageViewerDialog::GetStaticPixmap( const unsigned int i )
       imageFilenames[ numberOfFiles++ ] =  ":/TextureGraphics/TexturePoolWater.jpg";
       imageFilenames[ numberOfFiles++ ] =  ":/TextureGraphics/TextureSeaBed.jpg";
       imageFilenames[ numberOfFiles++ ] =  ":/TextureGraphics/TextureGrassAndSky.jpg";
+      imageFilenames[ numberOfFiles++ ] =  ":/TextureGraphics/TextureGreenGrassLong.jpg";
+      imageFilenames[ numberOfFiles++ ] =  ":/TextureGraphics/TextureGreenGrassShort.jpg";
       imageFilenames[ numberOfFiles++ ] =  ":/TextureGraphics/TexturePalmLeaf.jpg";
       imageFilenames[ numberOfFiles++ ] =  ":/TextureGraphics/TextureGreenHedge.jpg";
       imageFilenames[ numberOfFiles++ ] =  ":/TextureGraphics/TextureGreenMoss.jpg";
@@ -136,6 +138,7 @@ const QPixmap*  QImageViewerDialog::GetStaticPixmap( const unsigned int i )
       imageFilenames[ numberOfFiles++ ] =  ":/TextureGraphics/TextureMetalPebbled.jpg";
       imageFilenames[ numberOfFiles++ ] =  ":/TextureGraphics/TextureSolarPanels.jpg";
       imageFilenames[ numberOfFiles++ ] =  ":/TextureGraphics/TextureChocolate.jpg";
+      imageFilenames[ numberOfFiles++ ] =  ":/TextureGraphics/TextureSoccerBall.jpg";
       imageFilenames[ numberOfFiles++ ] =  ":/MiscImages/QSimLogo.jpg";
 
       // Increment myNumberOfStaticPixmaps if the image loaded propertly, otherwise reuse the current array element again.

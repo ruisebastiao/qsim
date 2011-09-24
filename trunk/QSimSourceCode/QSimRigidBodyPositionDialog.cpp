@@ -45,33 +45,50 @@ QSimRigidBodyPositionDialog::QSimRigidBodyPositionDialog() : QDialog(NULL)
 {
    // Arrange the images in a grid with a little room between each image.
    this->setLayout( &myGridLayout );
-   myGridLayout.setSpacing( 1 );
+   myGridLayout.setHorizontalSpacing( 8 );
+   myGridLayout.setVerticalSpacing( 4 );
 
    // 0th row in dialog.
-   myPositionLabel[0].setText( "x = " );
-   myOrientationLabel[0].setText( "Rx = " );
+   myPositionLabel[0].setText( "<b>x = </b>" );
+   myOrientationLabel[0].setText( "<b>Rx = </b>" );
    this->AddLabelInputLineSpaceLabelInputLine( 0 ) ;
 
    // 1st row in dialog.
-   myPositionLabel[1].setText( "y = " );
-   myOrientationLabel[1].setText( "Ry = " );
+   myPositionLabel[1].setText( "<b>y = </b>" );
+   myOrientationLabel[1].setText( "<b>Ry = </b>" );
    this->AddLabelInputLineSpaceLabelInputLine( 1 ) ;
 
    // 2nd row in dialog.
-   myPositionLabel[2].setText( "z = " );
-   myOrientationLabel[2].setText( "Rz = " );
+   myPositionLabel[2].setText( "<b>z = </b>" );
+   myOrientationLabel[2].setText( "<b>Rz = </b>" );
    this->AddLabelInputLineSpaceLabelInputLine( 2 ) ;
+   
+   // Add a vertical spacer to take up some vertical space.
+   const unsigned int verticalSpacerPreferredWidth = 5;
+   const unsigned int verticalSpacerPreferredHeight = 10;
+   QSpacerItem* verticalSpacer = new QSpacerItem( verticalSpacerPreferredWidth, verticalSpacerPreferredHeight, QSizePolicy::Minimum, QSizePolicy::Minimum);
+   myGridLayout.addItem( verticalSpacer, 3, 0 );
 
+   // Add the OK and Cancel buttons.
+   // myWidgetForOkAndCancelButtons.setParent( this );
+   myWidgetForOkAndCancelButtons.setLayout( &myHorizontalBoxLayoutForOkAndCancelButtons ); 
+   myOkButton.setText( QString("OK") );
+   myCancelButton.setText( QString("Cancel") );
+   myHorizontalBoxLayoutForOkAndCancelButtons.addWidget( &myOkButton );
+   myHorizontalBoxLayoutForOkAndCancelButtons.addWidget( &myCancelButton );
+   const unsigned int rowNumberForOkAndCancelButtons = 4;
+   const unsigned int colNumberForOkAndCancelButtons = 1;
+   const unsigned int colSpanForOkAndCancelButtons = 5;
+   myGridLayout.addWidget( &myWidgetForOkAndCancelButtons, rowNumberForOkAndCancelButtons, colNumberForOkAndCancelButtons, colSpanForOkAndCancelButtons, Qt::AlignHCenter );
+
+   // Add another vertical spacer to take up the remaining available space.
+   verticalSpacer = new QSpacerItem( verticalSpacerPreferredWidth, verticalSpacerPreferredHeight, QSizePolicy::Minimum, QSizePolicy::Expanding );
+   myGridLayout.addItem( verticalSpacer, 5, 0 );
 #if 0
    // Add ability to upload a user-designated image file.
    myWidgetPushButtonToUploadImageFile.setParent(this);
    myWidgetPushButtonToUploadImageFile.setText( "Upload image file" );
    myWidgetPushButtonToUploadImageFile.resize( 300, 90 );
-   const unsigned int  currentRowNumber = this->GetRowNumberForCurrentNumberOfImages();
-   const unsigned int  currentColNumber = this->GetColNumberForCurrentNumberOfImages();
-   const unsigned int  startRowNumberforWidget = currentRowNumber + (currentColNumber == 0 ? 1 : 2);
-   const unsigned int  startColNumberForWidget = 2;
-   const unsigned int  spanColumns = myNumberOfItemsPerRowForLayout - 2*startColNumberForWidget;
    myGridLayout.addWidget( &myWidgetPushButtonToUploadImageFile, startRowNumberforWidget, startColNumberForWidget, 1, spanColumns, Qt::AlignCenter );
    QObject::connect( &myWidgetPushButtonToUploadImageFile, SIGNAL( clicked() ), this, SLOT( OpenFileNameAndAddImageToLayout() ) );
 #endif
@@ -98,7 +115,7 @@ void   QSimRigidBodyPositionDialog::AddLabelInputLineSpaceLabelInputLine( const 
    myGridLayout.addWidget( &positionDialog, rowNumber, 1 );
 
    // Blank space
-   QLabel* blankSpace = new QLabel( "      ", this );
+   QLabel* blankSpace = new QLabel( "  ", this );
    myGridLayout.addWidget( blankSpace, rowNumber, 2 );
 
    // Orientation label

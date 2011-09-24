@@ -35,6 +35,8 @@
      <file>TextureGraphics/TextureFire2.jpg</file>
      <file>TextureGraphics/TextureFlowerGarden.jpg</file>
      <file>TextureGraphics/TextureGrassAndSky.jpg</file>
+     <file>TextureGraphics/TextureGreenGrassLong.jpg</file>
+     <file>TextureGraphics/TextureGreenGrassShort.jpg</file>
      <file>TextureGraphics/TextureGreenHedge.jpg</file>
      <file>TextureGraphics/TextureGreenMoss.jpg</file>
      <file>TextureGraphics/TextureIceCubes.jpg</file>
@@ -58,6 +60,7 @@
      <file>TextureGraphics/TextureSnow1.jpg</file>
      <file>TextureGraphics/TextureSnow2.jpg</file>
      <file>TextureGraphics/TextureSoil.jpg</file>
+     <file>TextureGraphics/TextureSoccerBall.jpg</file>
      <file>TextureGraphics/TextureSoilCracked.jpg</file>
      <file>TextureGraphics/TextureSolarPanels.jpg</file>
      <file>TextureGraphics/TextureStoneWall1.jpg</file>
