@@ -65,7 +65,7 @@ QSimRigidBodyPositionDialog::QSimRigidBodyPositionDialog() : QDialog(NULL)
    
    // Add a vertical spacer to take up some vertical space.
    const unsigned int verticalSpacerPreferredWidth = 5;
-   const unsigned int verticalSpacerPreferredHeight = 10;
+   const unsigned int verticalSpacerPreferredHeight = 5;
    QSpacerItem* verticalSpacer = new QSpacerItem( verticalSpacerPreferredWidth, verticalSpacerPreferredHeight, QSizePolicy::Minimum, QSizePolicy::Minimum);
    myGridLayout.addItem( verticalSpacer, 3, 0 );
 
