@@ -41,7 +41,7 @@ namespace QSim {
 
 
 //-----------------------------------------------------------------------------
-QSimMainWindow::QSimMainWindow()
+void  QSimMainWindow::ConstructorQSimMainWindow( const int numberOfCommandLineArguments, char *arrayOfCommandLineArguments[] )
 {
    // It is possible to override the weird default behavior of separating the title/tool bar from the rest of the application on Macintosh computers.
    this->setUnifiedTitleAndToolBarOnMac( false );
@@ -92,6 +92,17 @@ QSimMainWindow::QSimMainWindow()
 
    // Display a splash screen when application launches.
    this->DisplaySplashScreen();
+
+   // If there is more than one command line argument, display all the command line arguments.
+   if( numberOfCommandLineArguments > 1 )
+   {
+      for( int i=0;  i<numberOfCommandLineArguments;  i++ )
+      {
+         const char *argi = arrayOfCommandLineArguments[i];
+         QString message = QString().sprintf( "CommandLineArgument[%d] = %s\n", i, argi );
+         QMessageBox::information( this, tr("Debug message"), message, QMessageBox::Ok, QMessageBox::NoButton );
+      }
+   }
 }
 
 

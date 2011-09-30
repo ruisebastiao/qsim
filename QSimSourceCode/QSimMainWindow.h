@@ -54,7 +54,8 @@ class QSimMainWindow : public QMainWindow
 
 public:
    // Constructors and destructors.
-   QSimMainWindow();
+   QSimMainWindow( const int numberOfCommandLineArguments, char *arrayOfCommandLineArguments[] )  { this->ConstructorQSimMainWindow(numberOfCommandLineArguments,arrayOfCommandLineArguments); }
+   QSimMainWindow()  { this->ConstructorQSimMainWindow(0,NULL); }
   ~QSimMainWindow() {;}
 
    // Public method for accessing the main windows's GLWidget
@@ -101,6 +102,9 @@ private:
 
    // Add a status bar at the bottom of the very bottom of the application (helpful for notes, warnings, and messages).
    void  CreateMainWindowStatusBar()  { this->WriteMessageToMainWindowStatusBar( tr("Status message"), 0 ); }
+
+   // All constructors call this method.
+   void  ConstructorQSimMainWindow( const int numberOfCommandLineArguments, char *arrayOfCommandLineArguments[] );
 
    // Actions for file menu.
    QActionHelper  myExitProgramAction;
